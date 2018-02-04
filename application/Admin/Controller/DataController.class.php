@@ -56,6 +56,7 @@ class DataController extends AdminbaseController {
 
     public function data_check(){
 
+        $this->display();
     }
 
 
