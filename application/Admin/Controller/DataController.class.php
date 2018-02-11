@@ -60,7 +60,14 @@ class DataController extends AdminbaseController {
     }
 
 
+    /**
+     * 数据概况
+     */
 
+    public function data_check(){
+
+        $this->display();
+    }
 
 
 
