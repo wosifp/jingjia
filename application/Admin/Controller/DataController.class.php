@@ -51,10 +51,10 @@ class DataController extends AdminbaseController {
 //    }
 
     /**
-     * 数据查看
+     * 数据概况
      */
 
-    public function data_check(){
+    public function data_summarize(){
 
         $this->display();
     }
