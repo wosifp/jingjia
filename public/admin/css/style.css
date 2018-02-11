@@ -23,10 +23,14 @@ hr{border: none;height: 1px;}
 
 
 
+body{
+  background: #f5f5f5;
+}
 
 .qi_right_1{
     float: left;
     padding: 15px;
+    width: 100%;
 }
 
 /*弹窗*/
@@ -137,7 +141,9 @@ hr{border: none;height: 1px;}
 }
 .qi_bfb_30{
     width: 30%;
-    overflow: hidden;
+}
+.qi_bfb_40{
+    width: 40%;
 }
 .qi_bfb_100{
     width: 100%;
@@ -153,9 +159,31 @@ hr{border: none;height: 1px;}
     font-size: 18px;
     font-weight: bold;
 }
+.qi_p_5{
+  font-size: 16px; 
+  margin: 0 0 15px 0;
+  width: 100%;
+  overflow: hidden;
+}
 .btn{
     padding:0 12px;
 }
+.qi_inp_wid{
+  width: 100px;
+}
+.table-responsive{
+  margin: 20px auto 0;
+  width: 99%;
+  border: 1px solid #ccc;
+
+}
+.table-responsive table{
+  margin-bottom: 0;
+}
+.table-responsive table tr td, .table-responsive table tr th{
+  border-left: 1px solid #ccc;
+}
+
 
 .menu_list{width:400px; overflow: hidden; margin-top:10px; border: 1px solid #ccc; padding: 10px;}
 .menu_head{height:35px;line-height:35px;padding-left:38px;font-size:14px;color:#525252;cursor:pointer;border:1px solid #e1e1e1;position:relative;margin:0px;font-weight:bold;background:#f1f1f1}
@@ -163,3 +191,19 @@ hr{border: none;height: 1px;}
 .menu_list .current2{color: #f00; text-decoration: underline;}
 .menu_body{line-height:38px;border-left:1px solid #e1e1e1; backguound:#fff;border-right:1px solid #e1e1e1;}
 .menu_body a{display:block;height:38px;line-height:38px;padding-left:38px;color:#777777;background:#fff;text-decoration:none;border-bottom:1px solid #e1e1e1;}
+
+.pager{
+  margin: 0 auto;
+  text-align: left;
+}
+.pager li>a{
+    border-radius: 5px;
+    margin: 0 2px;
+    padding: 5px 10px;
+}
+.qi_padt_30{
+  padding-top: 30px;
+}
+.qi_mag_bott{
+  margin-bottom: 15px;
+}
