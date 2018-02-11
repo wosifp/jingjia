@@ -8,5 +8,6 @@ class IndexController extends HomebaseController{
     
     public function index(){
       echo "this is blog index !";
-    }
+	  $this ->display();
+	}
 }
