@@ -70,6 +70,36 @@ class DataController extends AdminbaseController {
     }
 
 
+    /**
+     * 数据洞察-->关键词分析
+     */
+
+    public function keywords_check(){
+
+        $this->display();
+    }
+
+
+    /**
+     * 数据洞察-->TOP排行
+     */
+
+    public function top_rank(){
+
+        $this->display();
+    }
+
+
+    /**
+     * 数据洞察-->增降分析
+     */
+
+    public function changes(){
+
+        $this->display();
+    }
+
+
 
 }
 
