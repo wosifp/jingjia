@@ -36,9 +36,9 @@ body{
 /*弹窗*/
 .tc{
     width: 100%;
-    background:#000; 
-    filter:alpha(opacity:30); 
-    opacity:0.3;  
+    background:#000;
+    filter:alpha(opacity:30);
+    opacity:0.3;
     -moz-opacity:0.3;
     -khtml-opacity: 0.3;
     position: fixed;
@@ -160,7 +160,7 @@ body{
     font-weight: bold;
 }
 .qi_p_5{
-  font-size: 16px; 
+  font-size: 16px;
   margin: 0 0 15px 0;
   width: 100%;
   overflow: hidden;
