@@ -50,14 +50,31 @@ class DataController extends AdminbaseController {
 //	    }
 //    }
 
+
+
     /**
-     * 数据概况
+     * 数据概况--暂时不用
      */
 
     public function data_summarize(){
-
+        $user_id = session(ADMIN_ID);
+        if($user_id ==1 ){ // 说明是mcc账户
+            // 查出该mcc账户下的所有子账户数据
+            $data = M("users")->where('id != 1')->select();
+            $result=array();
+            foreach ($data as $key => $value) {
+                $result[$value['trade']][$value['companyname']][]=$value;
+            }
+//            print_r($result);die;
+           $this->assign('trade',$result);
+        }else{
+            // 子账户
+            $result = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
+            $this->assign('user',$result);
+        }
         $this->display();
     }
+
 
 
     /**

@@ -11,8 +11,10 @@ function get_requestParams($ParamsName){
 function get_requestURL($postfix){
 	return C('url').c($postfix);
 }
-function get_postdata($paramInfo){
+
+function get_postdata($paramInfo,$target){
 	$arr_user = get_userNPT();
+	$arr_user['target'] = $target;
 		/* 获取请求体参数 */
 	$arr_body = get_requestParams($paramInfo);
 	$arr_data = array("header" => $arr_user, "body" => $arr_body);

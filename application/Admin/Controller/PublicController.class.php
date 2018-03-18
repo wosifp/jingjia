@@ -35,7 +35,7 @@ class PublicController extends AdminbaseController {
     
     public function logout(){
     	session('ADMIN_ID',null); 
-    	redirect(__ROOT__."/");
+    	redirect(__ROOT__."/admin");
     }
     
     public function dologin(){
@@ -82,11 +82,13 @@ class PublicController extends AdminbaseController {
     				//登入成功页面跳转
     				session('ADMIN_ID',$result["id"]);
     				session('name',$result["user_login"]);
+    				session('bai_name',$result["bai_name"]);
     				$result['last_login_ip']=get_client_ip(0,true);
     				$result['last_login_time']=date("Y-m-d H:i:s");
     				$user->save($result);
     				cookie("admin_username",$name,3600*24*30);
     				$this->success(L('LOGIN_SUCCESS'),U("Index/index"));
+//    				$this->success(L('LOGIN_SUCCESS'),U("Data/data_summarize"));
     			}else{
     				$this->error(L('PASSWORD_NOT_RIGHT'));
     			}

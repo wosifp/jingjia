@@ -19,56 +19,35 @@
                 账户：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
             </p>
             <div id="firstpane" class="menu_list" style="display:none">
-                <p class="qi_p_1">
-                    <input id="r2" type="radio" value="1" name="gender">行业 </input>
-                    <input id="r2" type="radio" value="1" name="gender">客户</input>
-                    <input id="r2" type="radio" value="1" name="gender">账单 </input>
-                </p>
                 <hr>
                 <p class="qi_p_3">
                     <span>可获取对象</span>
                     <input type="text">
                     <a href="javascript:" class="qi_a_1">搜索</a>
-                    <input id="r2" type="radio" value="1" name="">精确 </input>
+                    <!--<input id="r2" type="radio" value="1" name="">精确 </input>-->
                 </p>
-                <h3 class="menu_head">行业A</h3>
-                <div style="display: none;" class="menu_body">
-                    <a href="javascript:">客户A</a>
-                    <div style="display: none;" class="menu_body">
-                        <a href="javascript:">-- 客户A-账户A</a>
-                        <a href="javascript:">-- 客户A-账户B</a>
-                    </div>
-                    <a href="javascript:">客户B</a>
-                    <div style="display: none;" class="menu_body">
-                        <a href="javascript:">-- 客户B-账户A</a>
-                        <a href="javascript:">-- 客户B-账户B</a>
-                    </div>
-                </div>
-                <h3 class="menu_head">行业B</h3>
-                <div style="display: none;" class="menu_body">
-                    <a href="javascript:">客户A</a>
-                    <a href="javascript:">客户B</a>
-                </div>
 
-                <h3 class="menu_head">行业C</h3>
-                <div style="display:none" class="menu_body">
-                    <a href="javascript:">客户A</a>
-                    <a href="javascript:">客户B</a>
+                <foreach name="trade" item="vo" key="k">
+                <h3 class="menu_head">{$k}</h3>
+                <div style="display: none;" class="menu_body">
+                    <foreach name="vo" item="companyname" key="kk">
+                    <a href="javascript:" >{$kk}</a>
+                    <div style="display: none;" class="menu_body">
+                        <foreach name="companyname" item="user_login" key="kkk">
+                        <a href="javascript:"><span class="bai_name">{$user_login.user_login}</span></a>
+                        </foreach>
+                    </div>
+                    </foreach>
                 </div>
+                </foreach>
             </div>
         </div>
 
         <!--设备-->
         <div class="qi_float_l qi_bfb_30">
             设备：<select>
-            <option value="volvo">移动质量度</option>
-            <option value="saab">计算机质量度</option>
-            <option value="opel">展现</option>
-            <option value="audi">平均排名</option>
-            <option value="audi">点击</option>
-            <option value="audi">点击率</option>
-            <option value="audi">CPC</option>
-            <option value="audi">消费</option>
+            <option value="volvo">移动</option>
+            <option value="saab">PC</option>
         </select>
         </div>
         <!--设备 end-->
@@ -1080,3 +1059,11 @@
 
 </body>
 </html>
+
+<script>
+    $(".bai_name").click(function () {
+        var target = $(this).text();
+        window.location.href = "/Blog/Index/index?target=" + target;
+    })
+
+</script>
