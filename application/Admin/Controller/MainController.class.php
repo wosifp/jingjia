@@ -41,7 +41,24 @@ class MainController extends AdminbaseController {
             $this->assign('user',$result);
         }
         // 获取数据概况结束
+        $filename  = "./public/testdata/accountReport_byday.json";
+        
+        $json_string = file_get_contents($filename);
+        $json_data = json_decode($json_string,true);
+        $lebal = array();
+        $result = array();
+        foreach ($json_data as $key1 => $value1) {
+            # code...
+            $lebal[] = $value1['Date'];
+            foreach ($value1['KPIs'] as $key => $value) {
+                # code...
+                $result[$key][] = $value;
+            }
 
+        }
+        $this->assign('lebal',json_encode($lebal));
+        $this->assign('result',json_encode($result));
+        $this->assign('json_data',$json_string);
 
     	$this->assign('server_info', $info);
     	$this->display();
