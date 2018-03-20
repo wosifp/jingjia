@@ -1,0 +1,32 @@
+[
+{
+    "ID": 100,
+    "name": ["account1","campain1","group1","keyword1"],
+    "Date": "2018-01-01",
+    "KPIs": ["100","0.1","1000","2000","0.5" ]
+},
+{
+    "ID": 100,
+    "name": ["account1","campain1","group1","keyword1"],
+    "Date": "2018-01-02",
+    "KPIs": ["100","0.1","1000","2000","0.5" ]
+},
+{
+    "ID": 100,
+    "name": ["account1","campain1","group1","keyword1"],
+    "Date": "2018-01-03",
+    "KPIs": ["100","0.1","1000","2000","0.5" ]
+},
+{
+    "ID": 100,
+    "name": ["account1","campain1","group1","keyword1"],
+    "Date": "2018-01-04",
+    "KPIs": ["100","0.1","1000","2000","0.5" ]
+},
+{
+    "ID": 100,
+    "name": ["account1","campain1","group1","keyword1"],
+    "Date": "2018-01-05",
+    "KPIs": ["100","0.1","1000","2000","0.5" ]
+}
+]
