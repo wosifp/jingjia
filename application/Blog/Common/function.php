@@ -64,7 +64,7 @@ function getAccountReport_realtime($param = array("startDate"=>"2018-01-01","end
 	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
 	if($param["unitTime"]){
 		$param1["unitTime"]=$param["unitTime"];
-		$resultData =json_decode(getReport($param1,"RealTimeData"));
+		$resultData =json_decode(getReport("RealTimeData",$param1));
 	}else{
 		$unitTime = array("unitTime1"=>1,"unitTime3"=>3,"unitTime4"=>4,"unitTime5"=>5,"unitTime7"=>7,"unitTime8"=>8 );
 		foreach ($unitTime as $key1 => $value1) {
