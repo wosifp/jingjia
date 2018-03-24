@@ -41,7 +41,21 @@ class MainController extends AdminbaseController {
             $result = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
             $this->assign('user',$result);
         }
+
         // 获取数据概况结束
+
+        $t = time();
+        $start = mktime(0,0,0,date("m",$t),date("d",$t),date("Y",$t)); // 当天0时0分
+        $end = mktime(23,59,59,date("m",$t),date("d",$t),date("Y",$t)); // 当天23时59分
+// 设备默认为0，全部
+        $device = $_POST['device'] ? $_POST['device'] : 0;
+        $startDate = $_POST['device'] ? $_POST['device'] : date('Y-m-d',$start);
+        $endDate = $_POST['device'] ? $_POST['device'] : date('Y-m-d',$end);
+
+        $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
+
+
+        
         $filename  = "./public/testdata/accountReport_byday.json";
         
         $json_string = file_get_contents($filename);

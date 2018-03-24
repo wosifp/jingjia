@@ -56,7 +56,7 @@ li {
 
 			<!--设备-->
 			<div class="qi_float_l qi_bfb_30">
-				设备：<select>
+				设备：<select id="device">
 				<option value="0">全部</option>
 				<option value="2">PC</option>
 				<option value="1">移动</option>
@@ -968,5 +968,18 @@ function convertCanvasToImage(canvas) {
         var target = $(this).text();
         window.location.href = "/Admin/Main/index?target=" + target;
     })
-
+    $("#device").change(function () {
+        var device = $('#device :selected').val();
+        $.ajax({
+            type: "post",
+            url: "/Admin/Index/index",
+            data: {
+                device:device
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+            }
+        });
+    })
 </script>
