@@ -59,6 +59,8 @@ class UserController extends AdminbaseController{
 			if(!empty($_POST['role_id']) && is_array($_POST['role_id'])){
 				$role_ids=$_POST['role_id'];
 				unset($_POST['role_id']);
+				$_POST['p_id'] = session('ADMIN_ID');
+				
 				if ($this->users_model->create()!==false) {
 					$result=$this->users_model->add();
 					if ($result!==false) {

@@ -1,0 +1,1 @@
+create  table j_user_parentandchild(parentID int ,childID int);

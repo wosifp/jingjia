@@ -79,7 +79,26 @@ class PublicController extends AdminbaseController {
     				if( $result["id"]!=1 && ( empty($groups) || empty($result['user_status']) ) ){
     					$this->error(L('USE_DISABLED'));
     				}
+                   
     				//登入成功页面跳转
+                    if($groups["0"] == 6){
+                        
+                        session("username_mcc",$result["user_login"]);
+                        session("userpwd_mcc",$pass);
+                        $result['send_pwd'] = $pass;
+                       
+                    }else{
+                      
+                        session("username_normal",$result["user_login"]);
+                        $p_id = $user->where( array('id' =>$result['id'] ))->getField("p_id",true);
+                        
+                        $p_login = $user->where( array('id' => $p_id['0'] ))->Field("user_login,send_pwd")->find();
+                        
+                        session("username_mcc",$p_login["user_login"]);
+                        session("userpwd_mcc",$p_login["send_pwd"]);
+                        
+                    }
+                    
     				session('ADMIN_ID',$result["id"]);
     				session('name',$result["user_login"]);
     				session('bai_name',$result["bai_name"]);
