@@ -55,7 +55,7 @@ class MainController extends AdminbaseController {
         $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
 
 
-        
+
         $filename  = "./public/testdata/accountReport_byday.json";
         
         $json_string = file_get_contents($filename);
