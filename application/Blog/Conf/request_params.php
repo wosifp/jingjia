@@ -179,7 +179,7 @@ app 下载报告 / 推广电话报告，不支
 	),
 	
 	/* realTimePairRequestType RealTimePairRequestType 配对报告数据查询条件   */
-	'RealTimePairDataPostfix'=> '/ReportService/getRealTimePairData',
+	'RealTimePairDataPostfix'=> '/ReportService/getR.ealTimePairData',
 	'RealTimePairDataInfo'=>array(
 	'realTimePairRequestType'=>[
 	'performanceData'=>['cost','cpc','click','impression','ctr','cpm',/* 'position', */'conversion'],

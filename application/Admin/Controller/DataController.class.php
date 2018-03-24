@@ -116,7 +116,24 @@ class DataController extends AdminbaseController {
         $this->display();
     }
 
+    /**
+     * 数据洞察-->创意配图投放分析
+     */
 
+    public function creative(){
+
+        $this->display();
+    }
+
+
+    /**
+     * 数据洞察-->左上方排名分析
+     */
+
+    public function left_rank(){
+
+        $this->display();
+    }
 
 }
 
