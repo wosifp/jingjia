@@ -26,10 +26,11 @@ class MainController extends AdminbaseController {
     	);
 
     	// 获取数据概况
-        $user_id = session(ADMIN_ID);
-        if($user_id ==1 ){ // 说明是mcc账户
+        $p_id = session('p_id');
+        
+        if($p_id ==1  ){ // 说明是mcc账户
             // 查出该mcc账户下的所有子账户数据
-            $data = M("users")->where('id != 1')->select();
+            $data = M("users")->where('p_id = '.session('ADMIN_ID'))->select();
             $result=array();
             foreach ($data as $key => $value) {
                 $result[$value['trade']][$value['companyname']][]=$value;
@@ -56,6 +57,8 @@ class MainController extends AdminbaseController {
             }
 
         }
+        $params = array('startDate' =>'2018-02-03' ,'endDate'=>'2018-03-03' );
+        echo getAccountReport_realtime($params);
         $this->assign('lebal',json_encode($lebal));
         $this->assign('result',json_encode($result));
         $this->assign('json_data',$json_string);

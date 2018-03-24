@@ -81,19 +81,19 @@ class PublicController extends AdminbaseController {
     				}
                    
     				//登入成功页面跳转
+                    session("username_normal",$result["user_login"]);
+                        $p_id = $user->where( array('id' =>$result['id'] ))->getField("p_id",true);
+                        
+                        $p_login = $user->where( array('id' => $p_id['0'] ))->Field("user_login,send_pwd")->find();
                     if($groups["0"] == 6){
                         
                         session("username_mcc",$result["user_login"]);
                         session("userpwd_mcc",$pass);
                         $result['send_pwd'] = $pass;
+                        session("p_id",$p_id['0']) ;
                        
                     }else{
-                      
-                        session("username_normal",$result["user_login"]);
-                        $p_id = $user->where( array('id' =>$result['id'] ))->getField("p_id",true);
-                        
-                        $p_login = $user->where( array('id' => $p_id['0'] ))->Field("user_login,send_pwd")->find();
-                        
+                        session("p_id",$p_id['0']) ;
                         session("username_mcc",$p_login["user_login"]);
                         session("userpwd_mcc",$p_login["send_pwd"]);
                         
