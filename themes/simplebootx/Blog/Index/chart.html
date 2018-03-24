@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script src="__PUBLIC__/js/jquery.js"></script>
+    <script src="__PUBLIC__/js/echarts/echarts.js"></script>
+    <style>#echarts1 {width:500px; height: 600px;margin: auto;}</style>
+</head>
+<body>
+   <div id="echarts1" ></div>
+
+<script type="text/javascript">
+    
+    var mychart1 = echarts.init(document.getElementById('echarts1'));
+    var app={};
+    var  option = {
+    tooltip : {
+        formatter: "{a} <br/>{b} : {c}%"
+    },
+    toolbox: {
+        feature: {
+            restore: {},
+            saveAsImage: {}
+        }
+    },
+    series: [
+        {
+            name: '业务指标',
+            type: 'gauge',
+            detail: {formatter:'{value}%'},
+            data: [{value: 20, name: '完成率'}]
+        }
+    ]
+};
+
+    mychart1.setOption(option, true);
+
+
+    
+
+</script>
+</body>
+</html>

@@ -38,5 +38,13 @@ class IndexController extends HomebaseController {
 	function chart(){
 		$this->display();
 	}
+	function chart2()
+	{
+		# code...
+		$this->display();
+	}
+	function datepick(){
+		$this->display();
+	}
 
 }
