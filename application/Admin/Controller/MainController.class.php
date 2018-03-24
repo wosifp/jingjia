@@ -68,13 +68,10 @@ class MainController extends AdminbaseController {
         $endDate = $endDate ? $endDate : date('Y-m-d',$end);
         
         $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
+
         
         $json_string= getAccountReport_realtime($param);
         
-        
-       /* $filename  = "./public/testdata/accountReport_byday.json";
-        
-        $json_string = file_get_contents($filename);*/
         $json_data = json_decode($json_string,true);
         $lebal = array();
         $result = array();
