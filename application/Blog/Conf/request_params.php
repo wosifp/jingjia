@@ -115,6 +115,7 @@ getTemp 为 0 查询到的是 A, getTemp 为 1 查询到的是 A’.  	*/
 	'RealTimeDataPostfix'=> '/ReportService/getRealTimeData',
 	'RealTimeDataInfo'=>array(
 	'realTimeRequestType'=>[
+
 	'performanceData'=>['cost','cpc','click','impression','ctr','cpm','conversion'],
 	/* 选填，默认 null ，按照时间排序：  
 true ：降序  

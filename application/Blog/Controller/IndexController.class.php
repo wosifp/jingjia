@@ -26,14 +26,17 @@ class IndexController extends HomebaseController {
 		$this->display();
 	}
 	function canvas(){
+
 		$this->display();
 	}
-	function test(){
+	function test1(){
+	    $date_param= array("userId=");
+        $result = getReport($date_param);
+        echo $result;
 		$this->display();
 	}
 	function chart(){
 		$this->display();
 	}
-
 
 }
