@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script src="__PUBLIC__/js/jquery.js"></script>
+    <script src="__PUBLIC__/js/echarts/echarts.js"></script>
+    <script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
+
+    <style>#echarts1 {width:500px; height: 600px;margin: auto;}</style>
+</head>
+<body>
+   <div id="echarts1" >
+       
+       <input type="text" name="date_pick" id="datepicker1"><label>riqi</label></input>
+   </div>
+<script>
+//执行一个laydate实例
+
+laydate.render({
+  elem: '#datepicker1' ,
+  range: true,//指定元素
+  done: function(value){
+    console.log(value);
+  } 
+});
+
+</script>
+</body>
+</html>
