@@ -98,7 +98,6 @@ class PublicController extends AdminbaseController {
                         session("userpwd_mcc",$p_login["send_pwd"]);
                         
                     }
-                    
     				session('ADMIN_ID',$result["id"]);
     				session('name',$result["user_login"]);
     				session('bai_name',$result["bai_name"]);
