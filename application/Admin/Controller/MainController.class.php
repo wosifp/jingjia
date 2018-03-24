@@ -43,22 +43,38 @@ class MainController extends AdminbaseController {
         }
 
         // 获取数据概况结束
-
+        $target = $_POST['target'] ?$_POST['target']:0;
+        if($target){
+            session('username_normal',$target);
+        }
+        
         $t = time();
         $start = mktime(0,0,0,date("m",$t),date("d",$t),date("Y",$t)); // 当天0时0分
         $end = mktime(23,59,59,date("m",$t),date("d",$t),date("Y",$t)); // 当天23时59分
 // 设备默认为0，全部
-        $device = $_POST['device'] ? $_POST['device'] : 0;
-        $startDate = $_POST['device'] ? $_POST['device'] : date('Y-m-d',$start);
-        $endDate = $_POST['device'] ? $_POST['device'] : date('Y-m-d',$end);
-
+         $device = $_POST['device'] ? $_POST['device'] : 0;
+        if($device){
+            session("device",$device);
+            $device = session("device");
+        }
+        
+        $datepick = explode(" ",  $_POST['datepicker']);
+        
+        $startDate=$datepick[0];
+        
+        
+        $endDate =$datepick[2];
+        $startDate = $startDate ? $startDate : date('Y-m-d',$start);
+        $endDate = $endDate ? $endDate : date('Y-m-d',$end);
+        
         $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
-
-
         
-        $filename  = "./public/testdata/accountReport_byday.json";
+        $json_string= getAccountReport_realtime($param);
         
-        $json_string = file_get_contents($filename);
+        
+       /* $filename  = "./public/testdata/accountReport_byday.json";
+        
+        $json_string = file_get_contents($filename);*/
         $json_data = json_decode($json_string,true);
         $lebal = array();
         $result = array();
@@ -71,8 +87,8 @@ class MainController extends AdminbaseController {
             }
 
         }
-        $params = array('startDate' =>'2018-02-03' ,'endDate'=>'2018-03-03' );
-        echo getAccountReport_realtime($params);
+       // $params = array('startDate' =>'2018-02-03' ,'endDate'=>'2018-03-03' );
+        //echo getAccountReport_realtime($param);
         $this->assign('lebal',json_encode($lebal));
         $this->assign('result',json_encode($result));
         $this->assign('json_data',$json_string);

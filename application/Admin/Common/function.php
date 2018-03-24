@@ -66,12 +66,9 @@ function getAccountReport_realtime($param = array("startDate"=>"2018-01-01","end
 		$param1["unitTime"]=$param["unitTime"];
 		$resultData =json_decode(getReport("RealTimeData",$param1));
 	}else{
-		$unitTime = array("unitTime1"=>1,"unitTime3"=>3,"unitTime4"=>4,"unitTime5"=>5,"unitTime7"=>7,"unitTime8"=>8 );
-		foreach ($unitTime as $key1 => $value1) {
-			# code...
-			$param1["unitTime"]=$value1;
-			$resultData[$key1]=json_decode(getReport("RealTimeData",$param1));
-		}
+		$param1["unitTime"]=5;
+		$resultData=json_decode(getReport("RealTimeData",$param1));
+		
 	}
 	
 	return json_encode($resultData);

@@ -16,9 +16,9 @@ li {
 <script src="__PUBLIC__/admin/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="__PUBLIC__/admin/js/jquery.min.js"></script>
 <script src="__PUBLIC__/admin/js/style.js" type="text/javascript"></script>
-<script src="__PUBLIC__/admin/js/laydate.js"></script>
-<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate.css">
-<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate(1).css" id="LayDateSkin">
+<script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
+<!--<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate.css">
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate(1).css" id="LayDateSkin"> -->
 <script src="__PUBLIC__/js/echarts/Chart.bundle.js"></script>
 <script src="__PUBLIC__/js/echarts/utils.js"></script>
 <script src="__PUBLIC__/js/echarts/Chart.js"></script>
@@ -67,13 +67,25 @@ li {
 
 			<!--时间-->
 			<div class="qi_float_l qi_bfb_30">
-				时间：<input onclick="laydate()">--<input id="demo">
+				时间：<input type="text" name="date_pick" id="datepicker1">
 				<script>
-                    ;!function(){
-                        laydate({
-                            elem: '#demo'
-                        })
-                    }();
+                    laydate.render({
+  elem: '#datepicker1' ,
+  range: true,//指定元素
+  done: function(value){
+        $.ajax({
+            type: "post",
+            url: "/Admin/Main/index",
+            data: {
+                datepicker:value
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+            }
+        });
+  } 
+});
 				</script>
 			</div>
 			<!--时间 end-->
@@ -966,19 +978,31 @@ function convertCanvasToImage(canvas) {
 <script>
     $(".bai_name").click(function () {
         var target = $(this).text();
-        window.location.href = "/Admin/Main/index?target=" + target;
+         $.ajax({
+            type: "post",
+            url: "/Admin/Main/index",
+            data: {
+                target:target
+            },
+            dataType: "json",
+            success: function(data){
+                 alert(1111111);
+               // window.location = "/Admin/Index/index";
+            }
+        });
     })
     $("#device").change(function () {
         var device = $('#device :selected').val();
         $.ajax({
             type: "post",
-            url: "/Admin/Index/index",
+            url: "/Admin/Main/index",
             data: {
                 device:device
             },
             dataType: "json",
             success: function(data){
-                alert(1111111);
+                 alert(1111111);
+               // window.location = "/Admin/Index/index";
             }
         });
     })
