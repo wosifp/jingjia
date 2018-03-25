@@ -21,6 +21,7 @@ li {
 <link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate(1).css" id="LayDateSkin"> -->
 
 <script src="__PUBLIC__/js/echarts/echarts.min.js"></script>
+<script src="__PUBLIC__/js/echarts/china.js"></script>
 
 
 </head>
@@ -54,8 +55,6 @@ li {
 					</foreach>
 				</div>
 			</div>
-            <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
-            </div>
 
 			<!--设备-->
 			<div class="qi_float_l qi_bfb_30">
@@ -92,6 +91,9 @@ li {
 				</script>
 			</div>
 			<!--时间 end-->
+
+            <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
+            </div>
 		</div>
 
         <div class="qi_con_1">
@@ -234,7 +236,7 @@ li {
                 },2000);
 
                 // 使用刚指定的配置项和数据显示图表。
-                //myChart.setOption(option);
+                myChart.setOption(option);
             </script>
 			<!--统计图2 end-->
 		</div>
@@ -281,6 +283,145 @@ li {
                 };
                 myChart0.setOption(option0);
             </script>
+        </div>
+
+        <div class="qi_con_1">
+            <p class="qi_p_4">地域情况</p>
+            <div class="qi_bfb_100">
+                <select class="qi_float_r" id="diyu_select">
+                    <option value="0">展现</option>
+                    <option value="1">消费</option>
+                    <option value="2">点击</option>
+                    <option value="3">CPC</option>
+                    <option value="4">CTR</option>
+                    <option value="5">平均排名</option>
+                </select>
+            </div>
+
+        <div id="china-map"  style="width: 600px;height:400px;"></div>
+
+
+
+        <script>
+
+            var myChart1 = echarts.init(document.getElementById('china-map'));
+            myChart1.showLoading();
+
+            myChart1.hideLoading();
+            /**/
+            console.log(myChart1.getWidth());
+            console.log(myChart1.getHeight());
+            console.log(myChart1.getDom());
+            var option1 = {
+                title:[{
+                    color:'#033',
+                    text:"ditu ",
+                    textStyle:{
+                        fontWeight:'bold',
+                    }
+                }],
+                toolbox: {
+                    show: true,
+                    orient: 'vertical',
+                    left: 'right',
+                    top: 'center',
+                    feature: {
+                        dataView: {readOnly: false},
+                        restore: {},
+                        saveAsImage: {
+                            pixelRatio:4,
+                            backgroundColor:'#fff'
+
+                        }
+                    }
+                },
+                legend:[{
+                    type:'plain',
+                    left:'auto',
+                    top:'auto',
+                    orient:'vertical',
+                    formatter:"ddddddd",
+                    tooltip:{
+                        show:true
+                    },
+                    data: [{
+                        name: '系列1',
+                        // 强制设置图形为圆。
+                        icon: 'circle',
+                        // 设置文本为红色
+                        textStyle: {
+                            color: 'red'
+                        }
+                    }],
+                    icon:'rect'
+                }],
+                tooltip: {
+                    // show: false, //不显示提示标签
+                    formatter: '{b}', /*提示标签格式*/
+                    backgroundColor:"#ff7f50",//提示标签背景颜色
+                    textStyle:{color:"#fff"} //提示标签字体颜色
+                },
+                series: [{
+                    type: 'map',
+                    mapType: 'china',
+                    label: {
+                        normal: {
+                            show: true,//显示省份标签
+                            textStyle:{color:"#c71585"}//省份标签字体颜色
+                        },
+                        emphasis: {
+                            //对应的鼠标悬浮效果
+                            show: true,
+                            textStyle:{color:"#800080"}
+                        }
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: {
+                                readOnly: false
+                            },
+                            restore: {},
+                            saveAsImage: {
+                                pixelRatio: 4
+                            }
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            borderWidth: .5,//区域边框宽度
+                            borderColor: '#009fe8',//区域边框颜色
+                            areaColor:"#ffefd5",//区域颜色
+                        },
+                        emphasis: {
+                            borderWidth: .5,
+                            borderColor: '#4b0082',
+                            areaColor:"#ffdead",
+                        }
+                    },
+                    data:[
+                        {name:'福建', selected:true}//福建为选中状态
+                    ]
+                }],
+            };
+
+            myChart1.setOption(option1);
+            myChart1.on('mouseover', function (params) {
+                var dataIndex = params.dataIndex;
+                console.log(params);
+            });
+            myChart1.dispatch({
+                type:'showTip',
+                x:10,
+                y:10
+            })
+            var img = new Image();
+            img.src = myChart1.getDataURL();
+            console.log(img.src);
+            document.getElementById("button_download").onclick=function(){
+                document.getElementById("download_img").href = img.src;
+            }
+        </script>
         </div>
 
 		<div class="qi_con_1">
@@ -333,7 +474,6 @@ li {
 <script>
     $(".bai_name").click(function () {
         var target = $(this).text();
-//        $("#zhanghu").append(target);
         $("#zhanghu").html(target);
         $("#firstpane").css('display','none');
         $("#zhanghu").css('color','red');
