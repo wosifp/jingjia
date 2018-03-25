@@ -229,18 +229,42 @@
                         }
                     }
                 },
-                xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                title : {
+                    text: '某站点用户访问来源',
+                    subtext: '纯属虚构',
+                    x:'center'
                 },
-                yAxis: {
-                    type: 'value'
+                tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
                 },
-                series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    type: 'bar',
-                    smooth: true
-                }]
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+                },
+                series : [
+                    {
+                        name: '访问来源',
+                        type: 'pie',
+                        radius : '55%',
+                        center: ['50%', '60%'],
+                        data:[
+                            {value:335, name:'直接访问'},
+                            {value:310, name:'邮件营销'},
+                            {value:234, name:'联盟广告'},
+                            {value:135, name:'视频广告'},
+                            {value:1548, name:'搜索引擎'}
+                        ],
+                        itemStyle: {
+                            emphasis: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
             };
             myChart3.setOption(option3);
         </script>
@@ -447,19 +471,44 @@
             $(".zhexian").css('display','block');
             $(".zhutu").css('display','block');
             $("#page_select li").not(".zhexian").not(".zhutu").css('display','none');
+            $("#myChart0").css('display','block');
+            $("#myChart1").css('display','none');
+            $("#myChart2").css('display','none');
+            $("#myChart3").css('display','none');
+            $("#myChart4").css('display','none');
+            $("#myChart5").css('display','none');
         }
         if( unit_data == 22){ //设备对比 平涂
             $(".pingtu").css('display','block');
             $("#page_select li").not(".pingtu").css('display','none');
+            $("#myChart0").css('display','none');
+            $("#myChart1").css('display','none');
+            $("#myChart2").css('display','block');
+            $("#myChart3").css('display','none');
+            $("#myChart4").css('display','none');
+            $("#myChart5").css('display','none');
         }
         if( unit_data == 33){ // 地域分布 区域图、散点图
             $(".quyu").css('display','block');
             $(".sandian").css('display','block');
             $("#page_select li").not(".quyu").not(".sandian").css('display','none');
+            $("#myChart0").css('display','none');
+            $("#myChart1").css('display','none');
+            $("#myChart2").css('display','none');
+            $("#myChart3").css('display','none');
+            $("#myChart4").css('display','block');
+            $("#myChart5").css('display','none');
+
         }
         if( unit_data == 55){ // 数据构成 饼图
             $(".bingtu").css('display','block');
             $("#page_select li").not(".bingtu").css('display','none');
+            $("#myChart0").css('display','none');
+            $("#myChart1").css('display','none');
+            $("#myChart2").css('display','none');
+            $("#myChart3").css('display','block');
+            $("#myChart4").css('display','none');
+            $("#myChart5").css('display','none');
         }
 
         $.ajax({
