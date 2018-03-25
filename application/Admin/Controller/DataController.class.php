@@ -138,7 +138,44 @@ class DataController extends AdminbaseController {
      */
 
     public function keywords_check(){
-        $this->assign('trade',getAccountList());
+        //$this->assign('trade',getAccountList());
+        $p_id = session('p_id');
+        if($p_id ==1  ){ // 说明是mcc账户
+            // 查出该mcc账户下的所有子账户数据
+            $data = M("users")->where('p_id = '.session('ADMIN_ID'))->select();
+            $result=array();
+            foreach ($data as $key => $value) {
+                $result[$value['trade']][$value['companyname']][]=$value;
+            }
+            $this->assign('trade',$result);
+        }else{
+            // 子账户
+            $result = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
+            $this->assign('user',$result);
+        }
+        $target = $_POST['target'] ?$_POST['target']:0;
+        if($target){
+            session('username_normal',$target);
+        }
+        $t = time();
+        $start = mktime(0,0,0,date("m",$t),date("d",$t),date("Y",$t)); // 当天0时0分
+        $end = mktime(23,59,59,date("m",$t),date("d",$t),date("Y",$t)); // 当天23时59分
+// 设备默认为0，全部
+        $device = $_POST['device'] ? $_POST['device'] : 0;
+        if($device){
+            session("device",$device);
+            $device = session("device");
+        }
+
+        $datepick = explode(" ",  $_POST['datepicker']);
+
+        $startDate=$datepick[0];
+
+        $endDate =$datepick[2];
+        $startDate = $startDate ? $startDate : date('Y-m-d',$start);
+        $endDate = $endDate ? $endDate : date('Y-m-d',$end);
+
+        $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
         $this->display();
     }
 
@@ -148,7 +185,65 @@ class DataController extends AdminbaseController {
      */
 
     public function top_rank(){
-        $this->assign('trade',getAccountList());
+        //$this->assign('trade',getAccountList());
+        $p_id = session('p_id');
+        if($p_id ==1  ){ // 说明是mcc账户
+            // 查出该mcc账户下的所有子账户数据
+            $data = M("users")->where('p_id = '.session('ADMIN_ID'))->select();
+            $result=array();
+            foreach ($data as $key => $value) {
+                $result[$value['trade']][$value['companyname']][]=$value;
+            }
+            $this->assign('trade',$result);
+        }else{
+            // 子账户
+            $result = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
+            $this->assign('user',$result);
+        }
+        $target = $_POST['target'] ?$_POST['target']:0;
+        if($target){
+            session('username_normal',$target);
+        }
+        $t = time();
+        $start = mktime(0,0,0,date("m",$t),date("d",$t),date("Y",$t)); // 当天0时0分
+        $end = mktime(23,59,59,date("m",$t),date("d",$t),date("Y",$t)); // 当天23时59分
+        //层级选择level_to_choose
+        $level_to_choose = $_POST['level_to_choose'] ? $_POST['level_to_choose'] : "计划";
+        if($level_to_choose){
+            session("level_to_choose",$level_to_choose);
+            $unitOfTime=session("level_to_choose");
+        }
+        //echo $level_to_choose;
+        //设备选择device
+        $device = $_POST['device'] ? $_POST['device'] : 0;
+        if($device){
+            session("device",$device);
+            $unitOfTime=session("device");
+        }
+        //echo $device;
+        //指标选择indexselection
+        $indexselection = $_POST['indexselection'] ? $_POST['indexselection'] : "消费";
+        if($indexselection){
+            session("indexselection",$indexselection);
+            $indexselection=session("indexselection");
+        }
+        //echo $indexselection;
+        //TOP选择level_to_choose
+        $top_choice = $_POST['top_choice'] ? $_POST['top_choice'] : 10;
+        if($top_choice){
+            session("top_choice",$top_choice);
+            $top_choice=session("top_choice");
+        }
+        //echo $top_choice;
+
+        $datepick = explode(" ",  $_POST['datepicker']);
+
+        $startDate=$datepick[0];
+
+        $endDate =$datepick[2];
+        $startDate = $startDate ? $startDate : date('Y-m-d',$start);
+        $endDate = $endDate ? $endDate : date('Y-m-d',$end);
+        $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
         $this->display();
     }
 
