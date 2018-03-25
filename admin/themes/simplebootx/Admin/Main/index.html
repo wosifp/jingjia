@@ -22,6 +22,7 @@ li {
 <script src="__PUBLIC__/js/echarts/Chart.bundle.js"></script>
 <script src="__PUBLIC__/js/echarts/utils.js"></script>
 <script src="__PUBLIC__/js/echarts/Chart.js"></script>
+<script src="__PUBLIC__/js/echarts/echarts.min.js"></script>
 </head>
 <body>
 	<div class="qi_right_1">
@@ -53,6 +54,8 @@ li {
 					</foreach>
 				</div>
 			</div>
+            <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
+            </div>
 
 			<!--设备-->
 			<div class="qi_float_l qi_bfb_30">
@@ -70,22 +73,22 @@ li {
 				时间：<input type="text" name="date_pick" id="datepicker1">
 				<script>
                     laydate.render({
-  elem: '#datepicker1' ,
-  range: true,//指定元素
-  done: function(value){
-        $.ajax({
-            type: "post",
-            url: "/Admin/Main/index",
-            data: {
-                datepicker:value
-            },
-            dataType: "json",
-            success: function(data){
-                alert(1111111);
-            }
-        });
-  } 
-});
+                      elem: '#datepicker1' ,
+                      range: true,//指定元素
+                      done: function(value){
+                            $.ajax({
+                                type: "post",
+                                url: "/Admin/Main/index",
+                                data: {
+                                    datepicker:value
+                                },
+                                dataType: "json",
+                                success: function(data){
+                                    alert(1111111);
+                                }
+                            });
+                      }
+                    });
 				</script>
 			</div>
 			<!--时间 end-->
@@ -116,116 +119,8 @@ li {
 		</div>
 		<!--新增 基本关键指标 end-->
 
-
 		<div class="qi_con_1">
-
-			<div class="qi_bfb_100">
-				<select class="qi_float_r" id="qushitu_select">
-                    <option value="0">展现</option>
-					<option value="1">消费</option>
-					<option value="2">点击</option>
-					<option value="3">CPC</option>
-					<option value="4">CTR</option>
-					<option value="5">平均排名</option>
-				</select>
-			</div>
-
-
-			<!--统计图1-->
-            <div id="div_json" hidden="true">
-                <p id='p1'> {$json_data}</p>
-                <p id="p2">{$lebal}</p>
-                <p id="p3">{$result}</p>
-            </div>
-			<div height="400" width="600">
-				<canvas id="myChart0"> 你的浏览器不支持HTML5 canvas </canvas>
-			</div>
-            <!--统计图1 end-->
-            <a href="javascript:" id='downloadimg'  download="chartimg">
-            <button id="download" class="qi_a_1 qi_float_r">下载</button>
-             <script>
-
-                var ctxtemp = document.getElementById("myChart0");
-                var ctx = ctxtemp.getContext('2d');
-                $lebal_temp = $.parseJSON($('#div_json #p2').text());
-                $data_temp = $.parseJSON($('#div_json #p3').text());
-                $data_selected=$data_temp[3];
-                var config = {
-                    type: 'line',
-                    data: {
-                        labels: $lebal_temp,
-                        datasets: [{
-                            <!-- label: '# of Votes', -->
-                            label:"展现",
-                            data: $data_selected, 
-                            backgroundColor: [
-                                'rgba(255, 99, 132, 0)',
-                                'rgba(54, 162, 235, 0.9)',
-                                'rgba(255, 206, 86, 0.2)',
-                                'rgba(75, 192, 192, 0.2)',
-                                'rgba(153, 102, 255, 0.2)',
-                                'rgba(255, 159, 64, 0.2)'
-                            ],
-                            borderColor: [
-                                <!-- 'rgba(255,99,132,1)', -->
-                                'rgba(54, 162, 235, 1)',
-                                'rgba(255, 206, 86, 1)',
-                                'rgba(75, 192, 192, 1)',
-                                'rgba(153, 102, 255, 1)',
-                                'rgba(255, 159, 64, 1)'
-                            ],
-            
-                            borderWidth: 3
-                        }],
-                    },
-                    options: {
-                        scales: {
-                            yAxes: [{
-                                ticks: {
-                                    beginAtZero:true
-                                }
-                            }]
-                        }
-                       
-                    }
-                };
-var myChart = new Chart(ctx,config );
-$('.qi_bfb_100 .qi_float_r').change(function() {
-    
-    $data_selected = $data_temp[$(this).val()];
-    $lebal_selected = $('#qushitu_select :selected').text();
-    console.log($lebal_selected);
-    config.data.datasets.forEach(function(item){
-        item.data=$data_selected;
-        item.label=$lebal_selected;
-    })
-    myChart.update();
-});
-
-
-
-/*<!-- console.dir($('#chart0')) -->*/
-// Converts canvas to an image
-document.getElementById("download").onclick=function(){
-convertCanvasToImage(ctxtemp);
-} 
-function convertCanvasToImage(canvas) {
-    var image = new Image();
-    image.src = canvas.toDataURL("image/png");
-    /*console.log(image.src);*/
-    /*<!-- document.getElementById("img").innerHTML=''; -->*/
-    document.getElementById("downloadimg").href=image.src;
-    // document.getElementById("img").src=image.src;
-    
-    return image;
-}
-</script>
-
-		</div>
-
-
-		<div class="qi_con_1">
-			<p class="qi_p_4">关键词指标变化</p>
+			<p class="qi_p_4">关键指标变化率</p>
 			<div class="qi_bfb_100">
 				<select class="qi_float_r">
 					<option value="volvo">消费/点击/CPC</option>
@@ -234,522 +129,208 @@ function convertCanvasToImage(canvas) {
 				</select>
 			</div>
 			<!--统计图2-->
-			<div id="chart2" height="400" width="600"></div>
-			<script type="text/javascript">
-                function goChart(cBox,dataArr,textArr,ifFill){
-                    // 声明所需变量(canvas 2d上下文)
-                    var canvas,ctx;
-                    // 图表属性
-                    var cWidth, //图表中部内容宽度
-                        cHeight, //图表中部内容高度
-                        cMargin, //图表中部内容到canvas边的间距（留白）
-                        cSpace,  //中部内容外的说明文字空间
-                        textPadding; //文字到图表内容的间距
-                    var originX, originY; //图表的原点（坐标轴原点/圆心/某个参考中心点）
-                    // 主图属性
-                    var totalNomber, maxValue; // 模块数   数据最大值
-                    var colorArr; //显示的颜色数组
+			<!--<div id="chart2" height="400" width="600"></div>-->
+            <div id="main" style="width: 600px;height:400px;"></div>
+            <script type="text/javascript">
+                // 基于准备好的dom，初始化echarts实例
+                var myChart = echarts.init(document.getElementById('main'));
+//                var myChart = echarts.init($("#main"));
+                console.log(myChart);
 
-                    // 运动相关变量
-                    var ctr, numctr, speed; //起始步骤   全部步数  运动速度(每次运动间隔的毫秒数)
-                    //鼠标移动
-                    var mousePosition = {};  //鼠标位置信息
-
-                    // 创建canvas并获得canvas上下文
-                    canvas = document.createElement("canvas");
-                    if(canvas && canvas.getContext){
-                        ctx = canvas.getContext("2d");
-                    }
-
-                    canvas.innerHTML = "你的浏览器不支持HTML5 canvas";
-                    cBox.appendChild(canvas);
-
-                    initChart(); // 图表初始化
-
-                    // 图表初始化
-                    function initChart(){
-                        // 图表信息
-                        cMargin = 60;
-                        cSpace = 60;
-                        //将canvas扩大2倍，然后缩小，以适应高清屏幕
-                        canvas.width = cBox.getAttribute("width")* 2 ;
-                        canvas.height = cBox.getAttribute("height")* 2;
-                        canvas.style.height = canvas.height/2 + "px";
-                        canvas.style.width = canvas.width/2 + "px";
-                        cHeight = canvas.height - cMargin*2-cSpace*2;
-                        cWidth = canvas.width - cMargin*2-cSpace*2;
-                        originX = canvas.width/2;
-                        originY = cHeight+cSpace+cMargin;  //以漏斗图的最下面那个点为中心点
-
-                        // 主图信息
-                        totalNomber = textArr.length;
-                        var allArr = dataArr[0].value;
-//              for(var i=0; i<dataArr.length; i++){
-//                  allArr = allArr.concat( dataArr[i].value );
-//              }
-                        maxValue = Math.max.apply(null,allArr);
-
-                        colorArr=["#2DC6C8","#B6A2DD","#5AB1EE","#FEB880","#D7797F"]; //颜色数据
-                        // 运动相关
-                        ctr = 1;
-                        numctr = 40;
-                        speed = 2;
-
-                        textPadding=20;  //文字与文字基线线之间的间距
-
-                    }
-
-                    drawLegend();
-                    //绘制比例图及文字
-                    function drawLegend(){
-                        ctx.textAlign="left";
-
-                        var posX = cMargin+cSpace*3,
-                            posY = cMargin,
-                            tWidth = 30, //图例宽和高
-                            tHeight = 20
-
-                        for (var i = 0; i < totalNomber; i++){
-                            //绘制比例图及文字
-                            ctx.fillStyle = colorArr[i];
-                            ctx.fillRect(posX, posY, tWidth, tHeight);
-                            ctx.moveTo(posX, posY);
-                            ctx.font = 'normal 24px 微软雅黑';    //斜体 30像素 微软雅黑字体
-                            ctx.fillStyle = colorArr[i];
-                            //var percent = dataArr[i][2] + "：" + parseInt(100 * new_data_arr[i]) + "%";
-                            ctx.fillText(textArr[i], posX+tWidth+10, posY+17);
-
-                            posX += 150;
-
-                        }
-                    };
-
-
-
-                    var oldArr = dataArr[0].value;
-                    var nowArr = [];
-                    var nowTextArr = [];
-                    for(var i=0; i<totalNomber; i++){
-                        var obj = {
-                            value:oldArr[i],
-                            name:textArr[i]
-                        }
-                        nowArr.push(obj);
-                    }
-                    nowArr.sort(function(a,b){
-                        return a.value - b.value;
-                    });
-
-                    var positionArr = [];
-
-                    //循环生成每个块的位置信息
-                    var R = cWidth/2;
-                    var blockMargin = 4;
-                    var lineMargin = 20;
-                    for(var i=0; i<totalNomber; i++){
-                        var obj = {
-                            x:originX,
-                            y1:originY-cHeight/totalNomber*i,
-                            y2:originY-cHeight/totalNomber*(i+1)+blockMargin,
-                            r1:R*(nowArr[i-1] ? nowArr[i-1].value : 0)/maxValue,
-                            r2:R*nowArr[i].value/maxValue-blockMargin
-                        }
-                        console.log((nowArr[i-1] ? nowArr[i-1].value : 0)/maxValue,nowArr[i].value/maxValue)
-
-                        positionArr.push(obj);
-                    }
-                    //console.log(positionArr);
-
-                    drawChartAnimate(); // 绘制动画
-                    //绘制动画
-                    function drawChartAnimate(mouseMove){
-                        var persent = ctr/numctr;
-                        var tipArr = null;
-
-                        //绘制大方框
-
-                        //绘制每个块
-                        for(var i=0; i<totalNomber; i++){
-
-                            ctx.lineWidth = 2;
-                            ctx.fillStyle = colorArr[i%colorArr.length];
-                            var positionObj= positionArr[i];
-
-                            //绘制方块
-                            ctx.beginPath();
-                            var y1 = positionObj.y1-(positionObj.y1-positionObj.y2)/2*(1-persent);
-                            var y2 = positionObj.y2+(positionObj.y1-positionObj.y2)/2*(1-persent);
-                            var r1 = positionObj.r1*persent;
-                            var r2 = positionObj.r2*persent;
-                            ctx.moveTo(positionObj.x-r1,y1); //左下点
-                            ctx.lineTo(positionObj.x+r1,y1);  //右下
-                            ctx.lineTo(positionObj.x+r2,y2);  //右上
-                            ctx.lineTo(positionObj.x-r2,y2);  //左上
-                            if(mouseMove && ctx.isPointInPath(mousePosition.x*2, mousePosition.y*2)){
-                                ctx.globalAlpha = 0.8;
-                                tipArr = ["数据",nowArr[i].value,nowArr[i].name];
-                            }
-
-                            ctx.closePath();
-                            ctx.fill();
-                            ctx.globalAlpha = 1;
-                            tipArr && drawTips(mousePosition.x*2, mousePosition.y*2,tipArr);
-
-
-                            //绘制外部的线
-                            y1 = originY - cHeight/totalNomber*i*persent;
-                            y2 = originY - cHeight/totalNomber*(i+1)*persent+blockMargin;
-                            r1 *= persent;
-                            r2 *= persent;
-                            ctx.beginPath();
-                            var LDx = positionObj.x-r1-lineMargin;
-                            var Dy = y1;
-                            var RDx = positionObj.x+r1+lineMargin;
-
-                            console.log(Dy);
-                            if(i === 0){
-                                Dy += lineMargin;
-                                LDx = RDx = originX;
-                            }
-                            ctx.moveTo(LDx,Dy); //左下点
-                            if(i === totalNomber-1){
-                                ctx.lineTo(positionObj.x-r2-lineMargin-blockMargin-lineMargin/2,y2-blockMargin-lineMargin/2);  //左上
-                                ctx.lineTo(positionObj.x+r2+lineMargin+blockMargin+lineMargin/2,y2-blockMargin-lineMargin/2);  //右上
-                                ctx.lineTo(RDx,Dy);  //右下
-                            }else{
-                                ctx.lineTo(positionObj.x-r2-lineMargin-blockMargin,y2-blockMargin);  //左上
-                                ctx.moveTo(RDx,Dy);  //右下
-                                ctx.lineTo(positionObj.x+r2+lineMargin+blockMargin,y2-blockMargin);  //右上
-                            }
-                            console.log(persent);
-                            ctx.strokeStyle = "rgba(0,0,0,"+0.3*persent+")";
-                            ctx.stroke();
-                            /*drawFill({
-                                x:positionObj.x,
-                                y1:positionObj.y1-(positionObj.y1-positionObj.y2)/2*(1-persent),
-                                y2:positionObj.y2+(positionObj.y1-positionObj.y2)/2*(1-persent),
-                                r1:positionObj.r1*persent,
-                                r2:positionObj.r2*persent
-                            },false,mouseMove,["数据",nowArr[i].value,nowArr[i].name]);*/
-
-                        }
-
-                        if(ctr<numctr){
-                            ctr++;
-                            setTimeout(function(){
-                                ctx.clearRect(0,0,canvas.width, canvas.height);
-                                drawLegend();
-                                drawChartAnimate();
-                            }, speed*=1.08);
-                        }
-                    }
-
-
-                    //绘制提示框
-                    function drawTips(oX,oY,valArr){
-
-                        canvas.style.cursor = "pointer";
-                        ctx.save();
-                        ctx.beginPath();
-                        ctx.fillStyle = "rgba(0,0,0,0.5)";
-                        var H = 100;
-                        roundedRect(ctx,oX+10,oY,2*H,H,5);
-
-                        ctx.fillStyle = "#fff";
-                        ctx.textAlign="left";
-                        ctx.fillText(valArr[0]+"：", oX+H/3,oY+H/3);
-                        ctx.fillText(valArr[2]+"："+valArr[1], oX+H/3,oY+H/1.5);
-                        ctx.restore();
-                    }
-
-                    //绘制圆角矩形的方法
-                    function roundedRect(ctx,x,y,width,height,radius){
-                        ctx.moveTo(x,x+radius);
-                        ctx.beginPath();
-                        ctx.lineTo(x,y+height-radius);
-                        ctx.quadraticCurveTo(x,y+height,x+radius,y+height);
-                        ctx.lineTo(x+width-radius, y+height);
-                        ctx.quadraticCurveTo(x+width,y+height,x+width,y+height-radius);
-                        ctx.lineTo(x+width,y+radius);
-                        ctx.quadraticCurveTo(x+width,y,x+width-radius,y);
-                        ctx.lineTo(x+radius,y);
-                        ctx.quadraticCurveTo(x,y,x,y+radius);
-                        ctx.closePath();
-                        ctx.fill();
-                    }
-
-
-
-                    //监听鼠标移动
-                    var mouseTimer = null;
-                    canvas.addEventListener("mousemove",function(e){
-                        e = e || window.event;
-                        if( e.offsetX || e.offsetX==0 ){
-                            mousePosition.x = e.offsetX;
-                            mousePosition.y = e.offsetY;
-                        }else if( e.layerX || e.layerX==0 ){
-                            mousePosition.x = e.layerX;
-                            mousePosition.y = e.layerY;
-                        }
-
-                        clearTimeout(mouseTimer);
-                        mouseTimer = setTimeout(function(){
-                            ctx.clearRect(0,0,canvas.width, canvas.height);
-                            drawLegend();
-                            drawChartAnimate(true);
-
-                        },10);
-                    });
-
-
-
-                }
-
-                var dataArr = [
-                    {
-                        value : [100, 40, 60, 80, 20],
-                        name : '预期'
+                // 指定图表的配置项和数据
+                var option = {
+                    tooltip : {
+                        formatter: "{a} <br/>{b} : {c}%"
                     },
-                    {
-                        value : [15000, 8000, 18000, 31000, 42000, 11000],
-                        name : '实际'
-                    }
-                ];
+                    toolbox: {
+                        feature: {
+                            restore: {},
+                            saveAsImage: {}
+                        }
+                    },
+                    series: [
+                        {
+                            name: '业务指标',
+                            type: 'gauge',
+                            radius: '50%',
+                            center: ['20%', '55%'],
+                            min: 0,
+                            max: 200,
+                            splitNumber: 4,
+                            axisLine: {            // 坐标轴线
+                                lineStyle: {       // 属性lineStyle控制线条样式
+                                    width: 5
+                                }
+                            },
+                            detail: {
+                                formatter:'{value}%',
+                                fontSize:15
+                            },
+                            data: [{value: 50, name: '点击'}]
+                        },
 
-                /*
-                 * 参数1 ：需要显示canvas的dom  (非canvas标签，需要指定height和width)
-                 * 参数2：二维数据  每个数据表示需要显示的一组数据对象 （value表示数据数组，name表示此数据名称）
-                 * 参数3：一维数组  对应上面每个数据的名字
-                 * 参数4：中部填充是否实心 ，默认false
-                 * */
-                goChart(document.getElementById("chart2"),dataArr,["订单量","访问量","点击量","咨询量","转发量"],true)
+                        {
+                            name: '业务指标',
+                            type: 'gauge',
+                            radius: '50%',
+                            center: ['50%', '55%'],
+                            min: 0,
+                            max: 200,
+                            splitNumber: 4,
+                            axisLine: {            // 坐标轴线
+                                lineStyle: {       // 属性lineStyle控制线条样式
+                                    width: 5
+                                }
+                            },
 
+                            detail: {
+                                formatter:'{value}%',
+                                fontSize:15
+                            },
+                            data: [{value: 50, name: '转化次数'}]
+                        },
+                        {
+                            name: '业务指标',
+                            type: 'gauge',
+                            radius: '50%',
+                            center: ['80%', '55%'],
+                            min: 0,
+                            max: 200,
+                            splitNumber: 4,
+                            axisLine: {            // 坐标轴线
+                                lineStyle: {       // 属性lineStyle控制线条样式
+                                    width: 5
+                                }
+                            },
+                            detail: {
+                                formatter:'{value}%',
+                                fontSize:15
+                            },
+                            data: [{value: 50, name: 'CPA'}]
+                        },
+                    ]
+                };
 
-			</script>
+                setInterval(function () {
+                    option.series[0].data[0].value = (Math.random() * 100).toFixed(2) - 0;
+                    option.series[1].data[0].value = (Math.random() * 50).toFixed(2) - 0;
+                    option.series[2].data[0].value = (Math.random() * 50).toFixed(2) - 0;
+                    myChart.setOption(option, true);
+                },2000);
+
+                // 使用刚指定的配置项和数据显示图表。
+                myChart.setOption(option);
+            </script>
 			<!--统计图2 end-->
 
 			<a href="javascript:" class="qi_a_1 qi_float_r">下载</a>
 		</div>
 
+        <div class="qi_con_1">
+            <p class="qi_p_4">趋势图</p>
+            <div class="qi_bfb_100">
+                <select class="qi_float_r" id="qushitu_select">
+                    <option value="0">展现</option>
+                    <option value="1">消费</option>
+                    <option value="2">点击</option>
+                    <option value="3">CPC</option>
+                    <option value="4">CTR</option>
+                    <option value="5">平均排名</option>
+                </select>
+            </div>
 
 
-		<div class="qi_con_1">
-			<p class="qi_p_4">趋势图</p>
-			<div class="qi_bfb_100">
-				<select class="qi_float_r">
-					<option value="volvo">消费</option>
-					<option value="saab">展现</option>
-					<option value="opel">点击</option>
-					<option value="audi">CPC</option>
-					<option value="audi">CTR</option>
-					<option value="audi">平均排名</option>
-				</select>
-			</div>
-			<div class="qi_bfb_100">
-				<canvas id="chart3" height="300" width="600"> 你的浏览器不支持HTML5 canvas </canvas>
-			</div>
+            <!--统计图1-->
+            <div id="div_json" hidden="true">
+                <p id='p1'> {$json_data}</p>
+                <p id="p2">{$lebal}</p>
+                <p id="p3">{$result}</p>
+            </div>
+            <div height="400" width="600">
+                <canvas id="myChart0"> 你的浏览器不支持HTML5 canvas </canvas>
+            </div>
+            <!--统计图1 end-->
+            <a href="javascript:" id='downloadimg'  download="chartimg">
+                <button id="download" class="qi_a_1 qi_float_r">下载</button></a>
+                <script>
 
-			<script type="text/javascript">
-                function goChart(dataArr){
+                    var ctxtemp = document.getElementById("myChart0");
+                    var ctx = ctxtemp.getContext('2d');
+                    $lebal_temp = $.parseJSON($('#div_json #p2').text());
+                    $data_temp = $.parseJSON($('#div_json #p3').text());
+                    $data_selected=$data_temp[3];
+                    var config = {
+                        type: 'line',
+                        data: {
+                            labels: $lebal_temp,
+                            datasets: [{
+                                <!-- label: '# of Votes', -->
+                                label:"展现",
+                                data: $data_selected,
+                                backgroundColor: [
+                                    'rgba(255, 99, 132, 0)',
+                                    'rgba(54, 162, 235, 0.9)',
+                                    'rgba(255, 206, 86, 0.2)',
+                                    'rgba(75, 192, 192, 0.2)',
+                                    'rgba(153, 102, 255, 0.2)',
+                                    'rgba(255, 159, 64, 0.2)'
+                                ],
+                                borderColor: [
+                                    <!-- 'rgba(255,99,132,1)', -->
+                                    'rgba(54, 162, 235, 1)',
+                                    'rgba(255, 206, 86, 1)',
+                                    'rgba(75, 192, 192, 1)',
+                                    'rgba(153, 102, 255, 1)',
+                                    'rgba(255, 159, 64, 1)'
+                                ],
 
+                                borderWidth: 3
+                            }],
+                        },
+                        options: {
+                            scales: {
+                                yAxes: [{
+                                    ticks: {
+                                        beginAtZero:true
+                                    }
+                                }]
+                            }
 
-                    // 声明所需变量
-                    var canvas,ctx;
-                    // 图表属性
-                    var cWidth, cHeight, cMargin, cSpace;
-                    var originX, originY;
-                    // 折线图属性
-                    var tobalDots, dotSpace, maxValue;
-                    var totalYNomber;
-                    // 运动相关变量
-                    var ctr, numctr, speed;
-
-                    // 获得canvas上下文
-                    canvas = document.getElementById("chart3");
-                    if(canvas && canvas.getContext){
-                        ctx = canvas.getContext("2d");
-                    }
-                    initChart(); // 图表初始化
-                    drawLineLabelMarkers(); // 绘制图表轴、标签和标记
-                    drawLineAnimate(); // 绘制折线图的动画
-
-                    //点击刷新图表
-                    canvas.onclick = function(){
-                        initChart(); // 图表初始化
-                        drawLineLabelMarkers(); // 绘制图表轴、标签和标记
-                        drawLineAnimate(); // 绘制折线图的动画
+                        }
                     };
+                    var myChart = new Chart(ctx,config );
+                    $('.qi_bfb_100 .qi_float_r').change(function() {
 
-                    // 图表初始化
-                    function initChart(){
-                        // 图表信息
-                        cMargin = 60;
-                        cSpace = 80;
-                        /*这里是对高清屏幕的处理，
-                             方法：先将canvas的width 和height设置成本来的两倍
-                             然后将style.height 和 style.width设置成本来的宽高
-                             这样相当于把两倍的东西缩放到原来的 1/2，这样在高清屏幕上 一个像素的位置就可以有两个像素的值
-                             这样需要注意的是所有的宽高间距，文字大小等都得设置成原来的两倍才可以。
-                        */
-                        canvas.width = Math.floor( (window.innerWidth-100)/2 ) * 2 ;
-                        canvas.height = 740;
-                        canvas.style.height = canvas.height/2 + "px";
-                        canvas.style.width = canvas.width/2 + "px";
-                        cHeight = canvas.height - cMargin - cSpace;
-                        cWidth = canvas.width - cMargin - cSpace;
-                        originX = cMargin + cSpace;
-                        originY = cMargin + cHeight;
+                        $data_selected = $data_temp[$(this).val()];
+                        $lebal_selected = $('#qushitu_select :selected').text();
+                        console.log($lebal_selected);
+                        config.data.datasets.forEach(function(item){
+                            item.data=$data_selected;
+                            item.label=$lebal_selected;
+                        })
+                        myChart.update();
+                    });
 
-                        // 折线图信息
-                        tobalDots = dataArr.length;
-                        dotSpace = parseInt( cWidth/tobalDots );
-                        maxValue = 0;
-                        for(var i=0; i<dataArr.length; i++){
-                            var dotVal = parseInt( dataArr[i][1] );
-                            if( dotVal > maxValue ){
-                                maxValue = dotVal;
-                            }
-                        }
-                        maxValue += 50;
-                        totalYNomber = 10;
-                        // 运动相关
-                        ctr = 1;
-                        numctr = 100;
-                        speed = 6;
 
-                        ctx.translate(0.5,0.5);  // 当只绘制1像素的线的时候，坐标点需要偏移，这样才能画出1像素实线
+
+                    /*<!-- console.dir($('#chart0')) -->*/
+                    // Converts canvas to an image
+                    document.getElementById("download").onclick=function(){
+                        convertCanvasToImage(ctxtemp);
                     }
+                    function convertCanvasToImage(canvas) {
+                        var image = new Image();
+                        image.src = canvas.toDataURL("image/png");
+                        /*console.log(image.src);*/
+                        /*<!-- document.getElementById("img").innerHTML=''; -->*/
+                        document.getElementById("downloadimg").href=image.src;
+                        // document.getElementById("img").src=image.src;
 
-                    // 绘制图表轴、标签和标记
-                    function drawLineLabelMarkers(){
-                        ctx.font = "24px Arial";
-                        ctx.lineWidth = 2;
-                        ctx.fillStyle = "#566a80";
-                        ctx.strokeStyle = "#566a80";
-                        // y轴
-                        drawLine(originX, originY, originX, cMargin);
-                        // x轴
-                        drawLine(originX, originY, originX+cWidth, originY);
-
-                        // 绘制标记
-                        drawMarkers();
+                        return image;
                     }
+                </script>
 
-                    // 画线的方法
-                    function drawLine(x, y, X, Y){
-                        ctx.beginPath();
-                        ctx.moveTo(x, y);
-                        ctx.lineTo(X, Y);
-                        ctx.stroke();
-                        ctx.closePath();
-                    }
-
-                    // 绘制标记
-                    function drawMarkers(){
-                        ctx.strokeStyle = "#E0E0E0";
-                        // 绘制 y 轴 及中间横线
-                        var oneVal = parseInt(maxValue/totalYNomber);
-                        ctx.textAlign = "right";
-                        for(var i=0; i<=totalYNomber; i++){
-                            var markerVal =  i*oneVal;
-                            var xMarker = originX-5;
-                            var yMarker = parseInt( cHeight*(1-markerVal/maxValue) ) + cMargin;
-
-                            ctx.fillText(markerVal, xMarker, yMarker+3, cSpace); // 文字
-                            if(i>0){
-                                drawLine(originX+2, yMarker, originX+cWidth, yMarker);
-                            }
-                        }
-                        // 绘制 x 轴 及中间竖线
-                        ctx.textAlign = "center";
-                        for(var i=0; i<tobalDots; i++){
-                            var markerVal = dataArr[i][0];
-                            var xMarker = originX+i*dotSpace;
-                            var yMarker = originY+30;
-                            ctx.fillText(markerVal, xMarker, yMarker, cSpace); // 文字
-                            if(i>0){
-                                drawLine(xMarker, originY-2, xMarker, cMargin	);
-                            }
-                        }
-                        // 绘制标题 y
-                        ctx.save();
-                        ctx.rotate(-Math.PI/2);
-                        ctx.fillText("访问量", -canvas.height/2, cSpace-10);
-                        ctx.restore();
-                        // 绘制标题 x
-                        ctx.fillText("月份", originX+cWidth/2, originY+cSpace/2+20);
-                    };
-
-                    //绘制折线图
-                    function drawLineAnimate(){
-                        ctx.strokeStyle = "#566a80";  //"#49FE79";
-
-                        //连线
-                        ctx.beginPath();
-                        for(var i=0; i<tobalDots; i++){
-                            var dotVal = dataArr[i][1];
-                            var barH = parseInt( cHeight*dotVal/maxValue* ctr/numctr );//
-                            var y = originY - barH;
-                            var x = originX + dotSpace*i;
-                            if(i==0){
-                                ctx.moveTo( x, y );
-                            }else{
-                                ctx.lineTo( x, y );
-                            }
-                        }
-                        ctx.stroke();
-
-                        //背景
-                        ctx.lineTo( originX+dotSpace*(tobalDots-1), originY);
-                        ctx.lineTo( originX, originY);
-                        //背景渐变色
-                        //柱状图渐变色
-                        var gradient = ctx.createLinearGradient(0, 0, 0, 300);
-                        gradient.addColorStop(0, 'rgba(133,171,212,0.6)');
-                        gradient.addColorStop(1, 'rgba(133,171,212,0.1)');
-                        ctx.fillStyle = gradient;
-                        ctx.fill();
-                        ctx.closePath();
-                        ctx.fillStyle = "#566a80";
-
-                        //绘制点
-                        for(var i=0; i<tobalDots; i++){
-                            var dotVal = dataArr[i][1];
-                            var barH = parseInt( cHeight*dotVal/maxValue * ctr/numctr );
-                            var y = originY - barH;
-                            var x = originX + dotSpace*i;
-                            drawArc( x, y );  //绘制点
-                            ctx.fillText(parseInt(dotVal*ctr/numctr), x+15, y-8); // 文字
-                        }
-
-                        if(ctr<numctr){
-                            ctr++;
-                            setTimeout(function(){
-                                ctx.clearRect(0,0,canvas.width, canvas.height);
-                                drawLineLabelMarkers();
-                                drawLineAnimate();
-                            }, speed);
-                        }
-                    }
-
-                    //绘制圆点
-                    function drawArc( x, y, X, Y ){
-                        ctx.beginPath();
-                        ctx.arc( x, y, 3, 0, Math.PI*2 );
-                        ctx.fill();
-                        ctx.closePath();
-                    }
-
-
-                }
-
-                var chartData = [["1月/18", 50], ["1月/19", 60], ["1月/20", 100], ["1月/21",200], ["1月/22",350], ["1月/23",600], ["1月/24",720], ["1月/25",800], ["1月/26",700], ["1月/27",500], ["1月/28",650], ["1月/29",850]];
-                goChart(chartData);
-
-
-			</script>
-			<a href="javascript:" class="qi_a_1 qi_float_r">下载</a>
-		</div>
+        </div>
 
 		<div class="qi_con_1">
 			<p class="qi_p_4">分时汇总</p>
@@ -985,7 +566,11 @@ function convertCanvasToImage(canvas) {
 <script>
     $(".bai_name").click(function () {
         var target = $(this).text();
-         $.ajax({
+        $("#zhanghu").append(target);
+        $("#firstpane").css('display','none');
+        $("#zhanghu").css('color','red');
+
+        $.ajax({
             type: "post",
             url: "/Admin/Main/index",
             data: {
