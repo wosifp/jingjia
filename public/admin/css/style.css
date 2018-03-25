@@ -199,6 +199,7 @@ body{
 .pager li>a{
     border-radius: 5px;
     margin: 0 2px;
+    color:#000;
     padding: 5px 10px;
 }
 .qi_padt_30{
@@ -207,3 +208,45 @@ body{
 .qi_mag_bott{
   margin-bottom: 15px;
 }
+
+
+ .jzl-module-body {
+     padding: 10px 30px 20px;
+     background-color: #fff;
+     border-top: none;
+ }
+ .mb10 {
+     margin-bottom: 10px;
+ }
+ .summary_target_1, .summary_target_2, .summary_target_3, .summary_target_4, .summary_target_5, .summary_target_6 {
+     border-top: 3px solid #e4e4e4;
+     border-left: none;
+     border-right: none;
+     border-bottom: none;
+ }
+ .summary_target {
+     height: 80px;
+     padding: 15px 15px 12px;
+     border: 1px solid #e4e4e4;
+     background-color: #fff;
+ }
+ .summary_target_bgcolor_1 {
+     border-top:3px solid #4fbf6b;
+     background-color: #eef8ed;
+ }
+ .summary_target_bgcolor_2 {
+     border-top:3px solid #f8bd1f;
+     background-color: #f8f4ea;
+ }
+ .summary_target_bgcolor_3 {
+     border-top:3px solid #4597fe;
+     background-color: #ecf3fc;
+ }
+ .summary_target_bgcolor_4 {
+     border-top:3px solid #f87459;
+     background-color: #fdf1ef;
+ }
+ .summary_target_bgcolor_5 {
+     border-top:3px solid #00bdfb;
+     background-color: #e5f6fb;
+ }
