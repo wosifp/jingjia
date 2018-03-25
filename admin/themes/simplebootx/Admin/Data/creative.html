@@ -42,10 +42,10 @@
 
         <!--设备-->
         <div class="qi_float_l qi_bfb_30">
-            设备：<select>
-            <option value="volvo">全部</option>
-            <option value="saab">PC</option>
-            <option value="volvo">移动</option>
+            设备：<select id="device_select">
+            <option value="0">全部</option>
+            <option value="1">PC</option>
+            <option value="2">移动</option>
         </select>
         </div>
         <!--设备 end-->
@@ -83,7 +83,7 @@
             <li><a href="javascript:">自定义</a></li>
         </ul>
         <div class="qi_bfb_100 qi_padt_30">
-            <select class="qi_float_r">
+            <select class="qi_float_r" >
                 <option value="volvo">消费</option>
                 <option value="saab">展现</option>
                 <option value="opel">点击</option>
@@ -98,7 +98,29 @@
             <canvas id="chart"> 你的浏览器不支持HTML5 canvas </canvas>
         </div>
 
+<!--设备筛选  device_select -->
+<script type="text/javascript">
+    
+    $('#device_select').change(function(event) {
+        /* Act on the event */
+        $data = $(this).val();
+        console.log($data);
+        $.ajax({
+            type: "post",
+            url: "/Admin/Data/creative",
+            data: {
+                device:$data
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+            }
+        });
+    });
+</script>
+<!--设备筛选 end -->
         <script type="text/javascript">
+
             function goChart(dataArr){
 
                 // 声明所需变量

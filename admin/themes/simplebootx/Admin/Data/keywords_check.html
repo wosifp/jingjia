@@ -7,7 +7,6 @@
 <script src="__PUBLIC__/admin/js/jquery.min.js"></script>
 <script src="__PUBLIC__/admin/js/style.js" type="text/javascript"></script>
 <script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
-">
 
 
 <body>
@@ -43,10 +42,10 @@
 
         <!--设备-->
         <div class="qi_float_l qi_bfb_30">
-            设备：<select>
-            <option value="volvo">全部</option>
-            <option value="volvo">PC</option>
-            <option value="saab">移动</option>
+            设备：<select id="device">
+            <option value="0">全部</option>
+            <option value="2">PC</option>
+            <option value="1">移动</option>
         </select>
         </div>
         <!--设备 end-->
@@ -57,20 +56,20 @@
             时间：<input class="qi_inp_wid" id="datepicker1">
             <script>
                 laydate.render({
-  elem: '#datepicker1' ,
-  range: true,//指定元素
-  done: function(value){
-        $.ajax({
-            type: "post",
-            url: "/Admin/Data/keywords_check",
-            data: {
-                datepicker:value
-            },
-            dataType: "json",
-            success: function(data){
-                alert(1111111);
-            }
-        });
+                      elem: '#datepicker1' ,
+                      range: true,//指定元素
+                     done: function(value){
+                             $.ajax({
+                                 type: "post",
+                                 url: "/Admin/Data/keywords_check",
+                                 data: {
+                                     datepicker:value
+                                        },
+                                 dataType: "json",
+                                 success: function(data){
+                                 alert(1111111);
+                                }
+                             });
   } 
 });
             </script>
@@ -764,3 +763,36 @@
 
 </body>
 </html>
+
+<script>
+    $(".bai_name").click(function () {
+        var target = $(this).text();
+        $.ajax({
+            type: "post",
+            url: "/Admin/Data/data_check",
+            data: {
+                target:target
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+                // window.location = "/Admin/Data/data_check";
+            }
+        });
+    })
+    $("#device").change(function () {
+        var device = $('#device :selected').val();
+        $.ajax({
+            type: "post",
+            url: "/Admin/Data/keywords_check",
+            data: {
+                device:device
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+                // window.location = "/Admin/Data/data_check";
+            }
+        });
+    })
+</script>

@@ -70,20 +70,20 @@
 
     <div class="qi_con_1">
 
-        <ul class="pager qi_mag_bott">层级选择：
+        <ul class="pager qi_mag_bott" id="Level_to_choose">层级选择：
             <li><a href="javascript:">计划</a></li>
             <li><a href="javascript:">单元</a></li>
             <li><a href="javascript:">关键词</a></li>
             <li><a href="javascript:">创意</a></li>
         </ul>
 
-        <ul class="pager qi_mag_bott">设备：
-            <li><a href="javascript:">全部</a></li>
-            <li><a href="javascript:">PC</a></li>
-            <li><a href="javascript:">移动</a></li>
+        <ul class="pager qi_mag_bott" id="device">设备：
+            <li value="0"><a href="javascript:">全部</a></li>
+            <li value="2"><a href="javascript:">PC</a></li>
+            <li value="1"><a href="javascript:">移动</a></li>
         </ul>
 
-        <ul class="pager qi_mag_bott">指标选择：
+        <ul class="pager qi_mag_bott" id="Indexselection">指标选择：
             <li><a href="javascript:">消费</a></li>
             <li><a href="javascript:">展现</a></li>
             <li><a href="javascript:">点击</a></li>
@@ -91,7 +91,7 @@
             <li><a href="javascript:">平均价格</a></li>
         </ul>
 
-        <ul class="pager qi_mag_bott">TOP选择：
+        <ul class="pager qi_mag_bott" id="TOP_choice">TOP选择：
             <li><a href="javascript:">10</a></li>
             <li><a href="javascript:">20</a></li>
             <li><a href="javascript:">50</a></li>
@@ -403,3 +403,87 @@
 
 </body>
 </html>
+
+<script>
+    //账户
+    $(".bai_name").click(function () {
+        var target = $(this).text();
+        $.ajax({
+            type: "post",
+            url: "/Admin/Data/top_rank",
+            data: {
+                target:target
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+                // window.location = "/Admin/Data/data_check";
+            }
+        });
+    })
+    //设备device
+    $("#device li").click(function () {
+        var unit_data=$(this).val();
+        //console.log($unit_data);
+        $.ajax({
+            type:"post",
+            url:"/Admin/Data/top_rank",
+            data:{
+                unit_data:unit_data
+            },
+            dataType:"json",
+            success:function (data) {
+                alert(111111);
+            }
+        })
+    })
+    //层级选择Level_to_choose
+    $("#Level_to_choose li").click(function () {
+        var level_to_choose=$(this).text();
+        //console.log($unit_data);
+        $.ajax({
+            type:"post",
+            url:"/Admin/Data/top_rank",
+            data:{
+                level_to_choose:level_to_choose
+            },
+            dataType:"json",
+            success:function (data) {
+                alert(111111);
+            }
+        })
+    })
+    //指标选择Indexselection
+    $("#Indexselection li").click(function () {
+        var indexselection=$(this).text();
+        //console.log($unit_data);
+        $.ajax({
+            type:"post",
+            url:"/Admin/Data/top_rank",
+            data:{
+                indexselection:indexselection
+            },
+            dataType:"json",
+            success:function (data) {
+                alert(111111);
+            }
+        })
+    })
+    //TOP选择TOP_choice
+    $("#TOP_choice li").click(function () {
+        var top_choice=$(this).text();
+        //console.log($unit_data);
+        $.ajax({
+            type:"post",
+            url:"/Admin/Data/top_rank",
+            data:{
+                top_choice:top_choice
+            },
+            dataType:"json",
+            success:function (data) {
+                alert(111111);
+            }
+        })
+    })
+
+</script>

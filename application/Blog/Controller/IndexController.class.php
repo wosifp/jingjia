@@ -46,5 +46,8 @@ class IndexController extends HomebaseController {
 	function datepick(){
 		$this->display();
 	}
+	function chinamap(){
+		$this->display();
+	}
 
 }

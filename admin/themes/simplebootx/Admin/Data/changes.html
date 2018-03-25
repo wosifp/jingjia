@@ -70,12 +70,12 @@
 
     <div class="qi_con_1">
 
-        <ul class="pager qi_mag_bott">时间范围：
+        <ul class="pager qi_mag_bott" id="timerange">时间范围：
             <li><a href="javascript:">增长</a></li>
             <li><a href="javascript:">下降</a></li>
         </ul>
 
-        <ul class="pager qi_mag_bott">筛选条件：
+        <ul class="pager qi_mag_bott" id="filterparams">筛选条件：
             <li><a href="javascript:">消费额</a></li>
             <li><a href="javascript:">消费变化率</a></li>
             <li><a href="javascript:">点击额</a></li>
@@ -84,17 +84,86 @@
             <li><a href="javascript:">平均点击价格</a></li>
         </ul>
 
-        <ul class="pager qi_mag_bott">层级筛选：
+        <ul class="pager qi_mag_bott" id="tire">层级筛选：
             <li><a href="javascript:">计划</a></li>
             <li><a href="javascript:">单元</a></li>
             <li><a href="javascript:">关键词</a></li>
         </ul>
 
-        <ul class="pager qi_mag_bott">地域：
+        <ul class="pager qi_mag_bott" id="region">地域：
             <li><a href="javascript:">全部</a></li>
             <li><a href="javascript:">自定义</a></li>
         </ul>
 
+        <!--时间范围：timerange -->
+        <script type="text/javascript">
+            $('#timerange li').click(function(event) {
+                /* Act on the event */
+                $value = $(this).text();
+                
+                $.ajax({
+            type: "post",
+            url: "/Admin/Data/changes",
+            data: {
+                timerange:$value
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+            }
+        });
+            });
+        </script>
+        <!--时间范围：end -->
+
+
+        <!--筛选条件：filterparams -->
+        <script type="text/javascript">
+            $('#filterparams li').click(function(event) {
+                /* Act on the event */
+                $value = $(this).text();
+                console.log($value) ;
+                $.ajax({
+            type: "post",
+            url: "/Admin/Data/changes",
+            data: {
+                filterparams:$value
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+            }
+        });
+            });
+        </script>
+        <!--筛选条件： 时间范围：end-->
+
+        <!--层级筛选： tire-->
+        <script type="text/javascript">
+            $('#tire li').click(function(event) {
+                /* Act on the event */
+                $value = $(this).text();
+                console.log($value) ;
+                $.ajax({
+            type: "post",
+            url: "/Admin/Data/changes",
+            data: {
+                tire:$value
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+            }
+        });
+            });
+        </script>
+        <!--层级筛选：时间范围：end -->
+
+        <!--地域：region -->
+        
+        </script>
+        <!--地域： 时间范围：end-->
+        
         <!--柱状图-->
 
         <div height="400" width="600" style="margin:50px">
