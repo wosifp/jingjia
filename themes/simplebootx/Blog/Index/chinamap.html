@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=EDGE">
+        <title>ECharts</title>
+        
+        <script src="__PUBLIC__/js/jqueryjs"></script>
+        <script src="__PUBLIC__/js/echarts/echarts.js"></script>
+        <script src="__PUBLIC__/js/echarts/china.js"></script>
+        <style>#china-map {width:500px; height: 600px;margin: auto;}</style>
+    </head>
+    <body>        
+ <a id="download_img" href="" download="img2"><button id="button_download">download</button></a>   
+        </div>
+        <div id="china-map" >
+        
+       
+        
+        <script>
+           
+            var myChart1 = echarts.init(document.getElementById('china-map'),null,{renderer:'canvas' });
+            myChart1.showLoading();
+            
+            myChart1.hideLoading();
+            /**/
+            console.log(myChart1.getWidth());
+            console.log(myChart1.getHeight());
+            console.log(myChart1.getDom());
+            var option = {
+                title:[{
+                    color:'#033',
+                    text:"ditu ",
+                    textStyle:{
+                        fontWeight:'bold',
+                    }
+                }],
+                toolbox: {
+            show: true,
+            orient: 'vertical',
+            left: 'right',
+            top: 'center',
+            feature: {
+                dataView: {readOnly: false},
+                restore: {},
+                saveAsImage: {
+                    pixelRatio:4,
+                    backgroundColor:'#fff'
+
+                }
+            }
+        },
+                legend:[{
+                    type:'plain',
+                    left:'auto',
+                    top:'auto',
+                    orient:'vertical',
+                    formatter:"ddddddd",
+                    tooltip:{
+                        show:true
+                    },
+                    data: [{
+    name: '系列1',
+    // 强制设置图形为圆。
+    icon: 'circle',
+    // 设置文本为红色
+    textStyle: {
+        color: 'red'
+    }
+}],
+icon:'rect'
+                }],
+                tooltip: {
+                   // show: false, //不显示提示标签
+                    formatter: '{b}', /*提示标签格式*/
+                   backgroundColor:"#ff7f50",//提示标签背景颜色
+                    textStyle:{color:"#fff"} //提示标签字体颜色
+                },
+                series: [{
+                    type: 'map',
+                    mapType: 'china',
+                    label: {
+                        normal: {
+                            show: true,//显示省份标签
+                            textStyle:{color:"#c71585"}//省份标签字体颜色
+                        },    
+                        emphasis: {
+						//对应的鼠标悬浮效果
+                            show: true,
+                            textStyle:{color:"#800080"}
+                        } 
+                    },
+                    toolbox: {
+            show: true,
+            feature: {
+                dataView: {
+                    readOnly: false
+                },
+                restore: {},
+                saveAsImage: {
+                    pixelRatio: 4
+                }
+            }
+        },
+                    itemStyle: {
+                        normal: {
+                            borderWidth: .5,//区域边框宽度
+                            borderColor: '#009fe8',//区域边框颜色
+                            areaColor:"#ffefd5",//区域颜色
+                        },
+                        emphasis: {
+                            borderWidth: .5,
+                            borderColor: '#4b0082',
+                            areaColor:"#ffdead",
+                        }
+                    },
+                    data:[
+                        {name:'福建', selected:true}//福建为选中状态
+                    ]
+                }],
+            };
+            
+            myChart1.setOption(option);
+            myChart1.on('mouseover', function (params) {
+                var dataIndex = params.dataIndex;
+                console.log(params);
+            });
+            myChart1.dispatch({
+                type:'showTip',
+                x:10,
+                y:10
+            })
+            var img = new Image();
+            img.src = myChart1.getDataURL();
+            console.log(img.src);
+            document.getElementById("button_download").onclick=function(){
+                document.getElementById("download_img").href = img.src;
+            }
+        </script>
+        打开china.js文件，修改"properties":{"cp":[X坐标,Y坐标],...}
+    </body>
+</html>
