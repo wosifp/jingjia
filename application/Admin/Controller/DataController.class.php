@@ -125,7 +125,7 @@ class DataController extends AdminbaseController {
             session("unit_data",$unitOfTime);
             $unitOfTime=session("unit_data");
         }
-        echo $unitOfTime;
+        //echo $unitOfTime;
         $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
 
 
