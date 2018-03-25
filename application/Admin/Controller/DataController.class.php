@@ -92,7 +92,7 @@ class DataController extends AdminbaseController {
      */
 
     public function keywords_check(){
-
+        $this->assign('trade',getAccountList());
         $this->display();
     }
 
@@ -102,7 +102,7 @@ class DataController extends AdminbaseController {
      */
 
     public function top_rank(){
-
+        $this->assign('trade',getAccountList());
         $this->display();
     }
 
@@ -111,8 +111,8 @@ class DataController extends AdminbaseController {
      * 数据洞察-->增降分析
      */
 
-    public function changes(){
-
+     function changes(){
+        $this->assign('trade',getAccountList());
         $this->display();
     }
 
@@ -121,7 +121,7 @@ class DataController extends AdminbaseController {
      */
 
     public function creative(){
-
+         $this->assign('trade',getAccountList());
         $this->display();
     }
 
@@ -131,7 +131,7 @@ class DataController extends AdminbaseController {
      */
 
     public function left_rank(){
-
+         $this->assign('trade',getAccountList());
         $this->display();
     }
 
