@@ -100,13 +100,12 @@
             <li value="4"><a href="#" >分周</a></li>
             <li value="3"><a href="#" id="monthly">分月</a></li>
             <li value="1"><a href="#">分季度</a></li>
-            <li value="deviceCMP"><a href="#">设备对比</a></li>
-            <li><a href="#">地域分布</a></li>
-            <li><a href="#">整体分布</a></li>
-            <li><a href="#">数据构成</a></li>
-            <li><a href="#">关键词对比</a></li>
-            <li><a href="#">排名</a></li>
-            <li><a href="#">质量度</a></li>
+            <li value="22"><a href="#">设备对比</a></li>
+            <li value="33"><a href="#">地域分布</a></li>
+            <!--<li value="44"><a href="#">整体分布</a></li>-->
+            <li value="55"><a href="#">数据构成</a></li>
+            <!--<li value="66"><a href="#">关键词对比</a></li>-->
+            <!--<li value="77"><a href="#">质量度</a></li>-->
         </ul>
 
         <div class="qi_bfb_100 qi_padt_30">
@@ -119,14 +118,19 @@
                 <option value="audi">平均排名</option>
             </select>
             <ul class="pager" id="page_select">
-                <li><a href="#">折线图</a></li>
-                <li><a href="#">柱状体</a></li>
+                <li style="display: none" class="zhexian"><a href="#" >折线图</a></li>
+                <li style="display: none" class="zhutu" ><a href="#" >柱状体</a></li>
+                <li style="display: none" class="pingtu"><a href="#" >平涂</a></li>
+                <li style="display: none" class="dietu" ><a href="#" >堆叠图</a></li>
+                <li style="display: none" class="bingtu"><a href="#" >饼图</a></li>
+                <li style="display: none" class="quyu" ><a href="#" >区域图</a></li>
+                <li style="display: none" class="sandian" ><a href="#" >散点图</a></li>
             </ul>
         </div>
 
-        <!--统计图1-->
-        <div id="myChart0" style="width: 600px;height:400px;"></div>
-        <!--统计图1 end-->
+        <!--折线图-->
+        <div id="myChart0" style="width: 600px;height:400px;" style="display: block"></div>
+
         <script>
             var myChart0 = echarts.init(document.getElementById('myChart0'));
             var option0 = {
@@ -151,19 +155,246 @@
                 }]
             };
             myChart0.setOption(option0);
-            $("#page_select li").click(function () {
-                if($(this).text() == '折线图')
-                {
-                    option0.series[0].type ="line";
-                }
-                if($(this).text() == '柱状体')
-                {
-                    option0.series[0].type ="bar";
-                }
-                console.log(option0.series[0].type);
-            })
+        </script>
 
-            myChart0.setOption(option0);
+        <!--柱状图-->
+        <div id="myChart1" style="width: 600px;height:400px;" style="display: none"></div>
+
+        <script>
+            var myChart1 = echarts.init(document.getElementById('myChart1'));
+            var option1 = {
+                toolbox: {
+                    feature: {
+                        saveAsImage: {
+                            pixelRatio:3
+                        }
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'bar',
+                    smooth: true
+                }]
+            };
+            myChart1.setOption(option1);
+        </script>
+
+
+        <!--平涂-->
+        <div id="myChart2" style="width: 600px;height:400px;" style="display: none"></div>
+
+        <script>
+            var myChart2 = echarts.init(document.getElementById('myChart2'));
+            var option2 = {
+                toolbox: {
+                    feature: {
+                        saveAsImage: {
+                            pixelRatio:3
+                        }
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'bar',
+                    smooth: true
+                }]
+            };
+            myChart2.setOption(option2);
+        </script>
+
+        <!--饼图-->
+        <div id="myChart3" style="width: 600px;height:400px;" style="display: none"></div>
+
+        <script>
+            var myChart3 = echarts.init(document.getElementById('myChart3'));
+            var option3 = {
+                toolbox: {
+                    feature: {
+                        saveAsImage: {
+                            pixelRatio:3
+                        }
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'bar',
+                    smooth: true
+                }]
+            };
+            myChart3.setOption(option3);
+        </script>
+
+        <!--区域图-->
+        <div id="myChart4" style="width: 600px;height:400px;" style="display: none"></div>
+
+        <script>
+            var myChart4 = echarts.init(document.getElementById('myChart4'));
+            myChart4.showLoading();
+            myChart4.hideLoading();
+            var option4 = {
+                title:[{
+                    color:'#033',
+                    text:"ditu ",
+                    textStyle:{
+                        fontWeight:'bold',
+                    }
+                }],
+                toolbox: {
+                    show: true,
+                    orient: 'vertical',
+                    left: 'right',
+                    top: 'center',
+                    feature: {
+                        dataView: {readOnly: false},
+                        restore: {},
+                        saveAsImage: {
+                            pixelRatio:4,
+                            backgroundColor:'#fff'
+
+                        }
+                    }
+                },
+                legend:[{
+                    type:'plain',
+                    left:'auto',
+                    top:'auto',
+                    orient:'vertical',
+                    formatter:"ddddddd",
+                    tooltip:{
+                        show:true
+                    },
+                    data: [{
+                        name: '系列1',
+                        // 强制设置图形为圆。
+                        icon: 'circle',
+                        // 设置文本为红色
+                        textStyle: {
+                            color: 'red'
+                        }
+                    }],
+                    icon:'rect'
+                }],
+                tooltip: {
+                    // show: false, //不显示提示标签
+                    formatter: '{b}', /*提示标签格式*/
+                    backgroundColor:"#ff7f50",//提示标签背景颜色
+                    textStyle:{color:"#fff"} //提示标签字体颜色
+                },
+                series: [{
+                    type: 'map',
+                    mapType: 'china',
+                    label: {
+                        normal: {
+                            show: true,//显示省份标签
+                            textStyle:{color:"#c71585"}//省份标签字体颜色
+                        },
+                        emphasis: {
+                            //对应的鼠标悬浮效果
+                            show: true,
+                            textStyle:{color:"#800080"}
+                        }
+                    },
+                    toolbox: {
+                        show: true,
+                        feature: {
+                            dataView: {
+                                readOnly: false
+                            },
+                            restore: {},
+                            saveAsImage: {
+                                pixelRatio: 4
+                            }
+                        }
+                    },
+                    itemStyle: {
+                        normal: {
+                            borderWidth: .5,//区域边框宽度
+                            borderColor: '#009fe8',//区域边框颜色
+                            areaColor:"#ffefd5",//区域颜色
+                        },
+                        emphasis: {
+                            borderWidth: .5,
+                            borderColor: '#4b0082',
+                            areaColor:"#ffdead",
+                        }
+                    },
+                    data:[
+                        {name:'福建', selected:true}//福建为选中状态
+                    ]
+                }]
+            };
+            myChart4.setOption(option4);
+            myChart4.on('mouseover', function (params) {
+                var dataIndex = params.dataIndex;
+            });
+            myChart4.dispatch({
+                type:'showTip',
+                x:10,
+                y:10
+            })
+            var img = new Image();
+            img.src = myChart4.getDataURL();
+            document.getElementById("button_download").onclick=function(){
+                document.getElementById("download_img").href = img.src;
+            }
+        </script>
+
+        <!--散点图-->
+        <div id="myChart5" style="width: 600px;height:400px;" style="display: none"></div>
+
+        <script>
+            var myChart5 = echarts.init(document.getElementById('myChart5'));
+            var option5 = {
+                toolbox: {
+                    feature: {
+                        saveAsImage: {
+                            pixelRatio:3
+                        }
+                    }
+                },
+                xAxis: {},
+                yAxis: {},
+                series: [{
+                    symbolSize: 20,
+                    data: [
+                        [10.0, 8.04],
+                        [8.0, 6.95],
+                        [13.0, 7.58],
+                        [9.0, 8.81],
+                        [11.0, 8.33],
+                        [14.0, 9.96],
+                        [6.0, 7.24],
+                        [4.0, 4.26],
+                        [12.0, 10.84],
+                        [7.0, 4.82],
+                        [5.0, 5.68],
+                        [6.0, 4.68]
+                    ],
+                    type: 'scatter'
+                }]
+            };
+            myChart5.setOption(option5);
         </script>
 
     </div>
@@ -212,6 +443,25 @@
     $("#unitoftime li").click(function () {
         var unit_data=$(this).val();
         //console.log($unit_data);
+        if( unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7){
+            $(".zhexian").css('display','block');
+            $(".zhutu").css('display','block');
+            $("#page_select li").not(".zhexian").not(".zhutu").css('display','none');
+        }
+        if( unit_data == 22){ //设备对比 平涂
+            $(".pingtu").css('display','block');
+            $("#page_select li").not(".pingtu").css('display','none');
+        }
+        if( unit_data == 33){ // 地域分布 区域图、散点图
+            $(".quyu").css('display','block');
+            $(".sandian").css('display','block');
+            $("#page_select li").not(".quyu").not(".sandian").css('display','none');
+        }
+        if( unit_data == 55){ // 数据构成 饼图
+            $(".bingtu").css('display','block');
+            $("#page_select li").not(".bingtu").css('display','none');
+        }
+
         $.ajax({
             type:"post",
             url:"/Admin/Data/data_check",
@@ -224,4 +474,61 @@
             }
         })
     })
+
+    $(".zhexian").click(function () {
+        $("#myChart0").css('display','block');
+        $("#myChart1").css('display','none');
+        $("#myChart2").css('display','none');
+        $("#myChart3").css('display','none');
+        $("#myChart4").css('display','none');
+        $("#myChart5").css('display','none');
+    });
+
+    $(".zhutu").click(function () {
+        $("#myChart0").css('display','none');
+        $("#myChart1").css('display','block');
+        $("#myChart2").css('display','none');
+        $("#myChart3").css('display','none');
+        $("#myChart4").css('display','none');
+        $("#myChart5").css('display','none');
+    });
+
+    $(".pingtu").click(function () {
+        $("#myChart0").css('display','none');
+        $("#myChart1").css('display','none');
+        $("#myChart2").css('display','block');
+        $("#myChart3").css('display','none');
+        $("#myChart4").css('display','none');
+        $("#myChart5").css('display','none');
+    });
+
+    $(".bingtu").click(function () {
+        $("#myChart0").css('display','none');
+        $("#myChart1").css('display','none');
+        $("#myChart2").css('display','none');
+        $("#myChart3").css('display','block');
+        $("#myChart4").css('display','none');
+        $("#myChart5").css('display','none');
+    });
+
+    $(".quyu").click(function () {
+        $("#myChart0").css('display','none');
+        $("#myChart1").css('display','none');
+        $("#myChart2").css('display','none');
+        $("#myChart3").css('display','none');
+        $("#myChart4").css('display','block');
+        $("#myChart5").css('display','none');
+    });
+
+    $(".sandian").click(function () {
+        $("#myChart0").css('display','none');
+        $("#myChart1").css('display','none');
+        $("#myChart2").css('display','none');
+        $("#myChart3").css('display','none');
+        $("#myChart4").css('display','none');
+        $("#myChart5").css('display','block');
+    });
+
+
+
 </script>
