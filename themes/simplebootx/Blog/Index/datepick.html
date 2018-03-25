@@ -25,6 +25,24 @@ laydate.render({
   } 
 });
 
+
+laydate.render({
+  elem: '#datepicker1' ,
+  range: true,//指定元素
+  done: function(value){
+        $.ajax({
+            type: "post",
+            url: "/Admin/Main/index",
+            data: {
+                datepicker:value
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+            }
+        });
+  } 
+});
 </script>
 </body>
 </html>

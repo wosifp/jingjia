@@ -90,23 +90,11 @@ li {
 			</div>
 			<!--时间 end-->
 		</div>
-
-
+		<!--新增 基本关键指标 start-->
 		<div class="qi_con_1">
 			<div class="qi_bfb_100">
 				<p>关键指标</p>
 			</div>
-			<div class="qi_bfb_100">
-				<select class="qi_float_r" id="qushitu_select">
-                    <option value="0">展现</option>
-					<option value="1">消费</option>
-					<option value="2">点击</option>
-					<option value="3">CPC</option>
-					<option value="4">CTR</option>
-					<option value="5">平均排名</option>
-				</select>
-			</div>
-
 			<div class="qi_d_0">
 				<div calss="qi_d_1"style='float:left;width: 250px;height: 100px;'>
 					<p>点击</p><input>次
@@ -124,6 +112,25 @@ li {
 					<p>CPA</p><input>元
 				</div>
 			</div>
+
+		</div>
+		<!--新增 基本关键指标 end-->
+
+
+		<div class="qi_con_1">
+
+			<div class="qi_bfb_100">
+				<select class="qi_float_r" id="qushitu_select">
+                    <option value="0">展现</option>
+					<option value="1">消费</option>
+					<option value="2">点击</option>
+					<option value="3">CPC</option>
+					<option value="4">CTR</option>
+					<option value="5">平均排名</option>
+				</select>
+			</div>
+
+
 			<!--统计图1-->
             <div id="div_json" hidden="true">
                 <p id='p1'> {$json_data}</p>
@@ -169,7 +176,7 @@ li {
                             ],
             
                             borderWidth: 3
-                        }]
+                        }],
                     },
                     options: {
                         scales: {

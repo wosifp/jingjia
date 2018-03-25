@@ -6,57 +6,40 @@
 <script src="__PUBLIC__/admin/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="__PUBLIC__/admin/js/jquery.min.js"></script>
 <script src="__PUBLIC__/admin/js/style.js" type="text/javascript"></script>
-<script src="__PUBLIC__/admin/js/laydate.js"></script>
-<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate.css">
-<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate(1).css" id="LayDateSkin">
+<script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
+">
 
 
 <body>
 <div class="qi_right_1">
     <div class="qi_con_1">
         <div class="qi_float_l qi_bfb_30">
-            <p class="qi_p_2">
-                账户：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
-            </p>
-            <div id="firstpane" class="menu_list" style="display:none">
-                <p class="qi_p_1">
-                    <input id="r2" type="radio" value="1" name="gender">行业 </input>
-                    <input id="r2" type="radio" value="1" name="gender">客户</input>
-                    <input id="r2" type="radio" value="1" name="gender">账单 </input>
+                <p class="qi_p_2">
+                    账户：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
                 </p>
-                <hr>
-                <p class="qi_p_3">
-                    <span>可获取对象</span>
-                    <input type="text">
-                    <a href="javascript:" class="qi_a_1">搜索</a>
-                    <input id="r2" type="radio" value="1" name="">精确 </input>
-                </p>
-                <h3 class="menu_head">行业A</h3>
-                <div style="display: none;" class="menu_body">
-                    <a href="javascript:">客户A</a>
-                    <div style="display: none;" class="menu_body">
-                        <a href="javascript:">-- 客户A-账户A</a>
-                        <a href="javascript:">-- 客户A-账户B</a>
-                    </div>
-                    <a href="javascript:">客户B</a>
-                    <div style="display: none;" class="menu_body">
-                        <a href="javascript:">-- 客户B-账户A</a>
-                        <a href="javascript:">-- 客户B-账户B</a>
-                    </div>
-                </div>
-                <h3 class="menu_head">行业B</h3>
-                <div style="display: none;" class="menu_body">
-                    <a href="javascript:">客户A</a>
-                    <a href="javascript:">客户B</a>
-                </div>
-
-                <h3 class="menu_head">行业C</h3>
-                <div style="display:none" class="menu_body">
-                    <a href="javascript:">客户A</a>
-                    <a href="javascript:">客户B</a>
+                <div id="firstpane" class="menu_list" style="display:none">
+                    <hr>
+                    <p class="qi_p_3">
+                        <span>可获取对象</span>
+                        <input type="text">
+                        <a href="javascript:" class="qi_a_1">搜索</a>
+                        <!--<input id="r2" type="radio" value="1" name="">精确 </input>-->
+                    </p>
+                    <foreach name="trade" item="vo" key="k">
+                        <h3 class="menu_head">{$k}</h3>
+                        <div style="display: none;" class="menu_body">
+                            <foreach name="vo" item="companyname" key="kk">
+                                <a href="javascript:" >{$kk}</a>
+                                <div style="display: none;" class="menu_body">
+                                    <foreach name="companyname" item="user_login" key="kkk">
+                                        <a href="javascript:"><span class="bai_name">{$user_login.user_login}</span></a>
+                                    </foreach>
+                                </div>
+                            </foreach>
+                        </div>
+                    </foreach>
                 </div>
             </div>
-        </div>
 
         <!--设备-->
         <div class="qi_float_l qi_bfb_30">
@@ -71,13 +54,25 @@
 
         <!--时间-->
         <div class="qi_float_l qi_bfb_40">
-            时间：<input class="qi_inp_wid" onclick="laydate()">--<input class="qi_inp_wid" id="demo">
+            时间：<input class="qi_inp_wid" id="datepicker1">
             <script>
-                ;!function(){
-                    laydate({
-                        elem: '#demo'
-                    })
-                }();
+                laydate.render({
+  elem: '#datepicker1' ,
+  range: true,//指定元素
+  done: function(value){
+        $.ajax({
+            type: "post",
+            url: "/Admin/Data/keywords_check",
+            data: {
+                datepicker:value
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+            }
+        });
+  } 
+});
             </script>
         </div>
         <!--时间 end-->

@@ -146,7 +146,29 @@ function updateItem($data_param,$key_param,$value_param){
 
 	return $data_temp;
 }
+function getAccountList(){
+	$p_id = session('p_id');
+        
+    if($p_id ==1  ){ // 说明是mcc账户
+            // 查出该mcc账户下的所有子账户数据
+        $data = M("users")->where('p_id = '.session('ADMIN_ID'))->select();
+        $result=array();
+        foreach ($data as $key => $value) {
+            $result[$value['trade']][$value['companyname']][]=$value;
+        }
+       
+    }else{
+        // 子账户
+        $data = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
+        $result=array();
 
+        foreach ($data as $key => $value) {
+            $result[""][$value['companyname']][]=$value;
+        }
+    }
+    
+    return $result;
+}
 
 function test(){
 	echo "function test successfuly";
