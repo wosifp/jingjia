@@ -55,23 +55,27 @@ class MainController extends AdminbaseController {
         
         $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
 
-        
+        /* 调用该函数获取请求数据，将json字符串赋值给json_string*/
         $json_string= getAccountReport_realtime($param);
-        
+        /*对变量$json_sting进行 JSON 编码 */
         $json_data = json_decode($json_string,true);
+        /*lebal 数组存放的是日期数据*/
         $lebal = array();
+        /*result数组存放是文档中kpis【cots,】等*/
         $result = array();
         foreach ($json_data as $key1 => $value1) {
             # code...
             $lebal[] = $value1['Date'];
             foreach ($value1['KPIs'] as $key => $value) {
                 # code...
+                /*以数组中的索引为key,保存对应的数值*/
                 $result[$key][] = $value;
             }
 
         }
        // $params = array('startDate' =>'2018-02-03' ,'endDate'=>'2018-03-03' );
         //echo getAccountReport_realtime($param);
+        /*assign()将源对象json_encode()的引用给目标对象''*/
         $this->assign('lebal',json_encode($lebal));
         $this->assign('result',json_encode($result));
         $this->assign('json_data',$json_string);
