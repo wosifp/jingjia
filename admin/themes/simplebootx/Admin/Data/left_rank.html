@@ -78,15 +78,15 @@
     </div>
 
     <div class="qi_con_1">
-        <ul class="pager qi_mag_bott">时间单位：
+        <ul class="pager qi_mag_bott" id="timeunit">时间单位：
             <li><a href="javascript:">分时</a></li>
             <li><a href="javascript:">分日</a></li>
         </ul>
-        <ul class="pager qi_mag_bott">地域：
+        <ul class="pager qi_mag_bott" id="region">地域：
             <li><a href="javascript:">全部</a></li>
             <li><a href="javascript:">自定义</a></li>
         </ul>
-        <ul class="pager qi_mag_bott">关键词：
+        <ul class="pager qi_mag_bott" id="keywork_ul">关键词：
             <li><a href="javascript:">全部</a></li>
             <li><a href="javascript:">自定义</a></li>
         </ul>
@@ -104,6 +104,48 @@
 
         <!--折线图-->
         <canvas id="chart" height="400" width="600" style="margin:50px"> 你的浏览器不支持HTML5 canvas </canvas>
+        <!--时间单位：timeunit-->
+        <script type="text/javascript">
+            $('#timeunit li').click(function(event) {
+                /* Act on the event */
+                $value = $(this).text();
+                 console.log($value);
+                $.ajax({
+            type: "post",
+            url: "/Admin/Data/left_rank",
+            data: {
+                timeunit:$value
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+            }
+        });
+            });
+        </script>
+        <!--时间单位：-->
+        <!--地域：region-->
+        <!--地域：-->
+        <!--关键词：keywork_ul-->
+        <script type="text/javascript">
+            $('#keywork_ul li').click(function(event) {
+                /* Act on the event */
+                $value = $(this).text();
+                console.log($value);
+                $.ajax({
+            type: "post",
+            url: "/Admin/Data/left_rank",
+            data: {
+                keywork_ul:$value
+            },
+            dataType: "json",
+            success: function(data){
+                alert(1111111);
+            }
+        });
+            });
+        </script>
+        <!--关键词：-->
         <script type="text/javascript">
             function goChart(dataArr){
 
