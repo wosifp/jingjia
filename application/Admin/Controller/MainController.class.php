@@ -26,21 +26,7 @@ class MainController extends AdminbaseController {
     	);
 
     	// 获取数据概况
-        $p_id = session('p_id');
-        
-        if($p_id ==1  ){ // 说明是mcc账户
-            // 查出该mcc账户下的所有子账户数据
-            $data = M("users")->where('p_id = '.session('ADMIN_ID'))->select();
-            $result=array();
-            foreach ($data as $key => $value) {
-                $result[$value['trade']][$value['companyname']][]=$value;
-            }
-            $this->assign('trade',$result);
-        }else{
-            // 子账户
-            $result = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
-            $this->assign('user',$result);
-        }
+        $this->assign('trade',getAccountList());
 
         // 获取数据概况结束
         $target = $_POST['target'] ?$_POST['target']:0;
