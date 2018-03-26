@@ -77,7 +77,7 @@ function getAccountReport_realtime($param = array("startDate"=>"2018-01-01","end
 /*返回相应服务的报告
 参数：
 $param : 数组类型，可以修改请求参数体中 某些Key对应的键值，可为空。
-$serviceName : 服务名称
+$serviceName : 服务名称(Account, Campaign , Adgroup, Keyword, Creative,NewCreative,Toolkit , DynamicCreative,DynCreativeExclusion,RealTimeData,RealTimeQueryData,RealTimePairData,ProfessionalReportId, ReportState,ReportFileUrl,BulkJob,AllChangedObjects,FileStatus,FilePath,cancelDownload,ChangedId,ChangedItemId,ChangedScale)
 */
 function getReport($serviceName='Account',$param=array()){
 	/*获取自动添加后缀的服务名字*/

@@ -138,8 +138,9 @@ class DataController extends AdminbaseController {
      */
 
     public function keywords_check(){
-        //$this->assign('trade',getAccountList());
-        $p_id = session('p_id');
+        /*获取账户列表数据并赋值*/
+        $this->assign('trade',getAccountList());
+        /*$p_id = session('p_id');
         if($p_id ==1  ){ // 说明是mcc账户
             // 查出该mcc账户下的所有子账户数据
             $data = M("users")->where('p_id = '.session('ADMIN_ID'))->select();
@@ -152,7 +153,7 @@ class DataController extends AdminbaseController {
             // 子账户
             $result = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
             $this->assign('user',$result);
-        }
+        }*/
         $target = $_POST['target'] ?$_POST['target']:0;
         if($target){
             session('username_normal',$target);
@@ -185,8 +186,8 @@ class DataController extends AdminbaseController {
      */
 
     public function top_rank(){
-        //$this->assign('trade',getAccountList());
-        $p_id = session('p_id');
+        $this->assign('trade',getAccountList());
+        /*$p_id = session('p_id');
         if($p_id ==1  ){ // 说明是mcc账户
             // 查出该mcc账户下的所有子账户数据
             $data = M("users")->where('p_id = '.session('ADMIN_ID'))->select();
@@ -199,7 +200,7 @@ class DataController extends AdminbaseController {
             // 子账户
             $result = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
             $this->assign('user',$result);
-        }
+        }*/
         $target = $_POST['target'] ?$_POST['target']:0;
         if($target){
             session('username_normal',$target);
