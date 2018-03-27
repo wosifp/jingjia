@@ -11,12 +11,8 @@ class IndexController extends HomebaseController {
 			2、获取请求数据
 			3、发送请求 */
 		/* Account, Campaign , Adgroup, Keyword, Creative,NewCreative,Toolkit , DynamicCreative,DynCreativeExclusion,RealTimeData,RealTimeQueryData,RealTimePairData,ProfessionalReportId, ReportState,ReportFileUrl,BulkJob,AllChangedObjects,FileStatus,FilePath,cancelDownload,ChangedId,ChangedItemId,ChangedScale*/
-		$param_auto=auto_completeParam('Campaign');
-		$post_data = get_postdata($param_auto['info'],$target);
-		$url = get_requestURL($param_auto['postfix']);
-		$output = send_post($url,$post_data);
-		/*echo sp_password("Dsyx1234");*/
-		echo $output;
+
+		echo getReport("Account");
 	}
 
 

@@ -29,7 +29,7 @@
         <div class="qi_con_1">
             <div class="qi_float_l qi_bfb_30">
                 <p class="qi_p_2">
-                    账户：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
+                    范围：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
                 </p>
                 <div id="firstpane" class="menu_list" style="display:none">
                     <hr>
@@ -152,6 +152,18 @@
                             });
                         });
                     });
+                }
+                if ($value1=="关键词") {
+$.each($test_data, function(index, val) {
+                    $.each(val, function(index1, val1) {
+                            $.each(val1, function(index2, val2) {
+                                 $.each(val2, function(index3, val3) {
+$("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.keyword + '</option>'); 
+                                 });
+                                 
+                            });
+                        });
+                    });  
                 }
 
 

@@ -212,6 +212,57 @@ function getAdgroupIdList(){
 	//var_dump($result);
 	return $result;
 }
+/**/
+function getKeyWordIDList($param = array()){
+	if (empty($param)) {
+		# code...
+		$all_temp = getAdgroupIdList();
+		$result = array();
+		$ids = array( );
+		$idtype = 5;
+		foreach ($all_temp as $key1 => $value1) {
+			# code...
+			foreach ($value1 as $key2 => $value2) {
+				# code...
+				foreach ($value2 as $key3 => $value3) {
+					# code...
+					$ids[] = $value3->adgroupId;
+				}
+			}
+		}
+		$param1 = array('ids' => $ids,'idType'=>$idtype,'getTemp'=>0 );
+		$keywordData = json_decode(getReport('Keyword',$param1))->body->data;
+		$param2 = array('ids' => $ids,'idType'=>$idtype,'getTemp'=>1);
+		$keywordShadowData=json_decode(getReport('Keyword',$param2))->body->data;
+		foreach ($keywordShadowData as $k => $v) {
+			# code...
+			$keywordData[] = $v;
+		}
+		foreach ($keywordData as $key => $value) {
+			# code...
+			$d1 = $all_temp;
+			foreach ($d1 as $key1 => $value1) {
+				# code...
+				$d2 = $value1;
+				foreach ($d2 as $key2 => $value2) {
+					# code...
+					$d3 =$value2;
+					foreach ($d3 as $key3 => $value3) {
+						# code...
+						if ($value->adgroupId ==$value3->adgroupId) {
+						# code...
+						$result[$key1][$key2][$value3->adgroupName][]=$value;
+						}
+					}	
+				}
+			}
+		}
+
+		return $result;
+	}else{
+
+	}
+}
 function dispatch_myjob($param_string="计划"){
 	$result = array();
 	//var_dump($param_string);
@@ -224,6 +275,10 @@ function dispatch_myjob($param_string="计划"){
 			break;
 		case '单元':
 		return getAdgroupIdList();
+			break;
+		case '关键词':
+			# code...
+		return getKeyWordIDList();
 			break;
 		default:
 			# code...
