@@ -165,6 +165,18 @@ $("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="'
                         });
                     });  
                 }
+                if ($value1=="创意") {
+$.each($test_data, function(index, val) {
+                    $.each(val, function(index1, val1) {
+                            $.each(val1, function(index2, val2) {
+                                 $.each(val2, function(index3, val3) {
+$("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.title + '</option>'); 
+                                 });
+                                 
+                            });
+                        });
+                    });  
+                }
 
 
                 $tree1 = $("#mytreeselect").treeMultiselect({
