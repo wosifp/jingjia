@@ -185,7 +185,7 @@ body{
 }
 
 
-.menu_list{width:400px; overflow: hidden; margin-top:10px; border: 1px solid #ccc; padding: 10px;}
+.menu_list{width:600px; overflow: hidden; margin-top:10px; border: 1px solid #ccc; padding: 10px;}
 .menu_head{height:35px;line-height:35px;padding-left:38px;font-size:14px;color:#525252;cursor:pointer;border:1px solid #e1e1e1;position:relative;margin:0px;font-weight:bold;background:#f1f1f1}
 .menu_list .current{background:#eee;}
 .menu_list .current2{color: #f00; text-decoration: underline;}

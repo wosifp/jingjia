@@ -81,21 +81,16 @@ class DataController extends AdminbaseController {
      * 数据查看
      */
 
-    public function data_check(){
-        $p_id = session('p_id');
-        if($p_id ==1  ){ // 说明是mcc账户
-            // 查出该mcc账户下的所有子账户数据
-            $data = M("users")->where('p_id = '.session('ADMIN_ID'))->select();
-            $result=array();
-            foreach ($data as $key => $value) {
-                $result[$value['trade']][$value['companyname']][]=$value;
-            }
-            $this->assign('trade',$result);
-        }else{
-            // 子账户
-            $result = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
-            $this->assign('user',$result);
-        }
+     function data_check(){
+        //var_dump(dispatch_myjob($_POST['pager_select']));
+        var_dump($_POST['pager_select']);
+        $param_data  = dispatch_myjob($_POST['pager_select']);
+        $this->assign('page_1',json_encode($param_data));
+
+        //$this->assign('page_1',"kkkkk");
+            /*echo gettype(getCampaignIdList());*/
+            
+       /* 
         $target = $_POST['target'] ?$_POST['target']:0;
         if($target){
             session('username_normal',$target);
@@ -128,7 +123,7 @@ class DataController extends AdminbaseController {
         //echo $unitOfTime;
         $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
 
-
+*/
         $this->display();
     }
 
@@ -139,7 +134,10 @@ class DataController extends AdminbaseController {
 
     public function keywords_check(){
         /*获取账户列表数据并赋值*/
+        
         $this->assign('trade',getAccountList());
+        
+       
         /*$p_id = session('p_id');
         if($p_id ==1  ){ // 说明是mcc账户
             // 查出该mcc账户下的所有子账户数据

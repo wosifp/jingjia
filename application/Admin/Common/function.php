@@ -169,7 +169,55 @@ function getAccountList(){
     
     return $result;
 }
+/*获取计划的名字*/
+function getCampaignIdList(){
+	$temp = json_decode(getReport('Campaign'))->body->data ;
+	$result = array( );
+	
+	
+	foreach ($temp as $key => $value) {
 
+		$result[session('username_normal')][]=$value;
+	}
+	var_dump($result);
+	return $result;
+}
+function getAdgroupIdList(){
+	$temp = getCampaignIdList() ;
+	$result = array( );
+	$ids = array( );
+	foreach ($temp as $key => $value) {
+
+		$ids[]=$value->campaignId;
+	}
+	$idtype = 3;
+	$params = array('ids' => $ids,'idType'=>$idtype );
+	$adgroupdata = json_decode(getReport('Adgroup',$params))->body->data;
+	foreach ($adgroupdata as $key1 => $value1) {
+		# code...
+		$result[session('username_normal')][]=$value;
+	}
+
+	var_dump($result);
+	return $result;
+}
+function dispatch_myjob($param_string="计划"){
+	$result = array();
+	var_dump($param_string);
+	switch ($param_string) {
+		case '计划':
+			# code...
+		return getCampaignIdList();
+			break;
+		case '单元':
+		return getAdgroupIdList();
+			break;
+		default:
+			# code...
+		return false;
+			break;
+	}
+}
 function test(){
 	echo "function test successfuly";
 }

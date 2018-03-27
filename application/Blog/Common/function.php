@@ -2,7 +2,7 @@
 
 /* 返回用户数组，包括用户名，密码，token  */
 function get_userNPT(){
-	return array('username'=>C('username'),'password'=>C('password'),'token'=>C('token'),'target'=>C('target'));
+	return array('username'=>session('username_mcc'),'password'=>session('userpwd_mcc'),'token'=>C('token'),'target'=>session('username_normal'));
 }
 function get_requestParams($ParamsName){
 	
@@ -66,12 +66,9 @@ function getAccountReport_realtime($param = array("startDate"=>"2018-01-01","end
 		$param1["unitTime"]=$param["unitTime"];
 		$resultData =json_decode(getReport("RealTimeData",$param1));
 	}else{
-		$unitTime = array("unitTime1"=>1,"unitTime3"=>3,"unitTime4"=>4,"unitTime5"=>5,"unitTime7"=>7,"unitTime8"=>8 );
-		foreach ($unitTime as $key1 => $value1) {
-			# code...
-			$param1["unitTime"]=$value1;
-			$resultData[$key1]=json_decode(getReport("RealTimeData",$param1));
-		}
+		$param1["unitTime"]=5;
+		$resultData=json_decode(getReport("RealTimeData",$param1));
+		
 	}
 	
 	return json_encode($resultData);
@@ -80,7 +77,7 @@ function getAccountReport_realtime($param = array("startDate"=>"2018-01-01","end
 /*返回相应服务的报告
 参数：
 $param : 数组类型，可以修改请求参数体中 某些Key对应的键值，可为空。
-$serviceName : 服务名称
+$serviceName : 服务名称(Account, Campaign , Adgroup, Keyword, Creative,NewCreative,Toolkit , DynamicCreative,DynCreativeExclusion,RealTimeData,RealTimeQueryData,RealTimePairData,ProfessionalReportId, ReportState,ReportFileUrl,BulkJob,AllChangedObjects,FileStatus,FilePath,cancelDownload,ChangedId,ChangedItemId,ChangedScale)
 */
 function getReport($serviceName='Account',$param=array()){
 	/*获取自动添加后缀的服务名字*/
@@ -149,7 +146,29 @@ function updateItem($data_param,$key_param,$value_param){
 
 	return $data_temp;
 }
+function getAccountList(){
+	$p_id = session('p_id');
+        
+    if($p_id ==1  ){ // 说明是mcc账户
+            // 查出该mcc账户下的所有子账户数据
+        $data = M("users")->where('p_id = '.session('ADMIN_ID'))->select();
+        $result=array();
+        foreach ($data as $key => $value) {
+            $result[$value['trade']][$value['companyname']][]=$value;
+        }
+       
+    }else{
+        // 子账户
+        $data = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
+        $result=array();
 
+        foreach ($data as $key => $value) {
+            $result[""][$value['companyname']][]=$value;
+        }
+    }
+    
+    return $result;
+}
 
 function test(){
 	echo "function test successfuly";
