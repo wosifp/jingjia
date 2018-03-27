@@ -3,10 +3,8 @@
 <!-- <script src="__PUBLIC__/js/jqueryh/jquery-3.3.1.min.js"></script> -->
 <script src="__PUBLIC__/js/jquery.js"></script>
 <link href="__PUBLIC__/admin/css/bootstrap.min.css" rel="stylesheet">
-<link href="__PUBLIC__/admin/css/style.css" rel="stylesheet" type="text/css"/>
+<link href="__PUBLIC__/admin/css/style.css" rel="stylesheet" type="text/css" />
 <script src="__PUBLIC__/admin/js/bootstrap.min.js" type="text/javascript"></script>
-
-
 <script src="__PUBLIC__/admin/js/style.js" type="text/javascript"></script>
 <script src="__PUBLIC__/js/jquery-ui.min.js"></script>
 <!--<script src="__PUBLIC__/admin/js/laydate.js"></script>-->
@@ -19,164 +17,171 @@
 <link rel="stylesheet" href="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.min.css">
 
 <body>
-<div class="qi_right_1">
-    <div class="qi_con_1">
-        <ul class="pager" id="pager_select">
-            <li><a href="#">计划</a></li>
-            <li><a href="#">单元</a></li>
-            <li><a href="#">关键词</a></li>
-            <li><a href="#">创意</a></li>
-        </ul>
-    </div>
-    <div class="qi_con_1">
-        <div class="qi_float_l qi_bfb_30">
-            <p class="qi_p_2">
-                账户：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
-            </p>
-            <div id="firstpane" class="menu_list" style="display:none">
-                <hr>
-                
-                <select id="mytreeselect" multiple="multiple" ></select>
-                <button id="send_mytree" class="btn">确定</button>
+    <div class="qi_right_1">
+        <div class="qi_con_1">
+            <ul class="pager" id="pager_select">
+                <li><a href="#">计划</a></li>
+                <li><a href="#">单元</a></li>
+                <li><a href="#">关键词</a></li>
+                <li><a href="#">创意</a></li>
+            </ul>
+        </div>
+        <div class="qi_con_1">
+            <div class="qi_float_l qi_bfb_30">
+                <p class="qi_p_2">
+                    账户：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
+                </p>
+                <div id="firstpane" class="menu_list" style="display:none">
+                    <hr>
+                    <select id="mytreeselect" multiple="multiple"></select>
+                    <button id="send_mytree" class="btn">确定</button>
+                </div>
             </div>
-
-        </div>
-        <!--设备-->
-        <div class="qi_float_l qi_bfb_30">
-            设备：<select id="device">
-            <option value="0">全部</option>
-            <option value="2">PC</option>
-            <option value="1">移动</option>
-        </select>
-        </div>
-        <!--设备 end-->
-
-
-        <!--时间-->
-        <div class="qi_float_l qi_bfb_30">
-            时间：<input type="text" name="date_pick" id="datepicker1">
-            <script>
+            <!--设备-->
+            <div class="qi_float_l qi_bfb_30">
+                设备：
+                <select id="device">
+                    <option value="0">全部</option>
+                    <option value="2">PC</option>
+                    <option value="1">移动</option>
+                </select>
+            </div>
+            <!--设备 end-->
+            <!--时间-->
+            <div class="qi_float_l qi_bfb_30">
+                时间：
+                <input type="text" name="date_pick" id="datepicker1">
+                <script>
                 laydate.render({
-                    elem: '#datepicker1' ,
-                    range: true,//指定元素
-                    done: function(value){
+                    elem: '#datepicker1',
+                    range: true, //指定元素
+                    done: function(value) {
                         $.ajax({
                             type: "post",
                             url: "/Admin/Data/data_check",
                             data: {
-                                datepicker:value
+                                datepicker: value
                             },
                             dataType: "json",
-                            success: function(data){
+                            success: function(data) {
                                 alert(1111111);
                             }
                         });
                     }
                 });
-            </script>
+                </script>
+            </div>
+            <!--时间 end-->
+            <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
+            </div>
         </div>
-        <!--时间 end-->
-        <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
-        </div>
-    </div>
-
-    <div class="qi_con_1">
-        <ul class="pager" id="unitoftime">
-            <li id="points" value="5"><a href="#" >分日</a></li>
-            <li value="7"><a href="#" >分时</a></li>
-            <li value="4"><a href="#" >分周</a></li>
-            <li value="3"><a href="#" id="monthly">分月</a></li>
-            <li value="1"><a href="#">分季度</a></li>
-            <li value="22"><a href="#">设备对比</a></li>
-            <li value="33"><a href="#">地域分布</a></li>
-            <!--<li value="44"><a href="#">整体分布</a></li>-->
-            <li value="55"><a href="#">数据构成</a></li>
-            <!--<li value="66"><a href="#">关键词对比</a></li>-->
-            <!--<li value="77"><a href="#">质量度</a></li>-->
-        </ul>
-
-        <div class="qi_bfb_100 qi_padt_30">
-            <select class="qi_float_r">
-                <option value="volvo">消费</option>
-                <option value="saab">展现</option>
-                <option value="opel">点击</option>
-                <option value="audi">CPC</option>
-                <option value="audi">CTR</option>
-                <option value="audi">平均排名</option>
-            </select>
-            <ul class="pager" id="page_select">
-                <li style="display: none" class="zhexian"><a href="#" >折线图</a></li>
-                <li style="display: none" class="zhutu" ><a href="#" >柱状体</a></li>
-                <li style="display: none" class="pingtu"><a href="#" >平涂</a></li>
-                <li style="display: none" class="dietu" ><a href="#" >堆叠图</a></li>
-                <li style="display: none" class="bingtu"><a href="#" >饼图</a></li>
-                <li style="display: none" class="quyu" ><a href="#" >区域图</a></li>
-                <li style="display: none" class="sandian" ><a href="#" >散点图</a></li>
+        <div class="qi_con_1">
+            <ul class="pager" id="unitoftime">
+                <li id="points" value="5"><a href="#">分日</a></li>
+                <li value="7"><a href="#">分时</a></li>
+                <li value="4"><a href="#">分周</a></li>
+                <li value="3"><a href="#" id="monthly">分月</a></li>
+                <li value="1"><a href="#">分季度</a></li>
+                <li value="22"><a href="#">设备对比</a></li>
+                <li value="33"><a href="#">地域分布</a></li>
+                <!--<li value="44"><a href="#">整体分布</a></li>-->
+                <li value="55"><a href="#">数据构成</a></li>
+                <!--<li value="66"><a href="#">关键词对比</a></li>-->
+                <!--<li value="77"><a href="#">质量度</a></li>-->
             </ul>
-        </div>
-
-
-<!--计划单元关键词创意选择pager_select-->
-        <script type="text/javascript">
-            
+            <div class="qi_bfb_100 qi_padt_30">
+                <select class="qi_float_r">
+                    <option value="volvo">消费</option>
+                    <option value="saab">展现</option>
+                    <option value="opel">点击</option>
+                    <option value="audi">CPC</option>
+                    <option value="audi">CTR</option>
+                    <option value="audi">平均排名</option>
+                </select>
+                <ul class="pager" id="page_select">
+                    <li style="display: none" class="zhexian"><a href="#">折线图</a></li>
+                    <li style="display: none" class="zhutu"><a href="#">柱状体</a></li>
+                    <li style="display: none" class="pingtu"><a href="#">平涂</a></li>
+                    <li style="display: none" class="dietu"><a href="#">堆叠图</a></li>
+                    <li style="display: none" class="bingtu"><a href="#">饼图</a></li>
+                    <li style="display: none" class="quyu"><a href="#">区域图</a></li>
+                    <li style="display: none" class="sandian"><a href="#">散点图</a></li>
+                </ul>
+            </div>
+            <!--计划单元关键词创意选择pager_select-->
+            <script type="text/javascript">
             $("#pager_select a").click(function(event) {
                 /* Act on the event */
-                
+
                 $value1 = $(this).text();
                 console.log($value1);
                 $.ajax({
                     type: "post",
-                    url: "/Admin/Data/data_check",
+                    url: "/Admin/Ajax/handle_data_check",
                     data: {
-                        pager_select:$value1
+                        pager_select: $value1
                     },
+                    async: false,
                     dataType: "json",
-                    success: function(data){
-                        console.log(data);
+                    success: function(data) {
+
+                        $test_data = data.data;
+
                     }
-                });
-                $test_data =$.parseJSON('{$page_1}');
-                console.log($test_data);
-
-                $.each($test_data , function(index, val) {
-                   
-                     $.each(val, function(index1, val1) {
-                     $("#mytreeselect ").append('<option value='+val1.campaignId+' data-section="'+index+'">'+val1.campaignName+'</option>');
-
-                     });
-                     
                 });
                 $("#mytreeselect").empty();
                 $("#firstpane div").empty();
                 $("#firstpane div").remove();
-                $tree1 = $("#mytreeselect").treeMultiselect({ 
+                // $test_data =$.parseJSON('{$page_1}');
+                console.log($test_data);
+                if ($value1 == "计划") {
+                    $.each($test_data, function(index, val) {
+                        $.each(val, function(index1, val1) {
+                            $("#mytreeselect ").append('<option value=' + val1.campaignId + ' data-section="' + index + '">' + val1.campaignName + '</option>');
+                        });
+                    });
+                }
+                if ($value1 == "单元") {
+                    $.each($test_data, function(index, val) {
+
+                        $.each(val, function(index1, val1) {
+            
+                            $.each(val1, function(index2, val2) {
+                                 /* iterate through array or object */
+                                 $("#mytreeselect ").append('<option value=' + val2.adgroupId + ' data-section="' + index+'/'+index1 + '">' + val2.adgroupName + '</option>');
+                            });
+                        });
+                    });
+                }
+
+
+                $tree1 = $("#mytreeselect").treeMultiselect({
                     allowBatchSelection: true,
                     enableSelectAll: true,
                     searchable: true,
                     sortable: true,
-                    startCollapsed: true ,
-                onChange: function(text, value, initialIndex, section) {
-                    $temp = text;
-                }
+                    startCollapsed: true,
+                    onChange: function(text, value, initialIndex, section) {
+                        $temp = text;
+                    }
                 });
-                
-                
-            });
-$("#send_mytree").click(function() {
-                        console.log($temp);
-                    });
-        </script>
-<!--计划单元关键词创意选择 end-->
-        <!--折线图-->
-        <div id="myChart0" style="width: 600px;height:400px;display: block;" ></div>
 
-        <script>
+
+            });
+            $("#send_mytree").click(function() {
+                console.log($temp);
+            });
+            </script>
+            <!--计划单元关键词创意选择 end-->
+            <!--折线图-->
+            <div id="myChart0" style="width: 600px;height:400px;display: block;"></div>
+            <script>
             var myChart0 = echarts.init(document.getElementById('myChart0'));
             var option0 = {
                 toolbox: {
                     feature: {
                         saveAsImage: {
-                            pixelRatio:3
+                            pixelRatio: 3
                         }
                     }
                 },
@@ -194,18 +199,16 @@ $("#send_mytree").click(function() {
                 }]
             };
             myChart0.setOption(option0);
-        </script>
-
-        <!--柱状图-->
-        <div id="myChart1" style="width: 600px;height:400px;display: none;"></div>
-
-        <script>
+            </script>
+            <!--柱状图-->
+            <div id="myChart1" style="width: 600px;height:400px;display: none;"></div>
+            <script>
             var myChart1 = echarts.init(document.getElementById('myChart1'));
             var option1 = {
                 toolbox: {
                     feature: {
                         saveAsImage: {
-                            pixelRatio:3
+                            pixelRatio: 3
                         }
                     }
                 },
@@ -223,19 +226,16 @@ $("#send_mytree").click(function() {
                 }]
             };
             myChart1.setOption(option1);
-        </script>
-
-
-        <!--平涂-->
-        <div id="myChart2" style="width: 600px;height:400px;display: none;"></div>
-
-        <script>
+            </script>
+            <!--平涂-->
+            <div id="myChart2" style="width: 600px;height:400px;display: none;"></div>
+            <script>
             var myChart2 = echarts.init(document.getElementById('myChart2'));
             var option2 = {
                 toolbox: {
                     feature: {
                         saveAsImage: {
-                            pixelRatio:3
+                            pixelRatio: 3
                         }
                     }
                 },
@@ -253,74 +253,77 @@ $("#send_mytree").click(function() {
                 }]
             };
             myChart2.setOption(option2);
-        </script>
-
-        <!--饼图-->
-        <div id="myChart3" style="width: 600px;height:400px;display: none;"></div>
-
-        <script>
+            </script>
+            <!--饼图-->
+            <div id="myChart3" style="width: 600px;height:400px;display: none;"></div>
+            <script>
             var myChart3 = echarts.init(document.getElementById('myChart3'));
             var option3 = {
                 toolbox: {
                     feature: {
                         saveAsImage: {
-                            pixelRatio:3
+                            pixelRatio: 3
                         }
                     }
                 },
-                title : {
+                title: {
                     text: '某站点用户访问来源',
                     subtext: '纯属虚构',
-                    x:'center'
+                    x: 'center'
                 },
-                tooltip : {
+                tooltip: {
                     trigger: 'item',
                     formatter: "{a} <br/>{b} : {c} ({d}%)"
                 },
                 legend: {
                     orient: 'vertical',
                     left: 'left',
-                    data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
                 },
-                series : [
-                    {
-                        name: '访问来源',
-                        type: 'pie',
-                        radius : '55%',
-                        center: ['50%', '60%'],
-                        data:[
-                            {value:335, name:'直接访问'},
-                            {value:310, name:'邮件营销'},
-                            {value:234, name:'联盟广告'},
-                            {value:135, name:'视频广告'},
-                            {value:1548, name:'搜索引擎'}
-                        ],
-                        itemStyle: {
-                            emphasis: {
-                                shadowBlur: 10,
-                                shadowOffsetX: 0,
-                                shadowColor: 'rgba(0, 0, 0, 0.5)'
-                            }
+                series: [{
+                    name: '访问来源',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    data: [{
+                        value: 335,
+                        name: '直接访问'
+                    }, {
+                        value: 310,
+                        name: '邮件营销'
+                    }, {
+                        value: 234,
+                        name: '联盟广告'
+                    }, {
+                        value: 135,
+                        name: '视频广告'
+                    }, {
+                        value: 1548,
+                        name: '搜索引擎'
+                    }],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
                         }
                     }
-                ]
+                }]
             };
             myChart3.setOption(option3);
-        </script>
-
-        <!--区域图-->
-        <div id="myChart4" style="width: 600px;height:400px;display: none;"></div>
-
-        <script>
+            </script>
+            <!--区域图-->
+            <div id="myChart4" style="width: 600px;height:400px;display: none;"></div>
+            <script>
             var myChart4 = echarts.init(document.getElementById('myChart4'));
             myChart4.showLoading();
             myChart4.hideLoading();
             var option4 = {
-                title:[{
-                    color:'#033',
-                    text:"ditu ",
-                    textStyle:{
-                        fontWeight:'bold',
+                title: [{
+                    color: '#033',
+                    text: "ditu ",
+                    textStyle: {
+                        fontWeight: 'bold',
                     }
                 }],
                 toolbox: {
@@ -329,23 +332,25 @@ $("#send_mytree").click(function() {
                     left: 'right',
                     top: 'center',
                     feature: {
-                        dataView: {readOnly: false},
+                        dataView: {
+                            readOnly: false
+                        },
                         restore: {},
                         saveAsImage: {
-                            pixelRatio:4,
-                            backgroundColor:'#fff'
+                            pixelRatio: 4,
+                            backgroundColor: '#fff'
 
                         }
                     }
                 },
-                legend:[{
-                    type:'plain',
-                    left:'auto',
-                    top:'auto',
-                    orient:'vertical',
-                    formatter:"ddddddd",
-                    tooltip:{
-                        show:true
+                legend: [{
+                    type: 'plain',
+                    left: 'auto',
+                    top: 'auto',
+                    orient: 'vertical',
+                    formatter: "ddddddd",
+                    tooltip: {
+                        show: true
                     },
                     data: [{
                         name: '系列1',
@@ -356,26 +361,33 @@ $("#send_mytree").click(function() {
                             color: 'red'
                         }
                     }],
-                    icon:'rect'
+                    icon: 'rect'
                 }],
                 tooltip: {
                     // show: false, //不显示提示标签
-                    formatter: '{b}', /*提示标签格式*/
-                    backgroundColor:"#ff7f50",//提示标签背景颜色
-                    textStyle:{color:"#fff"} //提示标签字体颜色
+                    formatter: '{b}',
+                    /*提示标签格式*/
+                    backgroundColor: "#ff7f50", //提示标签背景颜色
+                    textStyle: {
+                        color: "#fff"
+                    } //提示标签字体颜色
                 },
                 series: [{
                     type: 'map',
                     mapType: 'china',
                     label: {
                         normal: {
-                            show: true,//显示省份标签
-                            textStyle:{color:"#c71585"}//省份标签字体颜色
+                            show: true, //显示省份标签
+                            textStyle: {
+                                color: "#c71585"
+                            } //省份标签字体颜色
                         },
                         emphasis: {
                             //对应的鼠标悬浮效果
                             show: true,
-                            textStyle:{color:"#800080"}
+                            textStyle: {
+                                color: "#800080"
+                            }
                         }
                     },
                     toolbox: {
@@ -392,47 +404,47 @@ $("#send_mytree").click(function() {
                     },
                     itemStyle: {
                         normal: {
-                            borderWidth: .5,//区域边框宽度
-                            borderColor: '#009fe8',//区域边框颜色
-                            areaColor:"#ffefd5",//区域颜色
+                            borderWidth: .5, //区域边框宽度
+                            borderColor: '#009fe8', //区域边框颜色
+                            areaColor: "#ffefd5", //区域颜色
                         },
                         emphasis: {
                             borderWidth: .5,
                             borderColor: '#4b0082',
-                            areaColor:"#ffdead",
+                            areaColor: "#ffdead",
                         }
                     },
-                    data:[
-                        {name:'福建', selected:true}//福建为选中状态
+                    data: [{
+                            name: '福建',
+                            selected: true
+                        } //福建为选中状态
                     ]
                 }]
             };
             myChart4.setOption(option4);
-            myChart4.on('mouseover', function (params) {
+            myChart4.on('mouseover', function(params) {
                 var dataIndex = params.dataIndex;
             });
             myChart4.dispatch({
-                type:'showTip',
-                x:10,
-                y:10
+                type: 'showTip',
+                x: 10,
+                y: 10
             })
             var img = new Image();
             img.src = myChart4.getDataURL();
-            document.getElementById("button_download").onclick=function(){
+            document.getElementById("button_download").onclick = function() {
                 document.getElementById("download_img").href = img.src;
             }
-        </script>
-
-        <!--散点图-->
-        <div id="myChart5" style="width: 600px;height:400px;display: none;"></div>
-
-        <script>
+            </script>
+            <!--散点图-->
+            <div id="myChart5" style="width: 600px;height:400px;display: none;"></div>
+            <script>
             var myChart5 = echarts.init(document.getElementById('myChart5'));
             var option5 = {
                 toolbox: {
                     feature: {
                         saveAsImage: {
-                            pixelRatio:3
+                            pixelRatio: 3
                         }
                     }
                 },
@@ -458,165 +470,158 @@ $("#send_mytree").click(function() {
                 }]
             };
             myChart5.setOption(option5);
-        </script>
-
+            </script>
+        </div>
     </div>
-
-
-</div>
-
 </body>
+
 </html>
-
 <script>
-    $(".bai_name").click(function () {
-        var target = $(this).text();
-        $("#zhanghu").html(target);
-        $("#firstpane").css('display','none');
-        $("#zhanghu").css('color','red');
-        $.ajax({
-            type: "post",
-            url: "/Admin/Data/data_check",
-            data: {
-                target:target
-            },
-            dataType: "json",
-            success: function(data){
-                alert(1111111);
-                // window.location = "/Admin/Data/data_check";
-            }
-        });
+$(".bai_name").click(function() {
+    var target = $(this).text();
+    $("#zhanghu").html(target);
+    $("#firstpane").css('display', 'none');
+    $("#zhanghu").css('color', 'red');
+    $.ajax({
+        type: "post",
+        url: "/Admin/Data/data_check",
+        data: {
+            target: target
+        },
+        dataType: "json",
+        success: function(data) {
+            alert(1111111);
+            // window.location = "/Admin/Data/data_check";
+        }
+    });
+})
+$("#device").change(function() {
+    var device = $('#device :selected').val();
+    $.ajax({
+        type: "post",
+        url: "/Admin/Data/data_check",
+        data: {
+            device: device
+        },
+        dataType: "json",
+        success: function(data) {
+            alert(1111111);
+            // window.location = "/Admin/Data/data_check";
+        }
+    });
+})
+
+$("#unitoftime li").click(function() {
+    var unit_data = $(this).val();
+    //console.log($unit_data);
+    if (unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7) {
+        $(".zhexian").css('display', 'block');
+        $(".zhutu").css('display', 'block');
+        $("#page_select li").not(".zhexian").not(".zhutu").css('display', 'none');
+        $("#myChart0").css('display', 'block');
+        $("#myChart1").css('display', 'none');
+        $("#myChart2").css('display', 'none');
+        $("#myChart3").css('display', 'none');
+        $("#myChart4").css('display', 'none');
+        $("#myChart5").css('display', 'none');
+    }
+    if (unit_data == 22) { //设备对比 平涂
+        $(".pingtu").css('display', 'block');
+        $("#page_select li").not(".pingtu").css('display', 'none');
+        $("#myChart0").css('display', 'none');
+        $("#myChart1").css('display', 'none');
+        $("#myChart2").css('display', 'block');
+        $("#myChart3").css('display', 'none');
+        $("#myChart4").css('display', 'none');
+        $("#myChart5").css('display', 'none');
+    }
+    if (unit_data == 33) { // 地域分布 区域图、散点图
+        $(".quyu").css('display', 'block');
+        $(".sandian").css('display', 'block');
+        $("#page_select li").not(".quyu").not(".sandian").css('display', 'none');
+        $("#myChart0").css('display', 'none');
+        $("#myChart1").css('display', 'none');
+        $("#myChart2").css('display', 'none');
+        $("#myChart3").css('display', 'none');
+        $("#myChart4").css('display', 'block');
+        $("#myChart5").css('display', 'none');
+
+    }
+    if (unit_data == 55) { // 数据构成 饼图
+        $(".bingtu").css('display', 'block');
+        $("#page_select li").not(".bingtu").css('display', 'none');
+        $("#myChart0").css('display', 'none');
+        $("#myChart1").css('display', 'none');
+        $("#myChart2").css('display', 'none');
+        $("#myChart3").css('display', 'block');
+        $("#myChart4").css('display', 'none');
+        $("#myChart5").css('display', 'none');
+    }
+
+    $.ajax({
+        type: "post",
+        url: "/Admin/Data/data_check",
+        data: {
+            unit_data: unit_data
+        },
+        dataType: "json",
+        success: function(data) {
+            alert(111111);
+        }
     })
-    $("#device").change(function () {
-        var device = $('#device :selected').val();
-        $.ajax({
-            type: "post",
-            url: "/Admin/Data/data_check",
-            data: {
-                device:device
-            },
-            dataType: "json",
-            success: function(data){
-                alert(1111111);
-                // window.location = "/Admin/Data/data_check";
-            }
-        });
-    })
+})
 
-    $("#unitoftime li").click(function () {
-        var unit_data=$(this).val();
-        //console.log($unit_data);
-        if( unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7){
-            $(".zhexian").css('display','block');
-            $(".zhutu").css('display','block');
-            $("#page_select li").not(".zhexian").not(".zhutu").css('display','none');
-            $("#myChart0").css('display','block');
-            $("#myChart1").css('display','none');
-            $("#myChart2").css('display','none');
-            $("#myChart3").css('display','none');
-            $("#myChart4").css('display','none');
-            $("#myChart5").css('display','none');
-        }
-        if( unit_data == 22){ //设备对比 平涂
-            $(".pingtu").css('display','block');
-            $("#page_select li").not(".pingtu").css('display','none');
-            $("#myChart0").css('display','none');
-            $("#myChart1").css('display','none');
-            $("#myChart2").css('display','block');
-            $("#myChart3").css('display','none');
-            $("#myChart4").css('display','none');
-            $("#myChart5").css('display','none');
-        }
-        if( unit_data == 33){ // 地域分布 区域图、散点图
-            $(".quyu").css('display','block');
-            $(".sandian").css('display','block');
-            $("#page_select li").not(".quyu").not(".sandian").css('display','none');
-            $("#myChart0").css('display','none');
-            $("#myChart1").css('display','none');
-            $("#myChart2").css('display','none');
-            $("#myChart3").css('display','none');
-            $("#myChart4").css('display','block');
-            $("#myChart5").css('display','none');
+$(".zhexian").click(function() {
+    $("#myChart0").css('display', 'block');
+    $("#myChart1").css('display', 'none');
+    $("#myChart2").css('display', 'none');
+    $("#myChart3").css('display', 'none');
+    $("#myChart4").css('display', 'none');
+    $("#myChart5").css('display', 'none');
+});
 
-        }
-        if( unit_data == 55){ // 数据构成 饼图
-            $(".bingtu").css('display','block');
-            $("#page_select li").not(".bingtu").css('display','none');
-            $("#myChart0").css('display','none');
-            $("#myChart1").css('display','none');
-            $("#myChart2").css('display','none');
-            $("#myChart3").css('display','block');
-            $("#myChart4").css('display','none');
-            $("#myChart5").css('display','none');
-        }
+$(".zhutu").click(function() {
+    $("#myChart0").css('display', 'none');
+    $("#myChart1").css('display', 'block');
+    $("#myChart2").css('display', 'none');
+    $("#myChart3").css('display', 'none');
+    $("#myChart4").css('display', 'none');
+    $("#myChart5").css('display', 'none');
+});
 
-        $.ajax({
-            type:"post",
-            url:"/Admin/Data/data_check",
-            data:{
-                unit_data:unit_data
-            },
-            dataType:"json",
-            success:function (data) {
-                alert(111111);
-            }
-        })
-    })
+$(".pingtu").click(function() {
+    $("#myChart0").css('display', 'none');
+    $("#myChart1").css('display', 'none');
+    $("#myChart2").css('display', 'block');
+    $("#myChart3").css('display', 'none');
+    $("#myChart4").css('display', 'none');
+    $("#myChart5").css('display', 'none');
+});
 
-    $(".zhexian").click(function () {
-        $("#myChart0").css('display','block');
-        $("#myChart1").css('display','none');
-        $("#myChart2").css('display','none');
-        $("#myChart3").css('display','none');
-        $("#myChart4").css('display','none');
-        $("#myChart5").css('display','none');
-    });
+$(".bingtu").click(function() {
+    $("#myChart0").css('display', 'none');
+    $("#myChart1").css('display', 'none');
+    $("#myChart2").css('display', 'none');
+    $("#myChart3").css('display', 'block');
+    $("#myChart4").css('display', 'none');
+    $("#myChart5").css('display', 'none');
+});
 
-    $(".zhutu").click(function () {
-        $("#myChart0").css('display','none');
-        $("#myChart1").css('display','block');
-        $("#myChart2").css('display','none');
-        $("#myChart3").css('display','none');
-        $("#myChart4").css('display','none');
-        $("#myChart5").css('display','none');
-    });
+$(".quyu").click(function() {
+    $("#myChart0").css('display', 'none');
+    $("#myChart1").css('display', 'none');
+    $("#myChart2").css('display', 'none');
+    $("#myChart3").css('display', 'none');
+    $("#myChart4").css('display', 'block');
+    $("#myChart5").css('display', 'none');
+});
 
-    $(".pingtu").click(function () {
-        $("#myChart0").css('display','none');
-        $("#myChart1").css('display','none');
-        $("#myChart2").css('display','block');
-        $("#myChart3").css('display','none');
-        $("#myChart4").css('display','none');
-        $("#myChart5").css('display','none');
-    });
-
-    $(".bingtu").click(function () {
-        $("#myChart0").css('display','none');
-        $("#myChart1").css('display','none');
-        $("#myChart2").css('display','none');
-        $("#myChart3").css('display','block');
-        $("#myChart4").css('display','none');
-        $("#myChart5").css('display','none');
-    });
-
-    $(".quyu").click(function () {
-        $("#myChart0").css('display','none');
-        $("#myChart1").css('display','none');
-        $("#myChart2").css('display','none');
-        $("#myChart3").css('display','none');
-        $("#myChart4").css('display','block');
-        $("#myChart5").css('display','none');
-    });
-
-    $(".sandian").click(function () {
-        $("#myChart0").css('display','none');
-        $("#myChart1").css('display','none');
-        $("#myChart2").css('display','none');
-        $("#myChart3").css('display','none');
-        $("#myChart4").css('display','none');
-        $("#myChart5").css('display','block');
-    });
-
-
-
+$(".sandian").click(function() {
+    $("#myChart0").css('display', 'none');
+    $("#myChart1").css('display', 'none');
+    $("#myChart2").css('display', 'none');
+    $("#myChart3").css('display', 'none');
+    $("#myChart4").css('display', 'none');
+    $("#myChart5").css('display', 'block');
+});
 </script>

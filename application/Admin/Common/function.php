@@ -100,7 +100,7 @@ function getReport($serviceName='Account',$param=array()){
 		$post_data_temp = updateItem($post_data_temp,$key,$value);
 		}
 	}
-	
+	//var_dump($post_data_temp);
 /*将修改好的消息体 encode成json格式*/
 	$post_data = json_encode($post_data_temp);
 	//echo $post_data;
@@ -179,11 +179,12 @@ function getCampaignIdList(){
 
 		$result[session('username_normal')][]=$value;
 	}
-	var_dump($result);
+	//var_dump($result);
 	return $result;
 }
 function getAdgroupIdList(){
-	$temp = getCampaignIdList() ;
+	$temp = json_decode(getReport('Campaign'))->body->data ;
+	
 	$result = array( );
 	$ids = array( );
 	foreach ($temp as $key => $value) {
@@ -192,18 +193,30 @@ function getAdgroupIdList(){
 	}
 	$idtype = 3;
 	$params = array('ids' => $ids,'idType'=>$idtype );
+
 	$adgroupdata = json_decode(getReport('Adgroup',$params))->body->data;
+	
+	//var_dump($adgroupdata);
 	foreach ($adgroupdata as $key1 => $value1) {
 		# code...
-		$result[session('username_normal')][]=$value;
+		$tt = $temp;
+		foreach ($tt as $key2 => $value2) {
+			if ($value2->campaignId == $value1->campaignId) {
+				$result[session('username_normal')][$value2->campaignName][]=$value1;
+			}
+			
+		}
+		
 	}
-
-	var_dump($result);
+	
+	//var_dump($result);
 	return $result;
 }
 function dispatch_myjob($param_string="计划"){
 	$result = array();
-	var_dump($param_string);
+	//var_dump($param_string);
+	/*echo "dispatch_myjob";
+	echo $param_string;*/
 	switch ($param_string) {
 		case '计划':
 			# code...

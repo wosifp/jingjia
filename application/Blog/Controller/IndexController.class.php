@@ -21,7 +21,13 @@ class IndexController extends HomebaseController {
 
 
 
-
+	function testajax(){
+		$this->display();
+	}
+	function handleajax(){
+		 $dd = array('s' => "ddtt", );
+		$this->ajaxReturn($dd);
+	}
 	function jquery(){
 		$this->display();
 	}

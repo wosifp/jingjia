@@ -5,7 +5,12 @@
 namespace Admin\Controller;
 
 use Common\Controller\AdminbaseController;
-
+// 指定允许其他域名访问  
+header('Access-Control-Allow-Origin:*');  
+// 响应类型  
+header('Access-Control-Allow-Methods:*');  
+// 响应头设置  
+header('Access-Control-Allow-Headers:Origin, X-Requested-With, Content-Type, Accept,x-requested-with,content-type');   
 class DataController extends AdminbaseController {
 	
 	public function _initialize() {
@@ -17,6 +22,9 @@ class DataController extends AdminbaseController {
     /**
      * 后台框架首页
      */
+   public function index(){
+
+    }
 //    public function index() {
 //        $this->load_menu_lang();
 //
@@ -80,15 +88,7 @@ class DataController extends AdminbaseController {
     /**
      * 数据查看
      */
-
-     function data_check(){
-        //var_dump(dispatch_myjob($_POST['pager_select']));
-        var_dump($_POST['pager_select']);
-        $param_data  = dispatch_myjob($_POST['pager_select']);
-        $this->assign('page_1',json_encode($param_data));
-
-        //$this->assign('page_1',"kkkkk");
-            /*echo gettype(getCampaignIdList());*/
+   public  function data_check(){
             
        /* 
         $target = $_POST['target'] ?$_POST['target']:0;
@@ -134,7 +134,10 @@ class DataController extends AdminbaseController {
 
     public function keywords_check(){
         /*获取账户列表数据并赋值*/
-        
+        var_dump($_POST['device']);
+        if($_POST['device']){
+            $this->ajaxReturn("dxxxxxx");
+        }
         $this->assign('trade',getAccountList());
         
        

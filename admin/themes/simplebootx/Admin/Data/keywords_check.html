@@ -369,13 +369,13 @@
         var device = $('#device :selected').val();
         $.ajax({
             type: "post",
-            url: "/Admin/Data/keywords_check",
+            url: "__CONTROLLER__/keywords_check",
             data: {
                 device:device
             },
             dataType: "json",
             success: function(data){
-                alert(1111111);
+                alert(data);
                 // window.location = "/Admin/Data/data_check";
             }
         });

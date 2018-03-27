@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>test</title>
+    <script src="__PUBLIC__/js/jquery.js"></script>
+    <script src="__PUBLIC__/js/echarts/echarts.js"></script>
+    
+</head>
+<body>
+   <div id="myajax" ></div>
+
+    <script type="text/javascript">
+    	
+    	$.ajax({
+            url:"__CONTROLLER__/handleajax",//这里指向的就不再是页面了，而是一个方法。
+            data:{},
+            type:"POST",
+            dataType:"JSON",
+            success: function(data){
+                //alert(data[0].code);//这里要用索引，使用eq读取不出来数据。
+                $("#myajax").append(data.s);
+                console.log(data);
+            }
+        })
+    </script>
+
+</script>
+</body>
+</html>
