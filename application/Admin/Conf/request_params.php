@@ -85,8 +85,8 @@ getTemp 为 0 查询到的是 A, getTemp 为 1 查询到的是 A’.  	*/
 	/*7、--------------------------------------------------------------------------------------- */
 	'ToolkitPostfix'=>'/ToolkitService/getOperationRecord',
 	'ToolkitInfo'=>array(
-	'startDate'=>'2018-01-01',
-	'endDate'=>'2018-01-30',
+	'startDate'=>'2018-03-05',
+	'endDate'=>'2018-03-29',
 	'optTypes'=>[],
 	'optLevel'=>3,
 	'optContents'=>[]
@@ -211,7 +211,7 @@ app 下载报告 / 推广电话报告，不支
 	'ProfessionalReportIdInfo'=>array(
 	'reportRequestType'=>[
 	'performanceData'=>['cost','cpc','click','impression','ctr','cpm',/* 'position', */'conversion','phoneConversion','bridgeConversion'],
-	'startDate'=>'2018-01-02',
+	'startDate'=>'2018-01-27',
 	'endDate'=>'2018-02-02',
 	/* 选填；默认为 false 取值范围： true：只获取 id false：既获取 id 也获取字面  */
 	'idOnly'=>false,
@@ -241,12 +241,12 @@ app 下载报告 / 推广电话报告，不支
 	/* 查询报告当前的生成状态。请求中提供报告 ID ，返回中带有当前报告 ID 的处理状态。 8c36bcbbd4ff403b385b5c50cd32bd6e  */
 	'ReportStatePostfix'=> '/ReportService/getReportState',
 	'ReportStateInfo'=>array(
-	'reportId'=>'044f66721f095e3aba76eb833dfdb148'
+	'reportId'=>'5b3c82c26aed89dacabf00edc6e32872'
 	),
 	/* 获取报告下载地址。当报告成功生成后，使用 reportId 请求，返回相应的报告下载地址 8c36bcbbd4ff403b385b5c50cd32bd6e   */
 	'ReportFileUrlPostfix'=> '/ReportService/getReportFileUrl',
 	'ReportFileUrlInfo'=>array(
-	'reportId'=>'044f66721f095e3aba76eb833dfdb148'
+	'reportId'=>'5b3c82c26aed89dacabf00edc6e32872'
 	),
 	
 	/*10、--------------------------------------------------------------------------------------- */

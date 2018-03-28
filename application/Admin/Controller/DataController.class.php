@@ -64,7 +64,7 @@ class DataController extends AdminbaseController {
      * 数据概况--暂时不用
      */
 
-    public function data_summarize(){
+   /* public function data_summarize(){
         $user_id = session(ADMIN_ID);
         if($user_id ==1 ){ // 说明是mcc账户
             // 查出该mcc账户下的所有子账户数据
@@ -82,7 +82,7 @@ class DataController extends AdminbaseController {
         }
         $this->display();
     }
-
+*/
 
 
     /**
@@ -90,7 +90,7 @@ class DataController extends AdminbaseController {
      */
    public  function data_check(){
             
-       /* 
+        
         $target = $_POST['target'] ?$_POST['target']:0;
         if($target){
             session('username_normal',$target);
@@ -123,7 +123,7 @@ class DataController extends AdminbaseController {
         //echo $unitOfTime;
         $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
 
-*/
+
         $this->display();
     }
 
@@ -138,27 +138,18 @@ class DataController extends AdminbaseController {
         if($_POST['device']){
             $this->ajaxReturn("dxxxxxx");
         }
+
+        /*获取用户列表并压到模板*/
         $this->assign('trade',getAccountList());
         
        
-        /*$p_id = session('p_id');
-        if($p_id ==1  ){ // 说明是mcc账户
-            // 查出该mcc账户下的所有子账户数据
-            $data = M("users")->where('p_id = '.session('ADMIN_ID'))->select();
-            $result=array();
-            foreach ($data as $key => $value) {
-                $result[$value['trade']][$value['companyname']][]=$value;
-            }
-            $this->assign('trade',$result);
-        }else{
-            // 子账户
-            $result = M("users")->where(array('id'=>session(ADMIN_ID)))->select();
-            $this->assign('user',$result);
-        }*/
+        /*获取要被查看的账户名字*/
         $target = $_POST['target'] ?$_POST['target']:0;
         if($target){
             session('username_normal',$target);
         }
+
+        /*获取查询时间段参数*/
         $t = time();
         $start = mktime(0,0,0,date("m",$t),date("d",$t),date("Y",$t)); // 当天0时0分
         $end = mktime(23,59,59,date("m",$t),date("d",$t),date("Y",$t)); // 当天23时59分
@@ -275,6 +266,22 @@ class DataController extends AdminbaseController {
 
     public function left_rank(){
          $this->assign('trade',getAccountList());
+        $this->display();
+    }
+    public function account_check(){
+        $this->assign('trade',getAccountList());
+        $this->display();
+    }
+    public function trade_check(){
+        $this->assign('trade',getAccountList());
+        $this->display();
+    }
+    public function operation_record(){
+        $result = getReport("Toolkit");
+        echo $result;
+        $this->display();
+    }
+    public function optimize(){
         $this->display();
     }
 

@@ -12,7 +12,7 @@ class IndexController extends HomebaseController {
 			3、发送请求 */
 		/* Account, Campaign , Adgroup, Keyword, Creative,NewCreative,Toolkit , DynamicCreative,DynCreativeExclusion,RealTimeData,RealTimeQueryData,RealTimePairData,ProfessionalReportId, ReportState,ReportFileUrl,BulkJob,AllChangedObjects,FileStatus,FilePath,cancelDownload,ChangedId,ChangedItemId,ChangedScale*/
 
-		echo getReport("Account");
+		echo getReport("ReportState");
 	}
 
 
