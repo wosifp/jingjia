@@ -62,13 +62,15 @@
                     done: function(value) {
                         $.ajax({
                             type: "post",
-                            url: "/Admin/Data/data_check",
+                            url: "/Admin/Data/operation_record",
                             data: {
-                                datepicker: value
+                                datepicker: value,
+                                abcd:"sdf"
+
                             },
                             dataType: "json",
                             success: function(data) {
-                                alert(1111111);
+                                console.log(data);
                             }
                         });
                     }
@@ -165,7 +167,7 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
 
 
             });
-            
+            </script>
     </div>
 </body>
 

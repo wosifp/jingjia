@@ -8,6 +8,7 @@ class AjaxController extends HomebaseController {
 	}
 	function handleajax(){
 		 $dd = array('s' => "ddtt", );
+		 $datepick = $_POST['datepicker'];
 		$this->ajaxReturn($dd);
 	}
 	public function handle_data_check(){

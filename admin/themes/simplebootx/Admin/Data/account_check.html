@@ -51,6 +51,11 @@
                 </select>
             </div>
             <!--设备 end-->
+            <!-- 地域 -->
+            <div class="qi_float_l qi_bfb_30">
+                地域：
+            </div>
+            <!-- 地域end -->
             <!--时间-->
             <div class="qi_float_l qi_bfb_30">
                 时间：
@@ -62,7 +67,7 @@
                     done: function(value) {
                         $.ajax({
                             type: "post",
-                            url: "/Admin/Data/data_check",
+                            url: "__MODULE__/Data/data_check",
                             data: {
                                 datepicker: value
                             },
@@ -121,7 +126,7 @@
                 console.log($value1);
                 $.ajax({
                     type: "post",
-                    url: "/Admin/Ajax/handle_data_check",
+                    url: "__MODULE__/Ajax/handle_data_check",
                     data: {
                         pager_select: $value1
                     },
@@ -513,7 +518,7 @@ $(".bai_name").click(function() {
     $("#zhanghu").css('color', 'red');
     $.ajax({
         type: "post",
-        url: "/Admin/Data/data_check",
+        url: "__MODULE__/Data/data_check",
         data: {
             target: target
         },
@@ -528,7 +533,7 @@ $("#device").change(function() {
     var device = $('#device :selected').val();
     $.ajax({
         type: "post",
-        url: "/Admin/Data/data_check",
+        url: "__MODULE__/Data/data_check",
         data: {
             device: device
         },
@@ -589,7 +594,7 @@ $("#unitoftime li").click(function() {
 
     $.ajax({
         type: "post",
-        url: "/Admin/Data/data_check",
+        url: "__MODULE__/Data/data_check",
         data: {
             unit_data: unit_data
         },
