@@ -270,6 +270,21 @@ class DataController extends AdminbaseController {
     }
     public function account_check(){
         $this->assign('trade',getAccountList());
+        static $p_temp = array();
+        /*设置默认值*/
+        $p_temp['startDate']=isset($p_temp['startDate'])?$p_temp['startDate']:date('Y-m-d',strtotime('-1 day'));
+        $p_temp['endDate']=isset($p_temp['endDate'])?$p_temp['endDate']:date('Y-m-d');
+        $p_temp['Device']=isset($p_temp['Device'])?$p_temp['Device']:0;
+
+        if (IS_AJAX) {
+            # code...
+            $datepick = explode(" ",  $_POST['datepicker']);
+            $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
+            $p_temp['endDate']=$datepick[2]?$datepick[2]:$p_temp['endDate'];
+            $p_temp['Device']=$_POST['device']?$_POST['device']:$p_temp['Device'];
+           $this->ajaxReturn($p_temp);
+        }
+        
         $this->display();
     }
     public function trade_check(){

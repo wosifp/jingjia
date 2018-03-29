@@ -11,8 +11,12 @@ class IndexController extends HomebaseController {
 			2、获取请求数据
 			3、发送请求 */
 		/* Account, Campaign , Adgroup, Keyword, Creative,NewCreative,Toolkit , DynamicCreative,DynCreativeExclusion,RealTimeData,RealTimeQueryData,RealTimePairData,ProfessionalReportId, ReportState,ReportFileUrl,BulkJob,AllChangedObjects,FileStatus,FilePath,cancelDownload,ChangedId,ChangedItemId,ChangedScale*/
-
-		echo getReport("ReportState");
+		$a = array('a' => "a","b"=>"b",'d'=>'x' );
+		$c = array('c' => 'c','d'=>'d' );
+		
+		$a = array_merge($a,$c);
+		var_dump($a);
+		//echo getReport("ReportState");
 	}
 
 
