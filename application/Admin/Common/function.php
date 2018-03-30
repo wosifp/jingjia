@@ -406,7 +406,7 @@ function getCreativeIdList($param = array()){
 }
 function dispatch_kpijob($param_string="计划",$params = array()){
 	$result = array();
-	//var_dump($param_string);
+	//var_dump($params);
 	/*echo "dispatch_myjob";
 	echo $param_string;*/
 	switch ($param_string) {

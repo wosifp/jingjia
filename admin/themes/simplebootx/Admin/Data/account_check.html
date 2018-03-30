@@ -46,8 +46,8 @@
                 设备：
                 <select id="device">
                     <option value="0">全部</option>
-                    <option value="2">PC</option>
-                    <option value="1">移动</option>
+                    <option value="1">PC</option>
+                    <option value="2">移动</option>
                 </select>
             </div>
             <!--设备 end-->
@@ -59,22 +59,33 @@
             <!--时间-->
             <div class="qi_float_l qi_bfb_30">
                 时间：
-                <input type="text" name="date_pick" id="datepicker1">
+                <div>
+                    <input type="text" name="date_pick" id="datepicker1">
+                </div>
+                
                 <script>
                 laydate.render({
                     elem: '#datepicker1',
                     range: true, //指定元素
                     done: function(value) {
                         $.ajax({
-                            type: "post",
-                            url: "__MODULE__/Data/data_check",
+                            url: '__CONTROLLER__/account_check',
+                            type: 'POST',
+                            dataType: 'json',
                             data: {
-                                datepicker: value
+                                datepicker: value,
+                                pager_select:tier_selected
                             },
-                            dataType: "json",
-                            success: function(data) {
-                                alert(1111111);
-                            }
+                        })
+                        .done(function(e) {
+                            console.log("success");
+                            console.log(e);
+                        })
+                        .fail(function() {
+                            console.log("error");
+                        })
+                        .always(function() {
+                            console.log("complete");
                         });
                     }
                 });
@@ -119,16 +130,17 @@
             </div>
             <!--计划单元关键词创意选择pager_select-->
             <script type="text/javascript">
+                var tier_selected = '';
             $("#pager_select a").click(function(event) {
                 /* Act on the event */
 
-                $value1 = $(this).text();
-                console.log($value1);
+                tier_selected = $(this).text();
+                console.log(tier_selected);
                 $.ajax({
-                    url: '__CONTROLLER__/operation_record',
+                    url: '__CONTROLLER__/account_check',
                     type: 'POST',
                     dataType: 'json',
-                    data: {pager_select: $value1},
+                    data: {pager_select: tier_selected},
                 })
                 .done(function(e) {
                     console.log("success");
@@ -143,7 +155,7 @@
                     type: "post",
                     url: "__MODULE__/Ajax/handle_data_check",
                     data: {
-                        pager_select: $value1
+                        pager_select: tier_selected
                     },
                     async: false,
                     dataType: "json",
@@ -158,14 +170,14 @@
                 $("#firstpane div").remove();
                 // $test_data =$.parseJSON('{$page_1}');
                 console.log($test_data);
-                if ($value1 == "计划") {
+                if (tier_selected == "计划") {
                     $.each($test_data, function(index, val) {
                         $.each(val, function(index1, val1) {
                             $("#mytreeselect ").append('<option value=' + val1.campaignId + ' data-section="' + index + '">' + val1.campaignName + '</option>');
                         });
                     });
                 }
-                if ($value1 == "单元") {
+                if (tier_selected == "单元") {
                     $.each($test_data, function(index, val) {
 
                         $.each(val, function(index1, val1) {
@@ -177,7 +189,7 @@
                         });
                     });
                 }
-                if ($value1=="关键词") {
+                if (tier_selected=="关键词") {
 $.each($test_data, function(index, val) {
                     $.each(val, function(index1, val1) {
                             $.each(val1, function(index2, val2) {
@@ -189,7 +201,7 @@ $("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="'
                         });
                     });  
                 }
-                if ($value1=="创意") {
+                if (tier_selected=="创意") {
 $.each($test_data, function(index, val) {
                     $.each(val, function(index1, val1) {
                             $.each(val1, function(index2, val2) {
@@ -218,14 +230,18 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
             });
             $("#send_mytree").click(function() {
                 /*使用JSON.stringify($temp)方法将object转换为json字符串*/
+                console.log(typeof(jQuery.parseJSON(JSON.stringify($temp))));
                 $.ajax({
                     url: '__CONTROLLER__/account_check',
                     type: 'POST',
                     dataType: 'json',
-                    data:{statIds:JSON.stringify($temp)},
+                    data:{statIds:jQuery.parseJSON(JSON.stringify($temp)),
+                     pager_select: tier_selected
+                 },
                 })
-                .done(function() {
+                .done(function(e) {
                     console.log("success");
+                    console.log(e);
                 })
                 .fail(function() {
                     console.log("error");
@@ -562,19 +578,24 @@ $(".bai_name").click(function() {
     });
 })
 $("#device").change(function() {
-    var device = $('#device :selected').val();
+    $device = $('#device :selected').val();
     $.ajax({
-        type: "post",
-        url: "__MODULE__/Data/data_check",
-        data: {
-            device: device
-        },
-        dataType: "json",
-        success: function(data) {
-            alert(1111111);
-            // window.location = "/Admin/Data/data_check";
-        }
+        url: '__CONTROLLER__/account_check',
+        type: 'POST',
+        dataType: 'json',
+        data: {Device: $device,
+            pager_select:tier_selected},
+    }) 
+    .done(function() {
+        console.log("success");
+    })
+    .fail(function() {
+        console.log("error");
+    })
+    .always(function() {
+        console.log("complete");
     });
+    
 })
 
 $("#unitoftime li").click(function() {

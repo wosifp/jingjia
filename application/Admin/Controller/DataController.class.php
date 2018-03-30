@@ -115,12 +115,12 @@ class DataController extends AdminbaseController {
         $endDate = $endDate ? $endDate : date('Y-m-d',$end);
 
         //分时段 默认为5,分日
-        $unitOfTime = $_POST['unit_data'] ? $_POST['unit_data'] : 5;
-        if($unitOfTime){
-            session("unit_data",$unitOfTime);
-            $unitOfTime=session("unit_data");
+        $unitTime = $_POST['unit_data'] ? $_POST['unit_data'] : 5;
+        if($unitTime){
+            session("unit_data",$unitTime);
+            $unitTime=session("unit_data");
         }
-        //echo $unitOfTime;
+        //echo $unitTime;
         $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
 
 
@@ -204,14 +204,14 @@ class DataController extends AdminbaseController {
         $level_to_choose = $_POST['level_to_choose'] ? $_POST['level_to_choose'] : "计划";
         if($level_to_choose){
             session("level_to_choose",$level_to_choose);
-            $unitOfTime=session("level_to_choose");
+            $unitTime=session("level_to_choose");
         }
         //echo $level_to_choose;
         //设备选择device
         $device = $_POST['device'] ? $_POST['device'] : 0;
         if($device){
             session("device",$device);
-            $unitOfTime=session("device");
+            $unitTime=session("device");
         }
         //echo $device;
         //指标选择indexselection
@@ -275,22 +275,27 @@ class DataController extends AdminbaseController {
         $p_temp['startDate']=isset($p_temp['startDate'])?$p_temp['startDate']:date('Y-m-d',strtotime('-1 day'));
         $p_temp['endDate']=isset($p_temp['endDate'])?$p_temp['endDate']:date('Y-m-d');
         $p_temp['Device']=isset($p_temp['Device'])?$p_temp['Device']:0;
-
+        $p_temp['unitTime']=isset($p_temp['unitTime'])?$p_temp['unitTime']:5;
         if (IS_AJAX) {
             # code...
             $statIds_temp = $_POST['statIds'];
-            $p_unitTime = $_POST['unitOfTime']?$_POST['unitOfTime']:$p_temp;
+            //var_dump($_POST['statIds']);
+            foreach ($statIds_temp as $key => $value) {
+                $p_temp['statIds'][] =$value['value'];
+            }
+            //var_dump($p_temp);
+            $p_temp['unitTime'] = $_POST['unitTime']?$_POST['unitTime']:$p_temp['unitTime'];
             $p_temp['order']=$_POST['order']?$_POST['order']:$p_temp['order'];
             $datepick = explode(" ",  $_POST['datepicker']);
             $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
             $p_temp['endDate']=$datepick[2]?$datepick[2]:$p_temp['endDate'];
-            $p_temp['Device']=$_POST['device']?$_POST['device']:$p_temp['Device'];
+            $p_temp['Device']=$_POST['Device']?$_POST['Device']:$p_temp['Device'];
             
             $param_data  = dispatch_kpijob($_POST['pager_select'],$p_temp);
             
             //var_dump(json_decode($param));
 
-            
+            //var_dump(gettype($param));
            $this->ajaxReturn($param_data);
         }
         
@@ -314,7 +319,7 @@ class DataController extends AdminbaseController {
             # code...
             /*如果有需要处理的前端传来的数据，先处理数据，比如范围选择，地域代码数据，*/
              /*更新$p_temp数组*/
-            $p_unitTime = $_POST['unitOfTime']?$_POST['unitOfTime']:$p_temp;
+            $p_unitTime = $_POST['unitTime']?$_POST['unitTime']:$p_temp;
             $p_temp['order']=$_POST['order']?$_POST['order']:$p_temp['order'];
             $datepick = explode(" ",  $_POST['datepicker']);
             $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
