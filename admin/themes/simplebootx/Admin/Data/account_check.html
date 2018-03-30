@@ -125,6 +125,21 @@
                 $value1 = $(this).text();
                 console.log($value1);
                 $.ajax({
+                    url: '__CONTROLLER__/operation_record',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {pager_select: $value1},
+                })
+                .done(function(e) {
+                    console.log("success");
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                $.ajax({
                     type: "post",
                     url: "__MODULE__/Ajax/handle_data_check",
                     data: {
@@ -202,6 +217,23 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
 
             });
             $("#send_mytree").click(function() {
+                /*使用JSON.stringify($temp)方法将object转换为json字符串*/
+                $.ajax({
+                    url: '__CONTROLLER__/account_check',
+                    type: 'POST',
+                    dataType: 'json',
+                    data:{statIds:JSON.stringify($temp)},
+                })
+                .done(function() {
+                    console.log("success");
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
                 console.log($temp);
             });
             </script>

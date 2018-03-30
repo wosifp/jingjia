@@ -132,7 +132,7 @@ app 下载报告 / 推广电话报告，不支
 	'reportType'=>2,
 	/* 统计范围下的 id 集合。根据 StatRange 的不同类型填写不同 id  
 	选填，默认 NULL ，表示统计范围为全账户  staRange 为 3 时填写计划 id; staRange 为 5 时填写单元 id; staRange 为 7 时填写创意 id; staRange 为 11 时填写关键词keywordid; staRange 为 6 时填写关键词 wordid */
-	'statIds'=>array(),
+	'statIds'=>null,
 	/* 选填，默认值为 2 ；  2 ：账户范围  3 ：计划范围  5 ：单元范围  7 ：创意范围  11 ：关键词 (keywordid) 范围  6 ：关键词 (wordid) 范围  
 注意：统计范围不能细于当前的统计粒度，例如统计粒度为计划，则统计范围不能细到单元   */
 	'statRange'=>2,

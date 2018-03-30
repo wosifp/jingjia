@@ -62,7 +62,7 @@
                     done: function(value) {
                         $.ajax({
                             type: "post",
-                            url: "/Admin/Data/operation_record",
+                            url: "__CONTROLLER__/operation_record",
                             data: {
                                 datepicker: value,
                                 abcd:"sdf"
@@ -91,8 +91,24 @@
                 $value1 = $(this).text();
                 console.log($value1);
                 $.ajax({
+                    url: '__CONTROLLER__/operation_record',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {pager_select: $value1},
+                })
+                .done(function(e) {
+                    console.log("success");
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
+                $.ajax({
                     type: "post",
-                    url: "/Admin/Ajax/handle_data_check",
+                    url: "__MODULE__/Ajax/handle_data_check",
                     data: {
                         pager_select: $value1
                     },

@@ -278,11 +278,20 @@ class DataController extends AdminbaseController {
 
         if (IS_AJAX) {
             # code...
+            $statIds_temp = $_POST['statIds'];
+            $p_unitTime = $_POST['unitOfTime']?$_POST['unitOfTime']:$p_temp;
+            $p_temp['order']=$_POST['order']?$_POST['order']:$p_temp['order'];
             $datepick = explode(" ",  $_POST['datepicker']);
             $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
             $p_temp['endDate']=$datepick[2]?$datepick[2]:$p_temp['endDate'];
             $p_temp['Device']=$_POST['device']?$_POST['device']:$p_temp['Device'];
-           $this->ajaxReturn($p_temp);
+            
+            $param_data  = dispatch_kpijob($_POST['pager_select'],$p_temp);
+            
+            //var_dump(json_decode($param));
+
+            
+           $this->ajaxReturn($param_data);
         }
         
         $this->display();
@@ -303,11 +312,21 @@ class DataController extends AdminbaseController {
 
         if (IS_AJAX) {
             # code...
+            /*如果有需要处理的前端传来的数据，先处理数据，比如范围选择，地域代码数据，*/
+             /*更新$p_temp数组*/
+            $p_unitTime = $_POST['unitOfTime']?$_POST['unitOfTime']:$p_temp;
+            $p_temp['order']=$_POST['order']?$_POST['order']:$p_temp['order'];
             $datepick = explode(" ",  $_POST['datepicker']);
             $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
             $p_temp['endDate']=$datepick[2]?$datepick[2]:$p_temp['endDate'];
             $p_temp['Device']=$_POST['device']?$_POST['device']:$p_temp['Device'];
-           $this->ajaxReturn($p_temp);
+            
+            $param_data  = dispatch_kpijob($_POST['pager_select'],$p_temp);
+            
+            //var_dump(json_decode($param));
+
+            
+           $this->ajaxReturn($param_data);
         }
         
          $this->display();
