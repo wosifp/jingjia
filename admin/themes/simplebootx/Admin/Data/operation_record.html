@@ -82,6 +82,10 @@
                 </ul>
                 <!--折线图-->
             <div id="myChart0" style="width: 600px;height:400px;display: block;"></div>
+            <div id="myChart6" style="width: 600px;height:400px;display: block;">
+                
+
+            </div>
             <div><label>详情</label></div>
             <div id="jsGrid"></div>
             <script>
@@ -156,6 +160,7 @@
             myChart0.setOption(option0);
             </script>
             <!--柱状图-->
+
             <!--饼图-->
             <div id="myChart3" style="width: 600px;height:400px;display: none;"></div>
             <script>
@@ -239,6 +244,52 @@
                 }]
             };
             myChart1.setOption(option1);
+            </script>
+            <!-- 频率直方图 -->
+            <script type="text/javascript">
+              var myChart6 = echarts.init(document.getElementById('myChart6'));  
+
+
+var option6 = {
+    tooltip : {
+        trigger: 'axis',
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+    legend: {
+        data: [ '关键词修改频率直方图',]
+    },
+    grid: {
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+    },
+    xAxis:  {
+        type: 'value'
+    },
+    yAxis: {
+        type: 'category',
+        data: ['key1','key2','key3','key4']
+    },
+    series: [
+        {
+            name: '关键词修改频率直方图',
+            type: 'bar',
+            stack: '总量',
+            label: {
+                normal: {
+                    show: true,
+                    position: 'insideRight'
+                }
+            },
+            data: [292, 87, 16, 125]
+        },
+
+    ]
+};
+ myChart6.setOption(option6);
             </script>
         <div class="qi_con_1">
             
