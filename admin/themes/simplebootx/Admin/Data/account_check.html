@@ -353,7 +353,7 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
                     }
                 },
                 title: {
-                    text: '某站点用户访问来源',
+                    text: '计划构成',
                     subtext: '纯属虚构',
                     x: 'center'
                 },
@@ -364,28 +364,28 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
                 legend: {
                     orient: 'vertical',
                     left: 'left',
-                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+                    data: ['计划1', '计划2', '计划3', '计划4', '计划5']
                 },
                 series: [{
-                    name: '访问来源',
+                    name: '计划构成',
                     type: 'pie',
                     radius: '55%',
                     center: ['50%', '60%'],
                     data: [{
                         value: 335,
-                        name: '直接访问'
+                        name: '计划1'
                     }, {
                         value: 310,
-                        name: '邮件营销'
+                        name: '计划2'
                     }, {
                         value: 234,
-                        name: '联盟广告'
+                        name: '计划3'
                     }, {
                         value: 135,
-                        name: '视频广告'
+                        name: '计划4'
                     }, {
                         value: 1548,
-                        name: '搜索引擎'
+                        name: '计划5'
                     }],
                     itemStyle: {
                         emphasis: {
@@ -638,6 +638,16 @@ $("#unitoftime li").click(function() {
         $("#myChart4").css('display', 'block');
         $("#myChart5").css('display', 'none');
 
+    }
+    if (unit_data == 44) { // 数据构成 饼图
+        $(".bingtu").css('display', 'none');
+        $("#page_select li").not(".bingtu").css('display', 'none');
+        $("#myChart0").css('display', 'none');
+        $("#myChart1").css('display', 'block');
+        $("#myChart2").css('display', 'none');
+        $("#myChart3").css('display', 'none');
+        $("#myChart4").css('display', 'none');
+        $("#myChart5").css('display', 'none');
     }
     if (unit_data == 55) { // 数据构成 饼图
         $(".bingtu").css('display', 'block');
