@@ -85,8 +85,8 @@ getTemp 为 0 查询到的是 A, getTemp 为 1 查询到的是 A’.  	*/
 	/*7、--------------------------------------------------------------------------------------- */
 	'ToolkitPostfix'=>'/ToolkitService/getOperationRecord',
 	'ToolkitInfo'=>array(
-	'startDate'=>'2018-01-01',
-	'endDate'=>'2018-01-30',
+	'startDate'=>'2018-03-20',
+	'endDate'=>'2018-04-01',
 	'optTypes'=>null,
 	'optLevel'=>3,
 	'optContents'=>null

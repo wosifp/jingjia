@@ -19,38 +19,28 @@
 <link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid-theme.css" />
     
 <script type="text/javascript" src="__PUBLIC__/js/jsgrid/jsgrid.js"></script>
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid.css" />
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid-theme.css" />
+    
+<script type="text/javascript" src="__PUBLIC__/js/jsgrid/jsgrid.js"></script>
 <body>
     <div class="qi_right_1">
         <div class="qi_con_1">
-            <ul class="pager" id="pager_select">
-                <li><a href="#">账户</a></li>
-                <li><a href="#">计划</a></li>
-                <li><a href="#">单元</a></li>
-                <li><a href="#">关键词</a></li>
-                <li><a href="#">创意</a></li>
+           <ul class="pager" id="unitoftime">
+                <li id="points" value="5"><a href="#">关键词添加</a></li>
+                <li value="7"><a href="#">关键词价格</a></li>
+                <li value="4"><a href="#">匹配方式</a></li>
+                <li value="3"><a href="#" id="monthly">创意</a></li>
+                <li value="1"><a href="#">否定词添加</a></li>
+                <!-- <li value="22"><a href="#">设备对比</a></li>
+                <li value="33"><a href="#">地域分布</a></li>
+                <li value="44"><a href="#">层级分布</a></li>
+                <li value="55"><a href="#">数据构成</a></li> -->
+                <!--<li value="66"><a href="#">关键词对比</a></li>-->
+                <!--<li value="77"><a href="#">质量度</a></li>-->
             </ul>
         </div>
         <div class="qi_con_1">
-            <div class="qi_float_l qi_bfb_30">
-                <p class="qi_p_2">
-                    范围：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
-                </p>
-                <div id="firstpane" class="menu_list" style="display:none">
-                    <hr>
-                    <select id="mytreeselect" multiple="multiple"></select>
-                    <button id="send_mytree" class="btn">确定</button>
-                </div>
-            </div>
-            <!--设备-->
-            <div class="qi_float_l qi_bfb_30">
-                设备：
-                <select id="device">
-                    <option value="0">全部</option>
-                    <option value="2">PC</option>
-                    <option value="1">移动</option>
-                </select>
-            </div>
-            <!--设备 end-->
             <!--时间-->
             <div class="qi_float_l qi_bfb_30">
                 时间：
@@ -81,6 +71,175 @@
             <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
             </div>
         </div>
+        <ul class="pager" id="page_select">
+                    <li style="display: none" class="zhexian"><a href="#">折线图</a></li>
+                    <li style="display: none" class="zhutu"><a href="#">柱状体</a></li>
+                    <li style="display: none" class="pingtu"><a href="#">平涂</a></li>
+                    <li style="display: none" class="dietu"><a href="#">堆叠图</a></li>
+                    <li style="display: none" class="bingtu"><a href="#">饼图</a></li>
+                    <li style="display: none" class="quyu"><a href="#">区域图</a></li>
+                    <li style="display: none" class="sandian"><a href="#">散点图</a></li>
+                </ul>
+                <!--折线图-->
+            <div id="myChart0" style="width: 600px;height:400px;display: block;"></div>
+            <div><label>详情</label></div>
+            <div id="jsGrid"></div>
+            <script>
+    var clients = [
+        { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false }
+        
+    ];
+
+    var countries = [
+        { Name: "", Id: 0 },
+        { Name: "账户", Id: 1 },
+        { Name: "计划", Id: 2 },
+        { Name: "单元", Id: 3 },
+        { Name: "操作时间", Id: 4 },
+        { Name: "操作内容", Id: 5 },
+        { Name: "操作类型", Id: 6 },
+        { Name: "操作层级", Id: 7 },
+        { Name: "操作前内容", Id: 8 },
+        { Name: "操作后内容", Id: 9 },
+        { Name: "被操作对象名称", Id: 9 }
+
+    ];
+
+    $("#jsGrid").jsGrid({
+        width: "100%",
+        height: "400px",
+
+        //inserting: true,
+        //editing: true,
+        sorting: true,
+        paging: true,
+
+        data: clients,
+
+        fields: [
+            { name: "账户", type: "text", validate: "required" },
+            { name: "计划", type: "text", width: 50 },
+            { name: "单元", type: "text" },
+            { name: "操作时间", type: "text",  textField: "Name" },
+            { name: "操作内容", type: "text", sorting: false },
+            { name: "操作类型", type: "text", sorting: false },
+            { name: "操作层级", type: "text", sorting: false },
+            { name: "操作前内容", type: "text", sorting: false },
+            { name: "操作后内容", type: "text", sorting: false },
+            { name: "被操作对象名称", type: "text", sorting: false }
+        ]
+    });
+</script>
+            <script>
+            var myChart0 = echarts.init(document.getElementById('myChart0'));
+            var option0 = {
+                toolbox: {
+                    feature: {
+                        saveAsImage: {
+                            pixelRatio: 3
+                        }
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'line',
+                    smooth: true
+                }]
+            };
+            myChart0.setOption(option0);
+            </script>
+            <!--柱状图-->
+            <!--饼图-->
+            <div id="myChart3" style="width: 600px;height:400px;display: none;"></div>
+            <script>
+            var myChart3 = echarts.init(document.getElementById('myChart3'));
+            var option3 = {
+                toolbox: {
+                    feature: {
+                        saveAsImage: {
+                            pixelRatio: 3
+                        }
+                    }
+                },
+                title: {
+                    text: '某站点用户访问来源',
+                    subtext: '纯属虚构',
+                    x: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} ({d}%)"
+                },
+                legend: {
+                    orient: 'vertical',
+                    left: 'left',
+                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+                },
+                series: [{
+                    name: '访问来源',
+                    type: 'pie',
+                    radius: '55%',
+                    center: ['50%', '60%'],
+                    data: [{
+                        value: 335,
+                        name: '直接访问'
+                    }, {
+                        value: 310,
+                        name: '邮件营销'
+                    }, {
+                        value: 234,
+                        name: '联盟广告'
+                    }, {
+                        value: 135,
+                        name: '视频广告'
+                    }, {
+                        value: 1548,
+                        name: '搜索引擎'
+                    }],
+                    itemStyle: {
+                        emphasis: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }]
+            };
+            myChart3.setOption(option3);
+            </script>
+            <div id="myChart1" style="width: 600px;height:400px;display: none;"></div>
+            <script>
+            var myChart1 = echarts.init(document.getElementById('myChart1'));
+            var option1 = {
+                toolbox: {
+                    feature: {
+                        saveAsImage: {
+                            pixelRatio: 3
+                        }
+                    }
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'bar',
+                    smooth: true
+                }]
+            };
+            myChart1.setOption(option1);
+            </script>
         <div class="qi_con_1">
             
             <!--计划单元关键词创意选择pager_select-->
@@ -188,3 +347,118 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
 </body>
 
 </html>
+<script type="text/javascript">
+$("#unitoftime li").click(function() {
+    var unit_data = $(this).val();
+    //console.log($unit_data);
+    if (unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7) {
+        $(".zhexian").css('display', 'block');
+        $(".zhutu").css('display', 'block');
+        $("#page_select li").not(".zhexian").not(".zhutu").css('display', 'none');
+        $("#myChart0").css('display', 'block');
+        $("#myChart1").css('display', 'none');
+        $("#myChart2").css('display', 'none');
+        $("#myChart3").css('display', 'none');
+        $("#myChart4").css('display', 'none');
+        $("#myChart5").css('display', 'none');
+    }
+    if (unit_data == 22) { //设备对比 平涂
+        $(".pingtu").css('display', 'block');
+        $("#page_select li").not(".pingtu").css('display', 'none');
+        $("#myChart0").css('display', 'none');
+        $("#myChart1").css('display', 'none');
+        $("#myChart2").css('display', 'block');
+        $("#myChart3").css('display', 'none');
+        $("#myChart4").css('display', 'none');
+        $("#myChart5").css('display', 'none');
+    }
+    if (unit_data == 33) { // 地域分布 区域图、散点图
+        $(".quyu").css('display', 'block');
+        $(".sandian").css('display', 'block');
+        $("#page_select li").not(".quyu").not(".sandian").css('display', 'none');
+        $("#myChart0").css('display', 'none');
+        $("#myChart1").css('display', 'none');
+        $("#myChart2").css('display', 'none');
+        $("#myChart3").css('display', 'none');
+        $("#myChart4").css('display', 'block');
+        $("#myChart5").css('display', 'none');
+
+    }
+    if (unit_data == 55) { // 数据构成 饼图
+        $(".bingtu").css('display', 'block');
+        $("#page_select li").not(".bingtu").css('display', 'none');
+        $("#myChart0").css('display', 'none');
+        $("#myChart1").css('display', 'none');
+        $("#myChart2").css('display', 'none');
+        $("#myChart3").css('display', 'block');
+        $("#myChart4").css('display', 'none');
+        $("#myChart5").css('display', 'none');
+    }
+
+    $.ajax({
+        type: "post",
+        url: "__MODULE__/Data/data_check",
+        data: {
+            unit_data: unit_data
+        },
+        dataType: "json",
+        success: function(data) {
+            alert(111111);
+        }
+    })
+})
+
+$(".zhexian").click(function() {
+    $("#myChart0").css('display', 'block');
+    $("#myChart1").css('display', 'none');
+    $("#myChart2").css('display', 'none');
+    $("#myChart3").css('display', 'none');
+    $("#myChart4").css('display', 'none');
+    $("#myChart5").css('display', 'none');
+});
+
+$(".zhutu").click(function() {
+    $("#myChart0").css('display', 'none');
+    $("#myChart1").css('display', 'block');
+    $("#myChart2").css('display', 'none');
+    $("#myChart3").css('display', 'none');
+    $("#myChart4").css('display', 'none');
+    $("#myChart5").css('display', 'none');
+});
+
+$(".pingtu").click(function() {
+    $("#myChart0").css('display', 'none');
+    $("#myChart1").css('display', 'none');
+    $("#myChart2").css('display', 'block');
+    $("#myChart3").css('display', 'none');
+    $("#myChart4").css('display', 'none');
+    $("#myChart5").css('display', 'none');
+});
+
+$(".bingtu").click(function() {
+    $("#myChart0").css('display', 'none');
+    $("#myChart1").css('display', 'none');
+    $("#myChart2").css('display', 'none');
+    $("#myChart3").css('display', 'block');
+    $("#myChart4").css('display', 'none');
+    $("#myChart5").css('display', 'none');
+});
+
+$(".quyu").click(function() {
+    $("#myChart0").css('display', 'none');
+    $("#myChart1").css('display', 'none');
+    $("#myChart2").css('display', 'none');
+    $("#myChart3").css('display', 'none');
+    $("#myChart4").css('display', 'block');
+    $("#myChart5").css('display', 'none');
+});
+
+$(".sandian").click(function() {
+    $("#myChart0").css('display', 'none');
+    $("#myChart1").css('display', 'none');
+    $("#myChart2").css('display', 'none');
+    $("#myChart3").css('display', 'none');
+    $("#myChart4").css('display', 'none');
+    $("#myChart5").css('display', 'block');
+});
+</script>

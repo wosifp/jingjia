@@ -17,8 +17,12 @@
 <link rel="stylesheet" href="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.min.css">
 <link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid.css" />
 <link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid-theme.css" />
-    
+<link href="__PUBLIC__/js/areapicker/zyzn_1.css" type="text/css" rel="stylesheet">
+
 <script type="text/javascript" src="__PUBLIC__/js/jsgrid/jsgrid.js"></script>
+<script src="__PUBLIC__/js/areapicker/City_data.js"></script>
+<script src="__PUBLIC__/js/areapicker/areadata.js"></script>
+<script src="__PUBLIC__/js/areapicker/auto_area.js"></script>
 <body>
     <div class="qi_right_1">
         <div class="qi_con_1">
@@ -54,6 +58,7 @@
             <!-- 地域 -->
             <div class="qi_float_l qi_bfb_30">
                 地域：
+                <input type="text" class="area-duoxuan" value="" data-value="" name="area_pick" id="area_multipicker">
             </div>
             <!-- 地域end -->
             <!--时间-->
@@ -104,7 +109,7 @@
                 <li value="1"><a href="#">分季度</a></li>
                 <li value="22"><a href="#">设备对比</a></li>
                 <li value="33"><a href="#">地域分布</a></li>
-                <!--<li value="44"><a href="#">整体分布</a></li>-->
+                <li value="44"><a href="#">层级分布</a></li>
                 <li value="55"><a href="#">数据构成</a></li>
                 <!--<li value="66"><a href="#">关键词对比</a></li>-->
                 <!--<li value="77"><a href="#">质量度</a></li>-->
