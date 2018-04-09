@@ -1,5 +1,6 @@
 <?php
 return array (
+
   'ADMIN_AD_ADD_POST' => '提交添加',
   'ADMIN_AD_EDIT_POST' => '提交编辑',
   'ADMIN_AD_TOGGLE' => '广告显示切换',
@@ -55,6 +56,7 @@ return array (
   'ADMIN_ROUTE_LISTORDERS' => '路由排序',
   'ADMIN_ROUTE_OPEN' => '路由启用',
   'ADMIN_SETTING_DEFAULT' => '设置',
+  'ADMIN_SETTING_TOKEN'=>'修改token',
   'ADMIN_SETTING_PASSWORD' => '修改密码',
   'ADMIN_SETTING_PASSWORD_POST' => '提交修改',
   'ADMIN_SETTING_SITE' => '网站信息',

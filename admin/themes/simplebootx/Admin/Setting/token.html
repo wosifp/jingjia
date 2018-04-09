@@ -1,0 +1,32 @@
+<admintpl file="header" />
+</head>
+<body>
+	<div class="wrap">
+		<ul class="nav nav-tabs">
+			<li class="active"><a href="{:U('setting/password')}">{:L('ADMIN_SETTING_TOKEN')}</a></li>
+		</ul>
+		<form class="form-horizontal js-ajax-form" method="post" action="{:U('setting/token')}">
+			<fieldset>
+				<div class="control-group">
+					<label class="control-label" for="input-password">{:L('NOW_TOKEN')}</label>
+					<div class="controls">
+						<label>{$now_token}</label>
+					</div>
+				</div>
+				<div class="control-group">
+					
+					<label class="control-label" for="input-password">{:L('NEW_TOKEN')}</label>
+					<div class="controls">
+						<input type="text" class="input-xlarge" id="input-token" name="token">
+					</div>
+				</div>
+				<div class="form-actions">
+					<button type="submit" class="btn btn-primary  js-ajax-submit">{:L('SAVE')}</button>
+				</div>
+			</fieldset>
+		</form>
+
+	</div>
+	<script src="__PUBLIC__/js/common.js"></script>
+</body>
+</html>

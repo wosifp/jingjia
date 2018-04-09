@@ -85,7 +85,37 @@ class SettingController extends AdminbaseController{
 			
 		}
 	}
-	
+	//修改token
+	public function token(){
+		if (IS_POST) {
+			if(empty($_POST['token'])){
+				$this->error("token值不能为空！");
+			}
+			$user_obj = D("Common/Users");
+			$uid=sp_get_current_admin_id();
+			$admin=$user_obj->where(array("id"=>$uid))->find();
+
+			$token=I('post.token');
+			$data['token']=$token;
+			$data['id']=$uid;
+			$r=$user_obj->save($data);
+			if ($r!==false) {
+				$this->success("修改成功！");
+			} else {
+				$this->error("修改失败！");
+			}	
+		}
+		$user_obj = D("Common/Users");
+		$uid=sp_get_current_admin_id();
+		$admin=$user_obj->where(array("id"=>$uid))->find();	
+		$now_token=$admin['token'];
+		$this->assign('now_token',$now_token);
+		$this->display();
+	}
+	//
+	public function token_post(){
+
+	}
 	// 密码修改
 	public function password(){
 		$this->display();

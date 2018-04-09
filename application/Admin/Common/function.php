@@ -2,7 +2,11 @@
 
 /* 返回用户数组，包括用户名，密码，token  */
 function get_userNPT(){
-	return array('username'=>session('username_mcc'),'password'=>session('userpwd_mcc'),'token'=>C('token'),'target'=>session('username_normal'));
+	$user_obj = D("Common/Users");
+	$uid=sp_get_current_admin_id();
+	$admin=$user_obj->where(array("user_login"=>session('username_mcc')))->find();
+	$now_token=$admin['token'];
+	return array('username'=>session('username_mcc'),'password'=>session('userpwd_mcc'),'token'=>$now_token,'target'=>session('username_normal'));
 }
 function get_requestParams($ParamsName){
 	
