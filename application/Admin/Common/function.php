@@ -267,6 +267,12 @@ function getAccountList(){
 /*获取计划的名字*/
 function getCampaignIdList(){
 	$temp = json_decode(getReport('Campaign'))->body->data ;
+	if (empty($temp)) {
+		# code...
+		$params = array('mobileExtend' => 1 );
+		//var_dump($temp);
+		$temp = json_decode(getReport('Campaign',$params))->body->data;
+	}
 	$result = array( );
 	
 	
@@ -290,7 +296,7 @@ function getAdgroupIdList(){
 	$params = array('ids' => $ids,'idType'=>$idtype );
 
 	$adgroupdata = json_decode(getReport('Adgroup',$params))->body->data;
-	
+
 	//var_dump($adgroupdata);
 	foreach ($adgroupdata as $key1 => $value1) {
 		# code...

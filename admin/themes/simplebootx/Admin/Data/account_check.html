@@ -67,34 +67,6 @@
                 <div>
                     <input type="text" name="date_pick" id="datepicker1">
                 </div>
-                
-                <script>
-                laydate.render({
-                    elem: '#datepicker1',
-                    range: true, //指定元素
-                    done: function(value) {
-                        $.ajax({
-                            url: '__CONTROLLER__/account_check',
-                            type: 'POST',
-                            dataType: 'json',
-                            data: {
-                                datepicker: value,
-                                pager_select:tier_selected
-                            },
-                        })
-                        .done(function(e) {
-                            console.log("success");
-                            console.log(e);
-                        })
-                        .fail(function() {
-                            console.log("error");
-                        })
-                        .always(function() {
-                            console.log("complete");
-                        });
-                    }
-                });
-                </script>
             </div>
             <!--时间 end-->
             <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
@@ -116,8 +88,8 @@
             </ul>
             <div class="qi_bfb_100 qi_padt_30">
                 <select class="qi_float_r">
-                    <option value="volvo">消费</option>
                     <option value="saab">展现</option>
+                    <option value="volvo">消费</option>
                     <option value="opel">点击</option>
                     <option value="audi">CPC</option>
                     <option value="audi">CTR</option>
@@ -261,31 +233,7 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
             <!--计划单元关键词创意选择 end-->
             <!--折线图-->
             <div id="myChart0" style="width: 600px;height:400px;display: block;"></div>
-            <script>
-            var myChart0 = echarts.init(document.getElementById('myChart0'));
-            var option0 = {
-                toolbox: {
-                    feature: {
-                        saveAsImage: {
-                            pixelRatio: 3
-                        }
-                    }
-                },
-                xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    type: 'line',
-                    smooth: true
-                }]
-            };
-            myChart0.setOption(option0);
-            </script>
+            
             <!--柱状图-->
             <div id="myChart1" style="width: 600px;height:400px;display: none;"></div>
             <script>
@@ -560,6 +508,70 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
             <div id="jsGrid"></div>
         </div>
     </div>
+    
+                <script>
+            var myChart0 = echarts.init(document.getElementById('myChart0'));
+            var option0 = {
+                toolbox: {
+                    feature: {
+                        saveAsImage: {
+                            pixelRatio: 3
+                        }
+                    }
+                },
+                tooltip:{
+                    trigger:'item',
+                    formatter:'{a} , {b} , {c}'
+                },
+                xAxis: {
+                    type: 'category',
+                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                },
+                yAxis: {
+                    type: 'value'
+                },
+                series: [{
+                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    type: 'line',
+                    smooth: true
+                }]
+            };
+            myChart0.setOption(option0);
+            </script>
+            <script>
+                var chart_data=[];
+                laydate.render({
+                    elem: '#datepicker1',
+                    range: true, //指定元素
+                    done: function(value) {
+                        $.ajax({
+                            url: '__CONTROLLER__/account_check',
+                            type: 'POST',
+                            dataType: 'json',
+                            data: {
+                                datepicker: value,
+                                pager_select:tier_selected
+                            },
+                        })
+                        .done(function(e) {
+                            chart_data = e.data;
+                            console.log("success");
+                            console.log(typeof(e));
+                            console.log(chart_data);
+                            console.log(option0);
+                            option0.xAxis.data=chart_data.date;
+                            option0.series[0].data=chart_data.impression;
+                            myChart0.setOption(option0);
+                        })
+                        .fail(function() {
+                            console.log("error");
+                        })
+                        .always(function() {
+                            console.log("complete");
+                        });
+                    }
+                });
+                </script>
 </body>
 
 </html>

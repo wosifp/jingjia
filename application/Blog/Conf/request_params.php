@@ -8,7 +8,8 @@ return array(
 	),
 	/* 2、--------------------------------------------------------------------------------------- */
 	'CampaignPostfix'=> '/CampaignService/getCampaign',
-	'CampaignInfo'=>array("campaignIds" => array(),"campaignFields" => array("campaignName","budget","regionTarget","negativeWords","exactNegativeWords","schedule","budgetOfflineTime","showProb","pause","status","isDynamicCreative","campaignType","device","priceRatio")),
+	'CampaignInfo'=>array("campaignIds" => array(),"campaignFields" => array("campaignName","budget","regionTarget","negativeWords","exactNegativeWords","schedule","budgetOfflineTime","showProb","pause","status","isDynamicCreative","campaignType","device","priceRatio"),"mobileExtend"=>'1'),
+
 	
 	/*/3、--------------------------------------------------------------------------------------- */
 	'AdgroupPostfix'=>'/AdgroupService/getAdgroup',
@@ -85,11 +86,11 @@ getTemp 为 0 查询到的是 A, getTemp 为 1 查询到的是 A’.  	*/
 	/*7、--------------------------------------------------------------------------------------- */
 	'ToolkitPostfix'=>'/ToolkitService/getOperationRecord',
 	'ToolkitInfo'=>array(
-	'startDate'=>'2018-03-07',
+	'startDate'=>'2018-03-20',
 	'endDate'=>'2018-04-01',
-	'optTypes'=>array(),
+	'optTypes'=>null,
 	'optLevel'=>3,
-	'optContents'=>array()
+	'optContents'=>null
 	/* 具体参数参见api文档95页 */
 	),
 	
@@ -127,12 +128,12 @@ app 下载报告 / 推广电话报告，不支
 	/* 选填，默认为账户  2 ：账户粒度  3 ：计划粒度  5 ：单元粒度  7 ：创意粒度  11 ：关键词 (keywordid) 粒度  12 ：关键词 (keywordid)+ 创意粒度  6 ：关键词 (wordid) 粒度    */
 	'levelOfDetails'=>2,
 /* 	选填；  为 NULL 表示统计全部地域。  key:provid  ；  value: 地域代码数组  说明： app 下载报告 / 推广电话不支持 attributes  */
-	//'attributes'=>null,
+	'attributes'=>null,
 /* 	必填；  2 ：账户  10 ：计划  11 ：单元  14 ：关键词 (keywordid) 12 ：创意  3 ：地域  9 ：关键词 (wordid) 5 ：二级地域报告  21 ：蹊径报告  38 ：历史数据排名报告  40 ： app 下载报告  41 ：推广电话报告   */
 	'reportType'=>2,
 	/* 统计范围下的 id 集合。根据 StatRange 的不同类型填写不同 id  
 	选填，默认 NULL ，表示统计范围为全账户  staRange 为 3 时填写计划 id; staRange 为 5 时填写单元 id; staRange 为 7 时填写创意 id; staRange 为 11 时填写关键词keywordid; staRange 为 6 时填写关键词 wordid */
-	'statIds'=>array(),
+	'statIds'=>null,
 	/* 选填，默认值为 2 ；  2 ：账户范围  3 ：计划范围  5 ：单元范围  7 ：创意范围  11 ：关键词 (keywordid) 范围  6 ：关键词 (wordid) 范围  
 注意：统计范围不能细于当前的统计粒度，例如统计粒度为计划，则统计范围不能细到单元   */
 	'statRange'=>2,
@@ -142,7 +143,7 @@ app 下载报告 / 推广电话报告，不支
 告、当物料量较大时，建议按计划或单元分批获取，一条对应三条返回值   */
 	'number'=>100,
 	/* 选填，默认值为 0 取值范围：  0 ：全部搜索推广设备  1 ：仅计算机  2 ：仅移动   */
-	/* 'device'=>0, */
+	 'device'=>0, 
 	/* 选填，默认为0 搜索推广：0 内部流量：3 搜索合作流量：4 以上三个值支持账户、计划、单元、关键词、创意五种基本类型报告，逻辑关系为：0=3+4   信息流推广：23 搜索信息流：14 贴吧信息流：15 全部（搜索推广+信息流推广）：99   以上四个值支持账户、计划、单元三种 基 本 类 型 报 告 ， 逻 辑 关 系 为 ：23=14+15；99=0+23  */
 	'platform'=>0,
 	/* 选填，默认为0 全部：0 基础样式：1 强样式：2 应用商店：3 说明： App下载报告支持样式类型：0、1、2、3 推广电话报告支持：0、1、2  */

@@ -292,11 +292,26 @@ class DataController extends AdminbaseController {
             $p_temp['Device']=$_POST['Device']?$_POST['Device']:$p_temp['Device'];
             
             $param_data  = dispatch_kpijob($_POST['pager_select'],$p_temp);
+            $param_r=json_decode($param_data)->body->data;
             
+            $param_return = array( );
+            foreach ($param_r as $key => $value) {
+                # code...
+                $param_return['data']['id'][]=$value->id;
+                $param_return['data']['impression'][]=$value->kpis[0];
+                $param_return['data']['cost'][]=$value->kpis[1];
+                $param_return['data']['cpc'][]=round($value->kpis[2]);
+                $param_return['data']['click'][]=$value->kpis[3];
+                $param_return['data']['ctr'][]=round($value->kpis[4]);
+                $param_return['data']['cpm'][]=$value->kpis[5];
+                $param_return['data']['name'][]=$value->name;
+                $param_return['data']['date'][]=$value->date;
+                
+            }
             //var_dump(json_decode($param));
-
+            //var_dump($param_data);
             //var_dump(gettype($param));
-           $this->ajaxReturn($param_data);
+           $this->ajaxReturn($param_return);
         }
         
         $this->display();

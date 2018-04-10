@@ -8,7 +8,8 @@ return array(
 	),
 	/* 2、--------------------------------------------------------------------------------------- */
 	'CampaignPostfix'=> '/CampaignService/getCampaign',
-	'CampaignInfo'=>array("campaignIds" => array(),"campaignFields" => array("campaignName","budget","regionTarget","negativeWords","exactNegativeWords","schedule","budgetOfflineTime","showProb","pause","status","isDynamicCreative","campaignType","device","priceRatio")),
+	'CampaignInfo'=>array("campaignIds" => array(),"campaignFields" => array("campaignName","budget","regionTarget","negativeWords","exactNegativeWords","schedule","budgetOfflineTime","showProb","pause","status","isDynamicCreative","campaignType","device","priceRatio"),"mobileExtend"=>'1'),
+
 	
 	/*/3、--------------------------------------------------------------------------------------- */
 	'AdgroupPostfix'=>'/AdgroupService/getAdgroup',

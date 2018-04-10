@@ -1,12 +1,12 @@
 <?php 
-if(file_exists('application/Blog/Conf/user.php')){
-	$user = include 'application/Blog/Conf/user.php';
+if(file_exists('application/Admin/Conf/user.php')){
+	$user = include 'application/Admin/Conf/user.php';
 	
 }else{
 	$user = array();
 }
-if(file_exists('application/Blog/Conf/request_params.php')){
-	$request_params = include 'application/Blog/Conf/request_params.php';
+if(file_exists('application/Admin/Conf/request_params.php')){
+	$request_params = include 'application/Admin/Conf/request_params.php';
 }else{
 	$request_params = array();
 }
