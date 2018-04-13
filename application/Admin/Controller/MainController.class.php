@@ -34,53 +34,58 @@ class MainController extends AdminbaseController {
             session('username_normal',$target);
         }
         
-        $t = time();
-        $start = mktime(0,0,0,date("m",$t),date("d",$t),date("Y",$t)); // 当天0时0分
-        $end = mktime(23,59,59,date("m",$t),date("d",$t),date("Y",$t)); // 当天23时59分
-// 设备默认为0，全部
-         $device = $_POST['device'] ? $_POST['device'] : 0;
-        if($device){
-            session("device",$device);
-            $device = session("device");
-        }
-        
-        $datepick = explode(" ",  $_POST['datepicker']);
-        
-        $startDate=$datepick[0];
-        
-        
-        $endDate =$datepick[2];
-        $startDate = $startDate ? $startDate : date('Y-m-d',$start);
-        $endDate = $endDate ? $endDate : date('Y-m-d',$end);
-        
-        $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
+       static $p_temp = array();
+        /*设置默认值*/
+        $p_temp['startDate']=isset($p_temp['startDate'])?$p_temp['startDate']:date('Y-m-d',strtotime("-2 day"));
+        $p_temp['endDate']=isset($p_temp['endDate'])?$p_temp['endDate']:date('Y-m-d',strtotime("-1 day"));
+        $p_temp['device']=isset($p_temp['device'])?$p_temp['device']:0;
+        $p_temp['unitTime']=isset($p_temp['unitTime'])?$p_temp['unitTime']:5;
 
-        /* 调用该函数获取请求数据，将json字符串赋值给json_string*/
+
+        $param = array("startDate"=>$p_temp['startDate'],"endDate"=>$p_temp['endDate'],"platform"=>0,"device"=>$p_temp['device'],'unitTime'=>$p_temp['unitTime']);
+
+        $paramr = $param;
+        $paramr['device']='2';
+
+        /* 获取关键指标数据
+        **********************
+        调用该函数获取请求数据，将json字符串赋值给json_string*/
         $json_string= getAccountReport_realtime($param);
         /*对变量$json_sting进行 JSON 编码 */
-        $json_data = json_decode($json_string,true);
-        /*lebal 数组存放的是日期数据*/
-        $lebal = array();
-        /*result数组存放是文档中kpis【cots,】等*/
-        $result = array();
-        foreach ($json_data as $key1 => $value1) {
-            # code...
-            $lebal[] = $value1['Date'];
-            foreach ($value1['KPIs'] as $key => $value) {
-                # code...
-                /*以数组中的索引为key,保存对应的数值*/
-                $result[$key][] = $value;
-            }
+        //$rank_string = getHistoryRankReport_realtime($paramr);
+        
+        $k_temp = json_decode($json_string)->body->data;
+       // $r_temp = json_decode($rank_string)->body->data;
+       // var_dump($r_temp);
+       // echo json_encode($k_temp);
+        $keyindex_data['0']['id']=$k_temp[0]->id;
+        $keyindex_data['0']['impression']=$k_temp[0]->kpis[0];
+        $keyindex_data['0']['cost']=$k_temp[0]->kpis[1];
+        $keyindex_data['0']['cpc']=round($k_temp[0]->kpis[2],2);
+        $keyindex_data['0']['click']=$k_temp[0]->kpis[3];
+        $keyindex_data['0']['ctr']=round($k_temp[0]->kpis[4],2);
+        $keyindex_data['0']['cpm']=$k_temp[0]->kpis[5];
+        $keyindex_data['0']['name']=$k_temp[0]->name;
 
-        }
-       // $params = array('startDate' =>'2018-02-03' ,'endDate'=>'2018-03-03' );
-        //echo getAccountReport_realtime($param);
-        /*assign()将源对象json_encode()的引用给目标对象''*/
-        $this->assign('lebal',json_encode($lebal));
-        $this->assign('result',json_encode($result));
-        $this->assign('json_data',$json_string);
+        $keyindex_data['1']['id']=$k_temp[1]->id;
+        $keyindex_data['1']['impression']=$k_temp[1]->kpis[0];
+        $keyindex_data['1']['cost']=$k_temp[1]->kpis[1];
+        $keyindex_data['1']['cpc']=round($k_temp[1]->kpis[2],2);
+        $keyindex_data['1']['click']=$k_temp[1]->kpis[3];
+        $keyindex_data['1']['ctr']=round($k_temp[1]->kpis[4],2);
+        $keyindex_data['1']['cpm']=$k_temp[1]->kpis[5];
+        $keyindex_data['1']['name']=$k_temp[1]->name;
+        //var_dump($keyindex_data);
+        $this->assign('keyindex_data',$keyindex_data);
+       /*获取关键指标变化率mychart1 数据*/
 
-    	$this->assign('server_info', $info);
+       /*获取趋势图mychart2数据*/
+       /*获取地域分布图mychart3数据*/
+       /*获取分时数据mychart4 数据*/
+
+        
+
+    	
     	$this->display();
     }
 }
