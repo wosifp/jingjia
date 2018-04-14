@@ -57,8 +57,8 @@ li {
                 设备：
                 <select id="device">
                     <option value="0">全部</option>
-                    <option value="2">PC</option>
-                    <option value="1">移动</option>
+                    <option value="1">PC</option>
+                    <option value="2">移动</option>
                 </select>
             </div>
             <!--设备 end-->
@@ -71,7 +71,8 @@ li {
                     elem: '#datepicker1',
                     range: true, //指定元素
                     done: function(value) {
-                        $.ajax({
+                        window.location.href="__CONTROLLER__/index?datepicker="+value;
+                        /*$.ajax({
                             type: "post",
                             url: "__CONTROLLER__/index",
                             data: {
@@ -79,9 +80,10 @@ li {
                             },
                             dataType: "json",
                             success: function(data) {
+                               window.location.reload();
                                 alert(1111111);
                             }
-                        });
+                        });*/
                     }
                 });
                 </script>
@@ -150,16 +152,20 @@ li {
             <p class="qi_p_4">趋势图</p>
             <div class="qi_bfb_100">
                 <select class="qi_float_r" id="qushitu_select">
-                    <option value="0">展现</option>
-                    <option value="1">消费</option>
-                    <option value="2">点击</option>
-                    <option value="3">CPC</option>
-                    <option value="4">CTR</option>
-                    <option value="5">平均排名</option>
+                    <option value="trend_impression">展现</option>
+                    <option value="trend_cost">消费</option>
+                    <option value="trend_click">点击</option>
+                    <option value="trend_cpc">CPC</option>
+                    <option value="trend_ctr">CTR</option>
+                    <option value="trend_cpm">CPM</option>
+                    <option value="trend_avgrank">平均排名</option>
                 </select>
             </div>
             <!--统计图2 趋势图-->
             <div id="myChart2" style="width: 600px;height:400px;"></div>
+            <div hidden="true">
+                <p id="trend_data">{$trend_data}</p>
+            </div>
             <!--统计图2 趋势图 end-->
         </div>
         <div class="qi_con_1">
@@ -176,22 +182,26 @@ li {
             </div>
             <!-- 地区分布  -->
             <div id="china-map" style="width: 600px;height:400px;"></div>
+            
         </div>
         <!-- 地域分布  end -->
         <div class="qi_con_1">
             <p class="qi_p_4">分时汇总</p>
             <div class="qi_bfb_100">
-                <select class="qi_float_r">
-                    <option value="volvo">消费</option>
-                    <option value="saab">展现</option>
-                    <option value="opel">点击</option>
-                    <option value="audi">CPC</option>
-                    <option value="audi">CTR</option>
-                    <option value="audi">平均排名</option>
+                <select class="qi_float_r" id="fenshi_select">
+                    <option value="fenshi_cost">消费</option>
+                    <option value="fenshi_impression">展现</option>
+                    <option value="fenshi_click">点击</option>
+                    <option value="fenshi_cpc">CPC</option>
+                    <option value="fenshi_ctr">CTR</option>
+                    <option value="fenshi_avgrank">平均排名</option>
                 </select>
             </div>
             <!-- 分时汇总 -->
             <div id="myChart4" style="width: 600px;height:400px;"></div>
+            <div hidden="true">
+                <p id="fenshi_data">{$fenshi_data}</p>
+            </div>
             <!-- 分时汇总 end -->
         </div>
     </div>
@@ -342,6 +352,9 @@ li {
     <script>
     var myChart2 = echarts.init(document.getElementById('myChart2'));
     var option2 = {
+        tooltip: {
+            formatter: "{a} <br/>{b} : {c}"
+        },
         toolbox: {
             feature: {
                 saveAsImage: {
@@ -351,18 +364,55 @@ li {
         },
         xAxis: {
             type: 'category',
-            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            data:$.parseJSON($("#trend_data").text())['date']
         },
         yAxis: {
             type: 'value'
         },
         series: [{
-            data: [820, 932, 901, 934, 1290, 1330, 1320],
+            name:$.parseJSON($("#trend_data").text())['name'],
+            data: $.parseJSON($("#trend_data").text())['impression'],
             type: 'line',
             smooth: true
         }]
     };
+    
     myChart2.setOption(option2);
+    $("#qushitu_select").change(function(event) {
+        /* Act on the event */
+        switch($(this).val()){
+            case "trend_impression":
+                option2.series[0].data=$.parseJSON($("#trend_data").text())['impression'];
+                myChart2.setOption(option2);
+                break;
+            case "trend_cost":
+                option2.series[0].data=$.parseJSON($("#trend_data").text())['cost'];
+                myChart2.setOption(option2);
+                break;
+            case "trend_cpc":
+                option2.series[0].data=$.parseJSON($("#trend_data").text())['cpc'];
+                myChart2.setOption(option2);
+                break;
+            case "trend_ctr":
+                option2.series[0].data=$.parseJSON($("#trend_data").text())['ctr'];
+                myChart2.setOption(option2);
+                break;
+            case "trend_click":
+                option2.series[0].data=$.parseJSON($("#trend_data").text())['click'];
+                myChart2.setOption(option2);
+                break;
+            case "trend_cpm":
+                option2.series[0].data=$.parseJSON($("#trend_data").text())['cpm'];
+                myChart2.setOption(option2);
+                break;
+            case "trend_avgrank":
+                option2.series[0].data=$.parseJSON($("#trend_data").text())['avgrank'];
+                myChart2.setOption(option2);
+                break;
+            default :break;
+        }
+        
+    });
     </script>
 <!-- 地域分布 myChart3****************************-->
     <script>
@@ -474,7 +524,7 @@ li {
     myChart3.setOption(option3);
     myChart3.on('mouseover', function(params) {
         var dataIndex = params.dataIndex;
-        console.log(params);
+        /*console.log(params);*/
     });
     myChart3.dispatch({
         type: 'showTip',
@@ -492,6 +542,9 @@ li {
     <script>
     var myChart4 = echarts.init(document.getElementById('myChart4'));
     var option4 = {
+        tooltip: {
+            formatter: "{a} <br/>{b}时 : {c}"
+        },
         toolbox: {
             feature: {
                 saveAsImage: {
@@ -499,19 +552,57 @@ li {
                 }
             }
         },
-        xAxis: {
-            type: 'category',
-            data: ['01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23', '24']
-        },
-        yAxis: {
+         yAxis: {
             type: 'value'
         },
+        xAxis: {
+            type: 'category',
+            data: jQuery.parseJSON($("#fenshi_data").text())['date'],
+        },
+       
         series: [{
-            data: [120, 200, 150, 80, 70, 110, 130],
+            data: jQuery.parseJSON($("#fenshi_data").text())['kpis']['cost'],
             type: 'bar'
         }]
     };
+   
     myChart4.setOption(option4);
+   $("#fenshi_select").change(function(event) {
+       switch($(this).val()){
+        case "fenshi_impression":
+            option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
+            option4.series[0].data =jQuery.parseJSON($("#fenshi_data").text())['kpis']['impression']; 
+            myChart4.setOption(option4);
+            break;
+        case "fenshi_cost":
+            option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
+            option4.series[0].data =jQuery.parseJSON($("#fenshi_data").text())['kpis']['cost']; 
+            myChart4.setOption(option4);
+            break;
+        case "fenshi_click":
+            option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
+            option4.series[0].data =jQuery.parseJSON($("#fenshi_data").text())['kpis']['click']; 
+            myChart4.setOption(option4);
+            break;
+        case "fenshi_avgrank":
+            option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
+            option4.series[0].data =jQuery.parseJSON($("#fenshi_data").text())['kpis']['avgrank']; 
+            myChart4.setOption(option4);
+            break;
+        case "fenshi_cpc":
+            option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
+            option4.series[0].data =jQuery.parseJSON($("#fenshi_data").text())['kpis']['cpc']; 
+            myChart4.setOption(option4);
+            break;
+        case "fenshi_ctr":
+            option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
+            option4.series[0].data =jQuery.parseJSON($("#fenshi_data").text())['kpis']['ctr']; 
+            myChart4.setOption(option4);
+            break;
+        default :
+            break;
+       }
+   });
     </script>
 </body>
 
@@ -537,8 +628,12 @@ $(".bai_name").click(function() {
     });
 })
 $("#device").change(function() {
-    var device = $('#device :selected').val();
-    $.ajax({
+    
+    var device = $(this).val();
+    console.log(device);
+    window.location.href="__CONTROLLER__/index?device="+device;
+
+    /*$.ajax({
         type: "post",
         url: "__CONTROLLER__/index",
         data: {
@@ -549,6 +644,6 @@ $("#device").change(function() {
             alert(1111111);
             // window.location = "/Admin/Index/index";
         }
-    });
+    });*/
 })
 </script>
