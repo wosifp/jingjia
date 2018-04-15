@@ -128,11 +128,13 @@ class MainController extends AdminbaseController {
             $fenshi_temp['kpis']['cost'][(int)$value] = isset($fenshi_temp['kpis']['cost'][$value])?$fenshi_temp['kpis']['cost'][$value]:0;
             $fenshi_temp['kpis']['click'][(int)$value] = isset($fenshi_temp['kpis']['click'][$value])?$fenshi_temp['kpis']['click'][$value]:0;
        }
-       foreach ($fenshi_t as $key => $value) {
 
-           $fenshi_temp['kpis']['impression'][(int)explode(':',explode(' ', $value->date)[1])[0]] += $value->kpis[0];
-           $fenshi_temp['kpis']['cost'][(int)explode(':',explode(' ', $value->date)[1])[0]] += $value->kpis[1];
-           $fenshi_temp['kpis']['click'][(int)explode(':',explode(' ', $value->date)[1])[0]] += $value->kpis[3];
+       foreach ($fenshi_t as $key => $value) {
+            $n = explode(' ', $value->date);
+            $nn = explode(':',$n[1]);
+           $fenshi_temp['kpis']['impression'][(int)$nn[0]] += $value->kpis[0];
+           $fenshi_temp['kpis']['cost'][(int)$nn[0]] += $value->kpis[1];
+           $fenshi_temp['kpis']['click'][(int)$nn[0]] += $value->kpis[3];
        }
        foreach ($fenshi_temp['date'] as $key => $value) {
            $fenshi_temp['kpis']['cpc'][(int)$value] = $fenshi_temp['kpis']['click'][(int)$value]==0?0:round($fenshi_temp['kpis']['cost'][(int)$value]/$fenshi_temp['kpis']['click'][(int)$value],2);
