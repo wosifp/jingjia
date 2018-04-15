@@ -218,7 +218,7 @@ function getRegionReport_realtime($param = array("startDate"=>"2018-01-01","endD
 	$p_attributes = isset($param['attributes'])?$param['attributes']:null;
 	$p_statRange = isset($param['statRange'])?$param['statRange']:2;
 	$p_levelOfDetails = isset($param['levelOfDetails'])?$param['levelOfDetails']:2;
-	$p_order = isset($param['order'])?$param['order']:null;
+	$p_order = isset($param['order'])?$param['order']:true;
 	$p_number = isset($param['number'])?$param['number']:1000;
 	$p_performanceData=array('impression','cost','cpc','click','ctr','cpm','position','conversion' );
 	$p_device = isset($param['device'])?$param['device']:1;
@@ -535,6 +535,39 @@ function dispatch_myjob($param_string="计划"){
 			break;
 	}
 }
+ function mysort($array, $desc = false){
+     	//var_dump($array);
+       foreach ($array as $k => &$v) {
+         if ($desc) {
+
+         	for ($i= count($v['data']); $i >0 ; $i--) { 
+         		# code...
+
+         		for ($j=0; $j < $i-1 ; $j++) { 
+         			# code...
+         			
+         			if ($v['data'][$j] < $v['data'][$j+1] ) {
+         				$temp = $v['data'][$j];
+         				$v['data'][$j]=$v['data'][$j+1];
+         				$v['data'][$j+1]=$temp;
+         				$temp1 = $v['name'][$j];
+         				$v['name'][$j]=$v['name'][$j+1];
+         				$v['name'][$j+1]=$temp1;
+         			}else{
+         				
+         				continue;
+         			}
+         			
+         		}
+         	}
+         }
+       }
+       unset($v);
+       //var_dump($array);
+       return $array;
+
+
+    }
 function test(){
 	echo "function test successfuly";
 }

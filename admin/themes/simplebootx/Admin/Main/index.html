@@ -148,7 +148,7 @@ li {
             <!--统计图1  关键指标变化率 
                 *******************
                 -->
-            <div id="myChart1" style="width: 600px;height: 400px;"></div>
+            <div id="myChart1" style="width: 800px;height: 500px;"></div>
             <!--统计图1 end-->
         </div>
         <div class="qi_con_1">
@@ -165,7 +165,7 @@ li {
                 </select>
             </div>
             <!--统计图2 趋势图-->
-            <div id="myChart2" style="width: 600px;height:400px;"></div>
+            <div id="myChart2" style="width: 800px;height:400px;"></div>
             <div hidden="true">
                 <p id="trend_data">{$trend_data}</p>
             </div>
@@ -174,17 +174,21 @@ li {
         <div class="qi_con_1">
             <p class="qi_p_4">地域情况</p>
             <div class="qi_bfb_100">
-                <select class="qi_float_r" id="diyu_select">
-                    <option value="0">展现</option>
-                    <option value="1">消费</option>
-                    <option value="2">点击</option>
-                    <option value="3">CPC</option>
-                    <option value="4">CTR</option>
-                    <option value="5">平均排名</option>
+                <select class="qi_float_r" id="region_select">
+                    <option value="region_impression">展现</option>
+                    <option value="region_cost">消费</option>
+                    <option value="region_click">点击</option>
+                    <option value="region_cpc">CPC</option>
+                    <option value="region_ctr">CTR</option>
+                    <option value="region_cpm">CPM</option>
+                    <option value="region_avgrank">平均排名</option>
                 </select>
             </div>
             <!-- 地区分布  -->
-            <div id="china-map" style="width: 600px;height:400px;"></div>
+            <div id="china-map" style="width: 800px;height:400px;"></div>
+            <div hidden="true">
+                <p id="region_data">{$region_data}</p>
+            </div>
             
         </div>
         <!-- 地域分布  end -->
@@ -201,7 +205,7 @@ li {
                 </select>
             </div>
             <!-- 分时汇总 -->
-            <div id="myChart4" style="width: 600px;height:400px;"></div>
+            <div id="myChart4" style="width: 800px;height:400px;"></div>
             <div hidden="true">
                 <p id="fenshi_data">{$fenshi_data}</p>
             </div>
@@ -420,20 +424,20 @@ li {
     </script>
 <!-- 地域分布 myChart3****************************-->
     <script>
+    var region_grid_city_name = ["大连",'深圳','广州'];
+    var region_grid_city_data = [1,2,3];
+    var region_grid_province_name =$.parseJSON($("#region_data").text()).region_grid['impression']['name'].slice(0, 10);
+    var region_grid_province_data =$.parseJSON($("#region_data").text()).region_grid['impression']['data'].slice(0, 10);
+    var region_map_city_data = [{name:'杭州',value:222}];
+    var region_map_province_data = $.parseJSON($("#region_data").text()).region_map['impression'];
     var myChart3 = echarts.init(document.getElementById('china-map'));
     var option3 = {
-        title: [{
-            color: '#033',
-            text: "ditu ",
-            textStyle: {
-                fontWeight: 'bold',
-            }
-        }],
+        
         toolbox: {
             show: true,
-            orient: 'vertical',
+            orient: 'horizontal',
             left: 'right',
-            top: 'center',
+            top: 'top',
             feature: {
                 dataView: {
                     readOnly: false
@@ -446,38 +450,74 @@ li {
                 }
             }
         },
-        legend: [{
-            type: 'plain',
-            left: 'auto',
-            top: 'auto',
-            orient: 'vertical',
-            formatter: "ddddddd",
-            tooltip: {
-                show: true
-            },
-            data: [{
-                name: '系列1',
-                // 强制设置图形为圆。
-                icon: 'circle',
-                // 设置文本为红色
-                textStyle: {
-                    color: 'red'
-                }
-            }],
-            icon: 'rect'
-        }],
+
+        legend: {
+        orient: 'horizontal',
+        top: '20%',
+        left: '66%',
+        data: ['省份', '城市'],
+        selectedMode: 'single',
+        selected: {
+            '省份': true,
+            '城市': false
+        }
+
+    },
+     grid: {
+        x: '66%',
+        y: '27%',
+        width: '27%',
+        height: '60%',
+        show:true
+    },
+    xAxis:{
+        type:'value',
+        show:true
+        
+    },
+    yAxis:{
+        
+        type:'category',
+        inverse:true,
+        data:region_grid_province_name
+    },
+        /*图例 */
+        visualMap: {
+            orient:'horizontal',
+            
+        type: 'continuous',
+        min: 0,
+        max: Math.max.apply(null, region_grid_province_data),
+        text:['High','Low'],
+        realtime: false,
+        calculable : true,
+        color: ['orangered','yellow','lightskyblue']
+    },
+    /*鼠标移动*/
         tooltip: {
             // show: false, //不显示提示标签
-            formatter: '{b}',
+            formatter: '{b}:{c}',
             /*提示标签格式*/
             backgroundColor: "#ff7f50", //提示标签背景颜色
             textStyle: {
                 color: "#fff"
             } //提示标签字体颜色
         },
-        series: [{
+        series: [
+        {
+            name:'省份',
+            type:'bar',
+            data:region_grid_province_data
+        },{
+            name:'城市',
+            type:'bar'
+        },
+        {
+            name:"省份",
             type: 'map',
             mapType: 'china',
+            roam:'scale', //move
+            left:'7%',
             label: {
                 normal: {
                     show: true, //显示省份标签
@@ -493,18 +533,7 @@ li {
                     }
                 }
             },
-            toolbox: {
-                show: true,
-                feature: {
-                    dataView: {
-                        readOnly: false
-                    },
-                    restore: {},
-                    saveAsImage: {
-                        pixelRatio: 4
-                    }
-                }
-            },
+            
             itemStyle: {
                 normal: {
                     borderWidth: .5, //区域边框宽度
@@ -517,30 +546,71 @@ li {
                     areaColor: "#ffdead",
                 }
             },
-            data: [{
-                    name: '福建',
-                    selected: true
-                } //福建为选中状态
-            ]
+            data:  region_map_province_data
         }],
     };
-
+    console.log($.parseJSON($("#region_data").text()));
     myChart3.setOption(option3);
-    myChart3.on('mouseover', function(params) {
-        var dataIndex = params.dataIndex;
-        /*console.log(params);*/
+
+
+    myChart3.on('legendselectchanged',function(params){
+        console.log(params);
+        if (params.name=='城市') {
+            option3.yAxis.data=region_grid_city_name;
+            option3.series[0].data=region_grid_city_data;
+            option3.series[2].data=region_map_city_data;
+        }else if (params.name=='省份') {
+            option3.yAxis.data=region_grid_province_name;
+            option3.series[0].data=region_grid_province_data;
+            option3.series[2].data=region_map_province_data;
+        }
+        myChart3.setOption(option3);
     });
-    myChart3.dispatch({
-        type: 'showTip',
-        x: 10,
-        y: 10
-    })
-    var img = new Image();
-    img.src = myChart1.getDataURL();
-    console.log(img.src);
-    document.getElementById("button_download").onclick = function() {
-        document.getElementById("download_img").href = img.src;
-    }
+    $("#region_select").change(function(event) {
+        switch($(this).val()){
+            case 'region_impression':
+                region_grid_province_name =$.parseJSON($("#region_data").text()).region_grid['impression']['name'].slice(0, 10);
+                region_grid_province_data =$.parseJSON($("#region_data").text()).region_grid['impression']['data'].slice(0, 10);
+                region_map_province_data=$.parseJSON($("#region_data").text()).region_map['impression'];
+                break;
+            case 'region_cost':
+                region_grid_province_name =$.parseJSON($("#region_data").text()).region_grid['cost']['name'].slice(0, 10);
+                region_grid_province_data =$.parseJSON($("#region_data").text()).region_grid['cost']['data'].slice(0, 10);
+                region_map_province_data=$.parseJSON($("#region_data").text()).region_map['cost'];
+                break;
+            case 'region_click':
+                region_grid_province_name =$.parseJSON($("#region_data").text()).region_grid['click']['name'].slice(0, 10);
+                region_grid_province_data =$.parseJSON($("#region_data").text()).region_grid['click']['data'].slice(0, 10);
+                region_map_province_data=$.parseJSON($("#region_data").text()).region_map['click'];
+                break;
+            case 'region_cpc':
+                region_grid_province_name =$.parseJSON($("#region_data").text()).region_grid['cpc']['name'].slice(0, 10);
+                region_grid_province_data =$.parseJSON($("#region_data").text()).region_grid['cpc']['data'].slice(0, 10);
+                region_map_province_data=$.parseJSON($("#region_data").text()).region_map['cpc'];
+                break;
+            case 'region_ctr':
+                region_grid_province_name =$.parseJSON($("#region_data").text()).region_grid['ctr']['name'].slice(0, 10);
+                region_grid_province_data =$.parseJSON($("#region_data").text()).region_grid['ctr']['data'].slice(0, 10);
+                region_map_province_data=$.parseJSON($("#region_data").text()).region_map['ctr'];
+                break;
+            case 'region_cpm':
+                region_grid_province_name =$.parseJSON($("#region_data").text()).region_grid['cpm']['name'].slice(0, 10);
+                region_grid_province_data =$.parseJSON($("#region_data").text()).region_grid['cpm']['data'].slice(0, 10);
+                region_map_province_data=$.parseJSON($("#region_data").text()).region_map['cpm'];
+                break;
+            case 'region_avgrank':
+                region_grid_province_name =$.parseJSON($("#region_data").text()).region_grid['avgrank']['name'].slice(0, 10);
+                region_grid_province_data =$.parseJSON($("#region_data").text()).region_grid['avgrank']['data'].slice(0, 10);
+                region_map_province_data=$.parseJSON($("#region_data").text()).region_map['avgrank'];
+                break;
+            default:break;
+        }
+        option3.yAxis.data=region_grid_province_name;
+        option3.series[0].data=region_grid_province_data;
+        option3.series[2].data=region_map_province_data;
+        option3.visualMap.max = Math.max.apply(null, region_grid_province_data);
+        myChart3.setOption(option3);
+    });
     </script>
 <!-- 分时汇总 myChart4*********************** -->
     <script>

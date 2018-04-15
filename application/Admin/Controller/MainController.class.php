@@ -50,7 +50,7 @@ class MainController extends AdminbaseController {
 
         /*$paramr = $param;
         $paramr['device']='2';
-*/      
+            */      
         /*86400*/
         $param0 = $param;
         $n_t = strtotime($param['endDate'])-strtotime($param['startDate']);
@@ -108,10 +108,39 @@ class MainController extends AdminbaseController {
        //var_dump($trend_data);
        $this->assign("trend_data",json_encode($trend_data));
        /*获取地域分布图mychart3数据*/
-       $region_json = json_decode(getRegionReport_realtime($param))->body->data ;
+       $param_region=$param;
+       $param_region['unitOfTime']=8;
+       $region_json = json_decode(getRegionReport_realtime($param_region))->body->data ;
+
        foreach ($region_json as $key => $value) {
-           $region_data['impression'][] =json_decode(json_encode(array('name' =>$value->name[3] ,'value'=>$value->kpis[0],'id'=>$value->id )))  ;
+           $region_grid['impression']['name'][]=$value->name[3];
+           $region_grid['cost']['name'][]=$value->name[3];
+           $region_grid['cpc']['name'][]=$value->name[3];
+           $region_grid['click']['name'][]=$value->name[3];
+           $region_grid['ctr']['name'][]=$value->name[3];
+           $region_grid['cpm']['name'][]=$value->name[3];
+           $region_grid['position']['name'][]=$value->name[3];
+
+           $region_grid['impression']['data'][]=$value->kpis[0];
+           $region_grid['cost']['data'][]=$value->kpis[1];
+           $region_grid['cpc']['data'][]=round($value->kpis[2],2);
+           $region_grid['click']['data'][]=$value->kpis[3];
+           $region_grid['ctr']['data'][]=round($value->kpis[4],2);
+           $region_grid['cpm']['data'][]=round($value->kpis[5],2);
+           $region_grid['position']['data'][]=$value->kpis[6];
        }
+       $region_grid = mysort($region_grid,true);
+       foreach ($region_json as $key => $value) {
+           $region_map['impression'][] =json_decode(json_encode(array('name' =>$value->name[3] ,'value'=>round($value->kpis[0]),'id'=>$value->id )))  ;
+           $region_map['cost'][] =json_decode(json_encode(array('name' =>$value->name[3] ,'value'=>$value->kpis[1],'id'=>$value->id )))  ;
+           $region_map['cpc'][] =json_decode(json_encode(array('name' =>$value->name[3] ,'value'=>round($value->kpis[2],2),'id'=>$value->id )))  ;
+           $region_map['click'][] =json_decode(json_encode(array('name' =>$value->name[3] ,'value'=>$value->kpis[3],'id'=>$value->id )))  ;
+           $region_map['ctr'][] =json_decode(json_encode(array('name' =>$value->name[3] ,'value'=>round($value->kpis[4],2),'id'=>$value->id )))  ;
+           $region_map['cpm'][] =json_decode(json_encode(array('name' =>$value->name[3] ,'value'=>round($value->kpis[5],2),'id'=>$value->id )))  ;
+           $region_map['position'][] =json_decode(json_encode(array('name' =>$value->name[3] ,'value'=>$value->kpis[6],'id'=>$value->id )))  ;
+       }
+       $region_data = array('region_map' =>$region_map ,'region_grid'=>$region_grid );
+       $this->assign("region_data",json_encode($region_data));
        //var_dump($region_data);
        /*获取分时数据mychart4 数据*/
        $param_fenshi = $param;
