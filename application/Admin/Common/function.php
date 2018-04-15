@@ -201,7 +201,32 @@ function getHistoryRankReport_realtime($param = array("startDate"=>"2018-01-01",
 	return json_encode($resultData);
 }
 
+function getRegionReport_realtime($param = array("startDate"=>"2018-01-01","endDate"=>"2018-03-03",'device'=>0,'platform'=>0  )){
+	if (!strcmp("2001-09-17", $param["startDate"])) {
+		# code...
+		echo "开始时间不能早于2001-09-17";
+		return false;
+	}
+	if (strcmp($param["startDate"], $param["endDate"])>0) {
+		# code...
+		echo "截止时间不能早于起始时间";
+		return false;
+	}
+	$resultData = array( );
+	/*时间单位设置，1,3,4,5，8 分别对应年、月、周、日、请求时间段*/
+	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
+	$p_attributes = isset($param['attributes'])?$param['attributes']:null;
+	$p_statRange = isset($param['statRange'])?$param['statRange']:2;
+	$p_levelOfDetails = isset($param['levelOfDetails'])?$param['levelOfDetails']:2;
+	$p_order = isset($param['order'])?$param['order']:null;
+	$p_number = isset($param['number'])?$param['number']:1000;
+	$p_performanceData=array('impression','cost','cpc','click','ctr','cpm','position','conversion' );
+	$p_device = isset($param['device'])?$param['device']:1;
+	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>3,"levelOfDetails"=>$p_levelOfDetails,"platform"=>$param["platform"],"device"=>$p_device,'unitOfTime'=>$p_unitOfTime,'performanceData'=>$p_performanceData,'order'=>$p_order,'number'=>$p_number,'attributes'=>$p_attributes );
 
+	$resultData =json_decode(getReport("RealTimeData",$param1));
+	return json_encode($resultData);
+}
 
 
 

@@ -108,6 +108,11 @@ class MainController extends AdminbaseController {
        //var_dump($trend_data);
        $this->assign("trend_data",json_encode($trend_data));
        /*获取地域分布图mychart3数据*/
+       $region_json = json_decode(getRegionReport_realtime($param))->body->data ;
+       foreach ($region_json as $key => $value) {
+           $region_data['impression'][] =json_decode(json_encode(array('name' =>$value->name[3] ,'value'=>$value->kpis[0],'id'=>$value->id )))  ;
+       }
+       //var_dump($region_data);
        /*获取分时数据mychart4 数据*/
        $param_fenshi = $param;
        $param_fenshi['unitOfTime']=7;
@@ -135,7 +140,8 @@ class MainController extends AdminbaseController {
        }
        $this->assign("fenshi_data",json_encode($fenshi_temp));
        //var_dump($fenshi_temp);
-
+       
+       $this->assign("device_current",$p_temp['device']);
 
 
         
