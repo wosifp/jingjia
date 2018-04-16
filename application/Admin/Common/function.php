@@ -221,8 +221,9 @@ function getRegionReport_realtime($param = array("startDate"=>"2018-01-01","endD
 	$p_order = isset($param['order'])?$param['order']:true;
 	$p_number = isset($param['number'])?$param['number']:1000;
 	$p_performanceData=array('impression','cost','cpc','click','ctr','cpm','position','conversion' );
-	$p_device = isset($param['device'])?$param['device']:1;
-	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>3,"levelOfDetails"=>$p_levelOfDetails,"platform"=>$param["platform"],"device"=>$p_device,'unitOfTime'=>$p_unitOfTime,'performanceData'=>$p_performanceData,'order'=>$p_order,'number'=>$p_number,'attributes'=>$p_attributes );
+	$p_device = isset($param['device'])?$param['device']:0;
+	$p_reportType = isset($param['reportType'])?$param['reportType']:3;
+	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>$p_reportType,"levelOfDetails"=>$p_levelOfDetails,"platform"=>$param["platform"],"device"=>$p_device,'unitOfTime'=>$p_unitOfTime,'performanceData'=>$p_performanceData,'order'=>$p_order,'number'=>$p_number,'attributes'=>$p_attributes );
 
 	$resultData =json_decode(getReport("RealTimeData",$param1));
 	return json_encode($resultData);
