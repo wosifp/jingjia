@@ -361,8 +361,9 @@ class DataController extends AdminbaseController {
 
    // 0415 数据查看-测试
     public function chakan(){
-        // 接收参数
+        // 设备
         $device = $_REQUEST['device'] ? $_REQUEST['device'] : 0;
+        // 日期
         if($_REQUEST['riqi']){
             $riqi = explode(" ",  $_REQUEST['riqi']);
             $startDate=$riqi[0];
@@ -371,8 +372,15 @@ class DataController extends AdminbaseController {
             $startDate=date('Y-m-d',strtotime('-1 day'));
             $endDate =date('Y-m-d');
         }
+        // 地域
+        if($_REQUEST['attributes']){
+            $attributes = explode("-",  $_REQUEST['attributes']);
+        }else{
+            $attributes = null;
+        }
         // 查看类型：默认为5    1分年；3分月；4分周；5分日；7分时；8请求时间段汇总(endDate- StartDate)
         $unitOfTime = $_REQUEST['unitOfTime'] ? $_REQUEST['unitOfTime'] : 5;
+
         $p_temp = array();
         if (IS_AJAX) {
             # code...
@@ -388,7 +396,6 @@ class DataController extends AdminbaseController {
 
             $param_data  = dispatch_kpijob($_POST['pager_select'],$p_temp);
             $param_r=json_decode($param_data)->body->data;
-
             $param_return = array( );
             foreach ($param_r as $key => $value) {
                 # code...
