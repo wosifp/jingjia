@@ -115,12 +115,12 @@ class DataController extends AdminbaseController {
         $endDate = $endDate ? $endDate : date('Y-m-d',$end);
 
         //分时段 默认为5,分日
-        $unitTime = $_POST['unit_data'] ? $_POST['unit_data'] : 5;
-        if($unitTime){
-            session("unit_data",$unitTime);
-            $unitTime=session("unit_data");
+        $unitOfTime = $_POST['unit_data'] ? $_POST['unit_data'] : 5;
+        if($unitOfTime){
+            session("unit_data",$unitOfTime);
+            $unitOfTime=session("unit_data");
         }
-        //echo $unitTime;
+        //echo $unitOfTime;
         $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
 
 
@@ -204,14 +204,14 @@ class DataController extends AdminbaseController {
         $level_to_choose = $_POST['level_to_choose'] ? $_POST['level_to_choose'] : "计划";
         if($level_to_choose){
             session("level_to_choose",$level_to_choose);
-            $unitTime=session("level_to_choose");
+            $unitOfTime=session("level_to_choose");
         }
         //echo $level_to_choose;
         //设备选择device
         $device = $_POST['device'] ? $_POST['device'] : 0;
         if($device){
             session("device",$device);
-            $unitTime=session("device");
+            $unitOfTime=session("device");
         }
         //echo $device;
         //指标选择indexselection
@@ -276,6 +276,7 @@ class DataController extends AdminbaseController {
         $p_temp['endDate']=isset($p_temp['endDate'])?$p_temp['endDate']:date('Y-m-d');
         $p_temp['Device']=isset($p_temp['Device'])?$p_temp['Device']:0;
         $p_temp['unitOfTime']=isset($p_temp['unitOfTime'])?$p_temp['unitOfTime']:5;
+
         if (IS_AJAX) {
             # code...
             $statIds_temp = $_POST['statIds'];
@@ -293,7 +294,7 @@ class DataController extends AdminbaseController {
             
             $param_data  = dispatch_kpijob($_POST['pager_select'],$p_temp);
             $param_r=json_decode($param_data)->body->data;
-            
+            var_dump($param_r);
             $param_return = array( );
             foreach ($param_r as $key => $value) {
                 # code...
