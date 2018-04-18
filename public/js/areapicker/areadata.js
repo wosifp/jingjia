@@ -345,6 +345,8 @@ function svae_City() {
             Cityname += $(this).data("name") + '-';
         });
     }
+
+
     if (val != '') {
         val = val.substring(0, val.lastIndexOf('-'));
     }
@@ -354,6 +356,9 @@ function svae_City() {
 
     $(dataCityinput).data("value", val);
     $(dataCityinput).val(Cityname);
+    console.log(val);
+    $("#attributes").text(val);
+    console.log(Cityname);
 console.log($(dataCityinput).data("value", val));
     Close();
 }

@@ -33,11 +33,15 @@
                 <li><a href="#">关键词</a></li>
                 <li><a href="#">创意</a></li>
             </ul>
+            <span style="color: red">* 账户必选</span>
         </div>
         <div class="qi_con_1">
             <div class="qi_float_l qi_bfb_30">
-                <p class="qi_p_2">
-                    范围：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
+                <p class="qi_p_2" style="display: block"  id="fanwei">
+                    <span id="set_fanwei"></span>范围：
+                    <a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
+                    <span id="cengji" style="display: none"></span>
+                    <span style="color: red" id="beixuan">*默认为全部</span>
                 </p>
                 <div id="firstpane" class="menu_list" style="display:none">
                     <hr>
@@ -45,6 +49,9 @@
                     <button id="send_mytree" class="btn">确定</button>
                 </div>
             </div>
+        </div>
+
+        <div class="qi_con_1">
             <!--设备-->
             <div class="qi_float_l qi_bfb_30">
                 设备：
@@ -53,26 +60,42 @@
                     <option value="1">PC</option>
                     <option value="2">移动</option>
                 </select>
+
             </div>
+            <span style="color: red">*必填；默认为全部</span>
             <!--设备 end-->
+
+
+        </div>
+
+        <div class="qi_con_1">
+
+
+            <!--时间-->
+            <div class="qi_float_l qi_bfb_30">
+                时间：
+                <input type="text" name="date_pick" id="datepicker1">
+                <input type="hidden" value="" id="riqi">
+            </div>
+            <span style="color: red">*必填；默认为昨天——今天</span>
+            <!--时间 end-->
+
+
+        </div>
+
+        <div class="qi_con_1">
             <!-- 地域 -->
             <div class="qi_float_l qi_bfb_30">
                 地域：
                 <input type="text" class="area-duoxuan" value="" data-value="" name="area_pick" id="area_multipicker">
             </div>
+            <span style="color: red" >*必填；默认为全部</span>
+            <span id="attributes" style="display: none"></span>
             <!-- 地域end -->
-            <!--时间-->
-            <div class="qi_float_l qi_bfb_30">
-                时间：
-                <div>
-                    <input type="text" name="date_pick" id="datepicker1">
-                </div>
-            </div>
-            <!--时间 end-->
-            <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
-            </div>
         </div>
+
         <div class="qi_con_1">
+            查看类型:
             <ul class="pager" id="unitoftime">
                 <li id="points" value="5"><a href="#">分日</a></li>
                 <li value="7"><a href="#">分时</a></li>
@@ -86,6 +109,14 @@
                 <!--<li value="66"><a href="#">关键词对比</a></li>-->
                 <!--<li value="77"><a href="#">质量度</a></li>-->
             </ul>
+            <span style="color: red" >*选填</span>
+            <button id="chakan">查看</button>
+        </div>
+
+
+
+        <div class="qi_con_1">
+
             <div class="qi_bfb_100 qi_padt_30">
                 <select class="qi_float_r">
                     <option value="saab">展现</option>
@@ -112,6 +143,12 @@
                 /* Act on the event */
 
                 tier_selected = $(this).text();
+                // 0415添加
+                $("#fanwei").show();
+                $("#set_fanwei").text(tier_selected);
+                $("#beixuan").html("*默认为全部");
+                // 0415结束
+
                 console.log(tier_selected);
                 $.ajax({
                     url: '__CONTROLLER__/account_check',
@@ -147,6 +184,21 @@
                 $("#firstpane div").remove();
                 // $test_data =$.parseJSON('{$page_1}');
                 console.log($test_data);
+                console.log(11111111111111);
+
+                if (tier_selected == "账户") {
+                    $.each($test_data, function(index, val) {
+
+                        $.each(val, function(index1, val1) {
+
+                            $.each(val1, function(index2, val2) {
+                                /* iterate through array or object */
+                                $("#mytreeselect ").append('<option value=' + val2.id + ' data-section="' + index+'/'+index1 + '">' + val2.user_login + '</option>');
+                            });
+                        });
+                    });
+                }
+
                 if (tier_selected == "计划") {
                     $.each($test_data, function(index, val) {
                         $.each(val, function(index1, val1) {
@@ -167,11 +219,11 @@
                     });
                 }
                 if (tier_selected=="关键词") {
-$.each($test_data, function(index, val) {
-                    $.each(val, function(index1, val1) {
+                    $.each($test_data, function(index, val) {
+                        $.each(val, function(index1, val1) {
                             $.each(val1, function(index2, val2) {
                                  $.each(val2, function(index3, val3) {
-$("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.keyword + '</option>'); 
+                                    $("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.keyword + '</option>');
                                  });
                                  
                             });
@@ -179,11 +231,11 @@ $("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="'
                     });  
                 }
                 if (tier_selected=="创意") {
-$.each($test_data, function(index, val) {
-                    $.each(val, function(index1, val1) {
+                    $.each($test_data, function(index, val) {
+                        $.each(val, function(index1, val1) {
                             $.each(val1, function(index2, val2) {
                                  $.each(val2, function(index3, val3) {
-$("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.title + '</option>'); 
+                                     $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.title + '</option>');
                                  });
                                  
                             });
@@ -206,8 +258,13 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
 
             });
             $("#send_mytree").click(function() {
+                $("#firstpane").hide();
+                $("#beixuan").html('');
+                // 0417添加
+                $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
                 /*使用JSON.stringify($temp)方法将object转换为json字符串*/
                 console.log(typeof(jQuery.parseJSON(JSON.stringify($temp))));
+
                 $.ajax({
                     url: '__CONTROLLER__/account_check',
                     type: 'POST',
@@ -544,6 +601,7 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
                     elem: '#datepicker1',
                     range: true, //指定元素
                     done: function(value) {
+                        $("#riqi").val(value);
                         $.ajax({
                             url: '__CONTROLLER__/account_check',
                             type: 'POST',
@@ -576,24 +634,7 @@ $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="
 
 </html>
 <script>
-$(".bai_name").click(function() {
-    var target = $(this).text();
-    $("#zhanghu").html(target);
-    $("#firstpane").css('display', 'none');
-    $("#zhanghu").css('color', 'red');
-    $.ajax({
-        type: "post",
-        url: "__MODULE__/Data/data_check",
-        data: {
-            target: target
-        },
-        dataType: "json",
-        success: function(data) {
-            alert(1111111);
-            // window.location = "/Admin/Data/data_check";
-        }
-    });
-})
+
 $("#device").change(function() {
     $device = $('#device :selected').val();
     $.ajax({
@@ -602,7 +643,7 @@ $("#device").change(function() {
         dataType: 'json',
         data: {Device: $device,
             pager_select:tier_selected},
-    }) 
+    })
     .done(function() {
         console.log("success");
     })
@@ -612,8 +653,8 @@ $("#device").change(function() {
     .always(function() {
         console.log("complete");
     });
-    
-})
+
+});
 
 $("#unitoftime li").click(function() {
     var unit_data = $(this).val();
@@ -739,3 +780,58 @@ $(".sandian").click(function() {
     $("#myChart5").css('display', 'block');
 });
 </script>
+
+<!--0415 提交查询条件-->
+<script>
+    $("#chakan").click(function () {
+        // 层级（账户、计划、单元、关键词等）
+        var section_name = $(".section-name").text();
+        // 设备
+        var device = $('#device :selected').val();
+        // 日期
+        var riqi = $("#riqi").val();
+        // 地域
+        var attributes = $("#attributes").text();
+
+        var set_fanwei = $("#set_fanwei").text();
+
+        var cengji = $("#cengji").html();
+
+        if(!section_name && (set_fanwei=='账户')){
+            alert('范围未选择');return false;
+        }
+
+        if(device == ''){
+            alert('设备不能为空');return false;
+        }
+        if(riqi == ''){
+            alert('日期不能为空');return false;
+        }
+        if(attributes == ''){
+            alert('地域不能为空');return false;
+        }
+
+        // 发送ajax
+        $.ajax({
+            url: '__CONTROLLER__/chakan',
+            type: 'POST',
+            dataType: 'json',
+            data: {
+                device: device,
+                riqi:riqi,
+                attributes:attributes,
+                statIds:cengji,
+                pager_select: set_fanwei
+
+            },
+            success:function (data) {
+                console.log(data);
+            }
+        })
+
+
+
+
+    })
+</script>
+

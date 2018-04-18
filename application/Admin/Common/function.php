@@ -68,11 +68,11 @@ function getAccountReport_realtime($param = array("startDate"=>"2018-01-01","end
 	}
 	$resultData = array( );
 	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
-	$p_unitTime = isset($param['unitTime'])?$param['unitTime']:5;
+	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
 	$p_attributes = isset($param['attributes'])?$param['attributes']:null;
 	$p_order = isset($param['order'])?$param['order']:null;
 	$p_number = isset($param['number'])?$param['number']:1000;
-	$p_performanceData=$p_unitTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
+	$p_performanceData=$p_unitOfTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
 	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>2,"levelOfDetails"=>2,"platform"=>$param["platform"],"device"=>$param["device"],'unitTime'=>$p_unitTime,'performanceData'=>$p_performanceData,'order'=>$p_order,'number'=>$p_number,'attributes'=>$p_attributes );
 
 	$resultData =json_decode(getReport("RealTimeData",$param1));
@@ -103,8 +103,8 @@ function getCampaignReport_realtime($param = array("startDate"=>"2018-01-01","en
 	$p_number = isset($param['number'])?$param['number']:1000;
 	$p_attributes = isset($param['attributes'])?$param['attributes']:null;
 	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
-	$p_unitTime = isset($param['unitTime'])?$param['unitTime']:5;
-	$p_performanceData=$p_unitTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
+	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
+	$p_performanceData=$p_unitOfTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
 	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>10,"levelOfDetails"=>3,"platform"=>$param["platform"],"device"=>$param["device"],'statRange'=>$p_stateRange,'unitTime'=>$p_unitTime,'statIds'=>$p_statIds,'order'=>$p_order,'number'=>$p_number,'performanceData'=>$p_performanceData,'attributes'=>$p_attributes  );
 	
 	$resultData =json_decode(getReport("RealTimeData",$param1));
@@ -134,8 +134,8 @@ function getAdgrouReport_realtime($param = array("startDate"=>"2018-01-01","endD
 	$p_number = isset($param['number'])?$param['number']:1000;
 	$p_attributes = isset($param['attributes'])?$param['attributes']:null;
 	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
-	$p_unitTime = isset($param['unitTime'])?$param['unitTime']:5;
-	$p_performanceData=$p_unitTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
+	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
+	$p_performanceData=$p_unitOfTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
 	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>11,"levelOfDetails"=>5,"platform"=>$param["platform"],"device"=>$param["device"],'statRange'=>$p_statRange,'unitTime'=>$p_unitTime,'statIds'=>$p_statIds,'order'=>$p_order,'number'=>$p_number,'performanceData'=>$p_performanceData ,'attributes'=>$p_attributes );
 	
 	$resultData =json_decode(getReport("RealTimeData",$param1));
@@ -160,7 +160,7 @@ function getKeywordIdReport_realtime($param = array("startDate"=>"2018-01-01","e
 	$resultData = array( );
 	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
 	
-	$p_performanceData=$param['unitTime'] == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','position','conversion','bridgeConversion');
+	$p_performanceData=$param['unitOfTime'] == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','position','conversion','bridgeConversion');
 	$param1 = array("reportType"=>14,"levelOfDetails"=>11,'performanceData'=>$p_performanceData );
 	$param1 = array_merge($param,$param1);
 	
@@ -187,7 +187,7 @@ function getHistoryRankReport_realtime($param = array("startDate"=>"2018-01-01",
 	}
 	$resultData = array( );
 	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
-	$p_unitTime = isset($param['unitTime'])?$param['unitTime']:5;
+	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
 	$p_attributes = isset($param['attributes'])?$param['attributes']:null;
 	$p_statRange = isset($param['statRange'])?$param['statRange']:2;
 	$p_order = isset($param['order'])?$param['order']:null;
@@ -310,12 +310,10 @@ function getCampaignIdList(){
 		$temp = json_decode(getReport('Campaign',$params))->body->data;
 	}
 	$result = array( );
-	
-	
-	foreach ($temp as $key => $value) {
+    foreach ($temp as $key => $value) {
+        $result[session('username_normal')][]=$value;
+    }
 
-		$result[session('username_normal')][]=$value;
-	}
 	//var_dump($result);
 	return $result;
 }
@@ -503,6 +501,10 @@ function dispatch_myjob($param_string="计划"){
 			# code...
 		return getCreativeIdList();
 			break;
+        case '账户':
+            # code...
+            return getAccountList();
+            break;
 		default:
 			# code...
 		return false;

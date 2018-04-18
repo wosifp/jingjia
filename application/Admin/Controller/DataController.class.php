@@ -275,7 +275,7 @@ class DataController extends AdminbaseController {
         $p_temp['startDate']=isset($p_temp['startDate'])?$p_temp['startDate']:date('Y-m-d',strtotime('-1 day'));
         $p_temp['endDate']=isset($p_temp['endDate'])?$p_temp['endDate']:date('Y-m-d');
         $p_temp['Device']=isset($p_temp['Device'])?$p_temp['Device']:0;
-        $p_temp['unitTime']=isset($p_temp['unitTime'])?$p_temp['unitTime']:5;
+        $p_temp['unitOfTime']=isset($p_temp['unitOfTime'])?$p_temp['unitOfTime']:5;
         if (IS_AJAX) {
             # code...
             $statIds_temp = $_POST['statIds'];
@@ -284,7 +284,7 @@ class DataController extends AdminbaseController {
                 $p_temp['statIds'][] =$value['value'];
             }
             //var_dump($p_temp);
-            $p_temp['unitTime'] = $_POST['unitTime']?$_POST['unitTime']:$p_temp['unitTime'];
+            $p_temp['unitOfTime'] = $_POST['unitOfTime']?$_POST['unitOfTime']:$p_temp['unitOfTime'];
             $p_temp['order']=$_POST['order']?$_POST['order']:$p_temp['order'];
             $datepick = explode(" ",  $_POST['datepicker']);
             $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
@@ -334,7 +334,7 @@ class DataController extends AdminbaseController {
             # code...
             /*如果有需要处理的前端传来的数据，先处理数据，比如范围选择，地域代码数据，*/
              /*更新$p_temp数组*/
-            $p_unitTime = $_POST['unitTime']?$_POST['unitTime']:$p_temp;
+            $p_unitOfTime = $_POST['unitOfTime']?$_POST['unitOfTime']:$p_temp;
             $p_temp['order']=$_POST['order']?$_POST['order']:$p_temp['order'];
             $datepick = explode(" ",  $_POST['datepicker']);
             $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
@@ -353,6 +353,105 @@ class DataController extends AdminbaseController {
     }
     public function optimize(){
        /* $this->display();*/
+    }
+
+
+
+
+   // 0415 数据查看-测试
+    public function chakan(){
+        // 接收参数
+        $device = $_REQUEST['device'] ? $_REQUEST['device'] : 0;
+        if($_REQUEST['riqi']){
+            $riqi = explode(" ",  $_REQUEST['riqi']);
+            $startDate=$riqi[0];
+            $endDate =$riqi[2];
+        }else{
+            $startDate=date('Y-m-d',strtotime('-1 day'));
+            $endDate =date('Y-m-d');
+        }
+        // 查看类型：默认为5    1分年；3分月；4分周；5分日；7分时；8请求时间段汇总(endDate- StartDate)
+        $unitOfTime = $_REQUEST['unitOfTime'] ? $_REQUEST['unitOfTime'] : 5;
+        $p_temp = array();
+        if (IS_AJAX) {
+            # code...
+            $statIds_temp = $_REQUEST['statIds'];
+            //var_dump($_POST['statIds']);
+            foreach ($statIds_temp as $key => $value) {
+                $p_temp['statIds'][] =$value['value'];
+            }
+            $p_temp['order']=$_POST['order']?$_POST['order']:$p_temp['order'];
+            $p_temp['startDate']=$startDate;
+            $p_temp['endDate']=$endDate;
+            $p_temp['Device']=$device;
+
+            $param_data  = dispatch_kpijob($_POST['pager_select'],$p_temp);
+            $param_r=json_decode($param_data)->body->data;
+
+            $param_return = array( );
+            foreach ($param_r as $key => $value) {
+                # code...
+                $param_return['data']['id'][]=$value->id;
+                $param_return['data']['impression'][]=$value->kpis[0];
+                $param_return['data']['cost'][]=$value->kpis[1];
+                $param_return['data']['cpc'][]=round($value->kpis[2]);
+                $param_return['data']['click'][]=$value->kpis[3];
+                $param_return['data']['ctr'][]=round($value->kpis[4]);
+                $param_return['data']['cpm'][]=$value->kpis[5];
+                $param_return['data']['name'][]=$value->name;
+                $param_return['data']['date'][]=$value->date;
+            }
+            $this->ajaxReturn($param_return);
+        }
+
+        $this->display();
+
+
+//        static $p_temp = array();
+//        /*设置默认值*/
+//        $p_temp['startDate']=isset($p_temp['startDate'])?$p_temp['startDate']:date('Y-m-d',strtotime('-1 day'));
+//        $p_temp['endDate']=isset($p_temp['endDate'])?$p_temp['endDate']:date('Y-m-d');
+//        $p_temp['Device']=isset($p_temp['Device'])?$p_temp['Device']:0;
+//        $p_temp['unitOfTime']=isset($p_temp['unitOfTime'])?$p_temp['unitOfTime']:5;
+//        if (IS_AJAX) {
+//            # code...
+//            $statIds_temp = $_POST['statIds'];
+//            //var_dump($_POST['statIds']);
+//            foreach ($statIds_temp as $key => $value) {
+//                $p_temp['statIds'][] =$value['value'];
+//            }
+//            //var_dump($p_temp);
+//            $p_temp['unitOfTime'] = $_POST['unitOfTime']?$_POST['unitOfTime']:$p_temp['unitOfTime'];
+//            $p_temp['order']=$_POST['order']?$_POST['order']:$p_temp['order'];
+//            $datepick = explode(" ",  $_POST['datepicker']);
+//            $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
+//            $p_temp['endDate']=$datepick[2]?$datepick[2]:$p_temp['endDate'];
+//            $p_temp['Device']=$_POST['Device']?$_POST['Device']:$p_temp['Device'];
+//
+//            $param_data  = dispatch_kpijob($_POST['pager_select'],$p_temp);
+//            $param_r=json_decode($param_data)->body->data;
+//
+//            $param_return = array( );
+//            foreach ($param_r as $key => $value) {
+//                # code...
+//                $param_return['data']['id'][]=$value->id;
+//                $param_return['data']['impression'][]=$value->kpis[0];
+//                $param_return['data']['cost'][]=$value->kpis[1];
+//                $param_return['data']['cpc'][]=round($value->kpis[2]);
+//                $param_return['data']['click'][]=$value->kpis[3];
+//                $param_return['data']['ctr'][]=round($value->kpis[4]);
+//                $param_return['data']['cpm'][]=$value->kpis[5];
+//                $param_return['data']['name'][]=$value->name;
+//                $param_return['data']['date'][]=$value->date;
+//
+//            }
+//            //var_dump(json_decode($param));
+//            //var_dump($param_data);
+//            //var_dump(gettype($param));
+//            $this->ajaxReturn($param_return);
+//        }
+//
+//        $this->display();
     }
 
 }
