@@ -19,10 +19,12 @@ $(function () {
 		$content.height($(window).height()-headerheight);
 		 calcTaskitemsWidth();
 	});
-	$("#content iframe").load(function(){
+	/*$("#content iframe").load(function(){
     	$loading.hide();
+    });*/
+	$("#content iframe").on('load',function(){
+        $loading.hide();
     });
-	
     $task_content_inner = $("#task-content-inner");
    
 
@@ -54,6 +56,7 @@ $(function () {
     
 
     $("#appbox  li .delete").click(function (e) {
+        
         $(this).parent().remove();
         return false;
     });
@@ -62,7 +65,7 @@ $(function () {
 
     ///
 
-    $(".apps_container li").live("click", function () {
+    $(".apps_container li").on("click", function () {
         var app = '<li><span class="delete" style="display:inline">×</span><img src="" class="icon"><a href="#" class="title"></a></li>';
         var $app = $(app);
         $app.attr("data-appname", $(this).attr("data-appname"));
@@ -83,27 +86,42 @@ $(function () {
         $(".window").hide();
     });
 
-    $(".task-item").live("click", function () {
+    $(".task-item").on("click", function () {
         var appid = $(this).attr("app-id");
         var $app = $('#' + appid);
         showTopWindow($app);
     });
 
-    $("#task-content-inner li").live("click", function () {
+    /*$("#task-content-inner li").on("click", function () {
     	openapp($(this).attr("app-url"), $(this).attr("app-id"), $(this).attr("app-name"));
     	return false;
-    });
-    
-    $("#task-content-inner li").live("dblclick", function () {
-    	closeapp($(this));
-    	return false;
-    	
-    });
-    $("#task-content-inner a.macro-component-tabclose").live("click", function () {
-    	closeapp($(this).parent());
+    });*/
+    $("#task-content").on("click",'li', function () {
+        openapp($(this).attr("app-url"), $(this).attr("app-id"), $(this).attr("app-name"));
         return false;
     });
     
+    
+    /*$("#task-content-inner li").on("dblclick", function () {
+    	closeapp($(this));
+    	return false;
+    	
+    });*/
+    $('#task_content').on('dblclick', 'li', function(event) {
+        closeapp($(this));
+        return false;
+    });
+    /*$("#task-content-inner a.macro-component-tabclose").click( function () {
+    	console.log("click to close ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;");
+        //closeapp($(this).parent());
+        return false;
+    });*/
+    $("#task-content").on('click', '.macro-component-tabclose', function(event) {
+        
+        closeapp($(this).parent());
+        return false;
+        /* Act on the event */
+    });
     $("#task-next").click(function () {
         var marginleft = $task_content_inner.css("margin-left");
         marginleft = marginleft.replace("px", "");
@@ -183,8 +201,11 @@ function openapp(url, appid, appname, refresh) {
         $loading.show();
         $appiframe=$(appiframe_tpl).attr("src",url).attr("id","appiframe-"+appid);
         $appiframe.appendTo("#content");
-        $appiframe.load(function(){
+        /*$appiframe.load(function(){
         	$loading.hide();
+        });*/
+        $appiframe.on('load',function(){
+            $loading.hide();
         });
         calcTaskitemsWidth();
     } else {
@@ -203,8 +224,11 @@ function openapp(url, appid, appname, refresh) {
     	if(refresh===true){//刷新
     		$loading.show();
     		$iframe.attr("src",url);
-    		$iframe.load(function(){
+    		/*$iframe.load(function(){
             	$loading.hide();
+            });*/
+            $iframe.on('load',function(){
+                $loading.hide();
             });
     	}
     	$iframe.show();

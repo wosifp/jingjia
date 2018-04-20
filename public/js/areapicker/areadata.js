@@ -114,7 +114,7 @@ function appendCity(thiscon, Cityxz) {
 var dataarrary = __LocalDataCities.list;
 function selectProvince(type, con, isremove) {
     //显示省级
-    console.log(__LocalDataCities);
+    //console.log(__LocalDataCities);
     var strVarCity = "";
     if (type == "all") {
         var dataCityxz      = __LocalDataCities.category.provinces;
@@ -354,7 +354,10 @@ function svae_City() {
 
     $(dataCityinput).data("value", val);
     $(dataCityinput).val(Cityname);
-console.log($(dataCityinput).data("value", val));
+    console.log(Cityname);
+    console.log(val);
+    $("#area_action").trigger('click');
+//console.log($(dataCityinput).data("value", val));
     Close();
 }
 

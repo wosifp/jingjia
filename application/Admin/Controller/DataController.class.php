@@ -134,10 +134,8 @@ class DataController extends AdminbaseController {
 
     public function keywords_check(){
         /*获取账户列表数据并赋值*/
-        var_dump($_POST['device']);
-        if($_POST['device']){
-            $this->ajaxReturn("dxxxxxx");
-        }
+        /*var_dump($_POST['device']);*/
+        
 
         /*获取用户列表并压到模板*/
         $this->assign('trade',getAccountList());
@@ -154,21 +152,20 @@ class DataController extends AdminbaseController {
         $start = mktime(0,0,0,date("m",$t),date("d",$t),date("Y",$t)); // 当天0时0分
         $end = mktime(23,59,59,date("m",$t),date("d",$t),date("Y",$t)); // 当天23时59分
 // 设备默认为0，全部
-        $device = $_POST['device'] ? $_POST['device'] : 0;
-        if($device){
-            session("device",$device);
-            $device = session("device");
-        }
+        static $p_temp = array();
+        /*设置默认值*/
+        $datepick = explode(" ",  $_REQUEST['datepicker']);
+        $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
+        $p_temp['endDate']=$datepick[2]?$datepick[2]:$p_temp['endDate'];
+        $p_temp['startDate']=$p_temp['startDate']?$p_temp['startDate']:date('Y-m-d',strtotime("-2 day"));
+        $p_temp['endDate']=$p_temp['endDate']?$p_temp['endDate']:date('Y-m-d',strtotime("-1 day"));
+        $p_temp['device']=$_REQUEST['device']?$_REQUEST['device']:0;
+        $p_temp['unitOfTime']=isset($p_temp['unitOfTime'])?$p_temp['unitOfTime']:5;
+        $param = array("startDate"=>$p_temp['startDate'],"endDate"=>$p_temp['endDate'],"platform"=>0,"device"=>$p_temp['device'],'unitOfTime'=>$p_temp['unitOfTime']);
 
-        $datepick = explode(" ",  $_POST['datepicker']);
+        $keywords_data_json = json_decode(getKeywordIdReport_realtime($param))->body->data;
+        var_dump($keywords_data_json);
 
-        $startDate=$datepick[0];
-
-        $endDate =$datepick[2];
-        $startDate = $startDate ? $startDate : date('Y-m-d',$start);
-        $endDate = $endDate ? $endDate : date('Y-m-d',$end);
-
-        $param = array("startDate"=>$startDate,"endDate"=>$endDate,"platform"=>0,"Device"=>$device);
         $this->display();
     }
 
@@ -272,6 +269,9 @@ class DataController extends AdminbaseController {
         $this->assign('trade',getAccountList());
         static $p_temp = array();
         /*设置默认值*/
+        echo "S():";
+        echo S('startDate');
+        echo "<br>";
         $p_temp['startDate']=isset($p_temp['startDate'])?$p_temp['startDate']:date('Y-m-d',strtotime('-1 day'));
         $p_temp['endDate']=isset($p_temp['endDate'])?$p_temp['endDate']:date('Y-m-d');
         $p_temp['Device']=isset($p_temp['Device'])?$p_temp['Device']:0;

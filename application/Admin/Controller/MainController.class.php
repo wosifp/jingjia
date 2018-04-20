@@ -34,18 +34,44 @@ class MainController extends AdminbaseController {
             session('username_normal',$target);
         }
         
-       static $p_temp = array();
+       /*static $p_temp = array();*/
         /*设置默认值*/
-        $datepick = explode(" ",  $_REQUEST['datepicker']);
-        $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
-        $p_temp['endDate']=$datepick[2]?$datepick[2]:$p_temp['endDate'];
-        $p_temp['startDate']=$p_temp['startDate']?$p_temp['startDate']:date('Y-m-d',strtotime("-2 day"));
-        $p_temp['endDate']=$p_temp['endDate']?$p_temp['endDate']:date('Y-m-d',strtotime("-1 day"));
-        $p_temp['device']=$_REQUEST['device']?$_REQUEST['device']:0;
-        $p_temp['unitOfTime']=isset($p_temp['unitOfTime'])?$p_temp['unitOfTime']:5;
-
-       
-        $param = array("startDate"=>$p_temp['startDate'],"endDate"=>$p_temp['endDate'],"platform"=>0,"device"=>$p_temp['device'],'unitOfTime'=>$p_temp['unitOfTime']);
+      
+        $datepicker = explode(" ",  $_REQUEST['datepicker']);
+        S('firtp_datepicker',$_REQUEST['datepicker']?$_REQUEST['datepicker']:S('firtp_datepicker'),300);
+        
+        S('firtp_startDate',$datepicker[0]?$datepicker[0]:S('firtp_startDate'),300);
+        S('firtp_endDate',$datepicker[2]?$datepicker[2]:S('firtp_endDate'),300);
+        S('firtp_device',$_REQUEST['device']?$_REQUEST['device']==3?0:$_REQUEST['firtp_device']:S(device),300);
+        $area_str = $_REQUEST['area_value'];
+        /*S('provid',$_REQUEST)*/
+        S('firtp_area_city',$_REQUEST['area_city']?$_REQUEST['area_city']:S('firtp_area_city'),300);
+        $p_temp = array( );
+        $p_temp['startDate']=S('firtp_startDate')?S('firtp_startDate'):date('Y-m-d',strtotime("-2 day"));
+        $p_temp['endDate']=S('firtp_endDate')?S('firtp_endDate'):date('Y-m-d',strtotime("-1 day"));
+        $p_temp['device']=S('firtp_device')?S('firtp_device'):0;
+        $p_temp['unitOfTime']=8;
+        
+        $p_temp['area_city'] = S('firtp_area_city');
+        $p_temp['provid'] = explode("-", $p_temp['area_city']);
+        $p_temp['datepicker'] = S('firtp_datepicker');
+        
+       /* echo $p_temp['startDate'];
+       echo "<br>";
+       echo $p_temp['endDate'];
+       echo "<br>";
+       echo $p_temp['device'];
+       echo "<br>";
+       echo $p_temp['area_city'];
+       echo "<br>";*/
+        //var_dump(S('startDate')[0]);
+       /* $this->assign("area_city",$p_temp['area_city']);
+        $this->assign("device_selected",$p_temp['device']);
+        $this->assign("datepicked",$p_temp['datepicker']);*/
+        /*echo $p_temp['area_city'];echo "<br>";
+        echo $p_temp['device'];echo "<br>";
+        echo $p_temp['datepicker'];echo "<br>";*/
+        $param = array("startDate"=>$p_temp['startDate'],"endDate"=>$p_temp['endDate'],"platform"=>0,"device"=>$p_temp['device'],'unitOfTime'=>$p_temp['unitOfTime'],'provid'=>$p_temp['provid']);
         
 
         /*$paramr = $param;
@@ -57,7 +83,36 @@ class MainController extends AdminbaseController {
         
         $param0['startDate']=date('Y-m-d',strtotime($param['startDate'])-$n_t-86400);
         $param0['endDate'] = date('Y-m-d',strtotime($param['startDate'])-86400);
-        
+        /*获取平均排名数据 时间段*/
+        $rank_range_json = json_decode(getKeywordIdReport_realtime($param))->body->data;
+
+        $rank_range_json0=json_decode(getKeywordIdReport_realtime($param0))->body->data;
+
+        //var_dump($rank_range_json);
+        $rank_length = 0;
+        $rank_temp = 0;
+        foreach ($rank_range_json as $key => $value) {
+            if ((int)$value->kpis[6]==0) {
+                continue;
+            }else{
+                $rank_temp += $value->kpis[6];
+                $rank_length++;
+            }
+            
+        }
+        $avgrank1= round($rank_temp / $rank_length ,2);
+        $rank_length = 0;
+        $rank_temp = 0;
+        foreach ($rank_range_json0 as $key => $value) {
+            if ((int)$value->kpis[6]==0) {
+                continue;
+            }else{
+                $rank_temp += $value->kpis[6];
+                $rank_length++;
+            }
+            
+        }
+        $avgrank0 = round($rank_temp / $rank_length ,2);
         
         /* 获取关键指标数据
         **********************
@@ -71,28 +126,34 @@ class MainController extends AdminbaseController {
         //var_dump($k_temp);
         $k_temp_0 =json_decode($json_string_0)->body->data;
         foreach ($k_temp_0 as $key => $value) {
-            $key_data['0']['impression'] +=$value->kpis[0];
-            $key_data['0']['cost'] +=$value->kpis[1];
-            $key_data['0']['click'] +=$value->kpis[3];
+            $key_data['0']['impression'] =$value->kpis[0];
+            $key_data['0']['cost'] =$value->kpis[1];
+            $key_data['0']['cpc'] =round($value->kpis[2],2);
+            $key_data['0']['click'] =$value->kpis[3];
+            $key_data['0']['ctr'] = round($value->kpis[4],2);
         }
-        $key_data['0']['cpc'] =$key_data['0']['click']==0?0: round($key_data['0']['cost']/$key_data['0']['click'],2);
-        $key_data['0']['ctr'] = $key_data['0']['click']==0?0:round($key_data['0']['impression']/$key_data['0']['click'],2);
-
         foreach ($k_temp as $key => $value) {
-            $key_data['1']['impression'] +=$value->kpis[0];
-            $key_data['1']['cost'] +=$value->kpis[1];
-            $key_data['1']['click'] +=$value->kpis[3];
+            $key_data['1']['impression'] =$value->kpis[0];
+            $key_data['1']['cost'] =$value->kpis[1];
+            $key_data['1']['cpc'] =round($value->kpis[2],2);
+            $key_data['1']['click'] =$value->kpis[3];
+            $key_data['1']['ctr'] = round($value->kpis[4],2);
         }
-        $key_data['1']['cpc'] =$key_data['1']['click']==0?0: round($key_data['1']['cost']/$key_data['1']['click'],2);
-        $key_data['1']['ctr'] = $key_data['1']['click']==0?0:round($key_data['1']['impression']/$key_data['1']['click'],2);
        // echo json_encode($k_temp);
-        
+        $key_data['0']['position'] = $avgrank0;
+        $key_data['1']['position'] = $avgrank1;
         //var_dump($keyindex_data);
         $this->assign('keyindex_data',$key_data);
+        $this->assign('keyindex_data_rate',json_encode($key_data));
        /*获取关键指标变化率mychart1 数据*/
        
        /*获取趋势图mychart2数据*/
-       foreach ($k_temp as $key => $value) {
+       $params_trend = $param;
+       $params_trend['unitOfTime']=5;
+       $k_avgrank_trend = json_decode(getKeywordIdReport_realtime($params_trend))->body->data;
+       //var_dump($k_avgrank_trend);
+       $k_trend = json_decode(getAccountReport_realtime($params_trend))->body->data;
+       foreach ($k_trend as $key => $value) {
            $trend_data['date'][] =$value->date;
            $trend_data['impression'][] =$value->kpis[0];
            $trend_data['cost'][] =$value->kpis[1];
@@ -103,7 +164,12 @@ class MainController extends AdminbaseController {
            $trend_data['conversion'][] =$value->kpis[6];
            $trend_data['phoneConversion'][] =$value->kpis[7];
            $trend_data['bridgeConversion'][] =$value->kpis[8];
-           $trend_data['name']=$value->name;     
+           $trend_data['name']=$value->name;
+           foreach ($k_avgrank_trend as $k1 => $v1) {
+                    if (strcmp($v1->date, $value->date)) {
+                        $trend_data['position'][] = round($v1->kpis[6]);
+                    }
+                }     
        }
        //var_dump($trend_data);
        $this->assign("trend_data",json_encode($trend_data));
@@ -209,11 +275,20 @@ class MainController extends AdminbaseController {
        $this->assign("fenshi_data",json_encode($fenshi_temp));
        //var_dump($fenshi_temp);
        
-       $this->assign("device_current",$p_temp['device']);
 
 
-        
-
+        if (IS_AJAX) {
+            /*$this->success('123','',true);*/
+           /* $this->ajaxReturn(true);*/
+           $ajax_result = array( );
+           $ajax_result['data']['key_data']=$key_data;
+           $ajax_result['data']['trend_data']=$trend_data;
+           $ajax_result['data']['region_data']=$region_data;
+           $ajax_result['data']['region_data2']=$region_data2;
+           $ajax_result['data']['fenshi_data']=$fenshi_temp;
+           $this->ajaxReturn($ajax_result);
+        }
+        //var_dump($fenshi_temp);
     	
     	$this->display();
     }
