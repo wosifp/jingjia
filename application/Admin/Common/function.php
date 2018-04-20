@@ -75,7 +75,7 @@ function getAccountReport_realtime($param = array("startDate"=>"2018-01-01","end
 	$p_number = isset($param['number'])?$param['number']:1000;
 	$p_performanceData=$p_unitOfTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
 	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>2,"levelOfDetails"=>2,"platform"=>$param["platform"],"device"=>$param["device"],'unitOfTime'=>$p_unitOfTime,'performanceData'=>$p_performanceData,'order'=>$p_order,'number'=>$p_number,'provid'=>$p_provid );
-	
+
 	$resultData =json_decode(getReport("RealTimeData",$param1));
 	return json_encode($resultData);
 	
@@ -107,7 +107,6 @@ function getCampaignReport_realtime($param = array("startDate"=>"2018-01-01","en
 	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
 	$p_performanceData=$p_unitOfTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
 	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>10,"levelOfDetails"=>3,"platform"=>$param["platform"],"device"=>$param["device"],'statRange'=>$p_stateRange,'unitOfTime'=>$p_unitOfTime,'statIds'=>$p_statIds,'order'=>$p_order,'number'=>$p_number,'performanceData'=>$p_performanceData,'provid'=>$p_provid  );
-	
 	$resultData =json_decode(getReport("RealTimeData",$param1));
 	
 	return json_encode($resultData);
@@ -138,7 +137,6 @@ function getAdgrouReport_realtime($param = array("startDate"=>"2018-01-01","endD
 	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
 	$p_performanceData=$p_unitOfTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
 	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>11,"levelOfDetails"=>5,"platform"=>$param["platform"],"device"=>$param["device"],'statRange'=>$p_statRange,'unitOfTime'=>$p_unitOfTime,'statIds'=>$p_statIds,'order'=>$p_order,'number'=>$p_number,'performanceData'=>$p_performanceData ,'provid'=>$p_provid );
-	
 	$resultData =json_decode(getReport("RealTimeData",$param1));
 	
 	return json_encode($resultData);
@@ -338,12 +336,10 @@ function getCampaignIdList(){
 		$temp = json_decode(getReport('Campaign',$params))->body->data;
 	}
 	$result = array( );
-	
-	
-	foreach ($temp as $key => $value) {
+    foreach ($temp as $key => $value) {
+        $result[session('username_normal')][]=$value;
+    }
 
-		$result[session('username_normal')][]=$value;
-	}
 	//var_dump($result);
 	return $result;
 }
@@ -531,6 +527,10 @@ function dispatch_myjob($param_string="计划"){
 			# code...
 		return getCreativeIdList();
 			break;
+        case '账户':
+            # code...
+            return getAccountList();
+            break;
 		default:
 			# code...
 		return false;

@@ -345,6 +345,8 @@ function svae_City() {
             Cityname += $(this).data("name") + '-';
         });
     }
+
+
     if (val != '') {
         val = val.substring(0, val.lastIndexOf('-'));
     }
