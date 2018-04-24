@@ -2,7 +2,11 @@
 
 /* 返回用户数组，包括用户名，密码，token  */
 function get_userNPT(){
-	return array('username'=>session('username_mcc'),'password'=>session('userpwd_mcc'),'token'=>C('token'),'target'=>session('username_normal'));
+	$user_obj = D("Common/Users");
+	$uid=sp_get_current_admin_id();
+	$admin=$user_obj->where(array("user_login"=>session('username_mcc')))->find();
+	$now_token=$admin['token'];
+	return array('username'=>session('username_mcc'),'password'=>session('userpwd_mcc'),'token'=>$now_token,'target'=>session('username_normal'));
 }
 function get_requestParams($ParamsName){
 	
@@ -22,6 +26,10 @@ function get_postdata($paramInfo){
 function auto_completeParam($keyword){
 	return array('info'=>$keyword.'Info','postfix'=>$keyword.'Postfix');
 }
+/*发送post请求
+参数：$url，请求api的url
+$post_data ，请求体
+*/
 function send_post($url, $post_data) {    
       // 1. 初始化
 		$ch = curl_init();
@@ -45,9 +53,9 @@ function send_post($url, $post_data) {
 /*parameters data format:
 ["startDate"=>"2018-01-01","endDate"=>"2018-03-03"]
 函数功能：返回账户时事报告，默认平台和设备为全部，可通过参数传入选择不同平台和设备。
-时间单位可通过“unitTime”设置，不设置则默认返回所有情况下的数据。
+时间单位可通过“unitOfTime”设置，不设置则默认返回所有情况下的数据。
 */
-function getAccountReport_realtime($param = array("startDate"=>"2018-01-01","endDate"=>"2018-03-03","platform"=>0,"Device"=>0)  ){
+function getAccountReport_realtime($param = array("startDate"=>"2018-01-01","endDate"=>"2018-03-03","platform"=>0,"device"=>0)  ){
 	if (!strcmp("2001-09-17", $param["startDate"])) {
 		# code...
 		echo "开始时间不能早于2001-09-17";
@@ -59,22 +67,198 @@ function getAccountReport_realtime($param = array("startDate"=>"2018-01-01","end
 		return false;
 	}
 	$resultData = array( );
-	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>2,"levelOfDetails"=>2,"platform"=>$param["platform"],"Device"=>$param["Device"] );
-
-	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
-	if($param["unitTime"]){
-		$param1["unitTime"]=$param["unitTime"];
-		$resultData =json_decode(getReport("RealTimeData",$param1));
-	}else{
-		$param1["unitTime"]=5;
-		$resultData=json_decode(getReport("RealTimeData",$param1));
-		
-	}
 	
+	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
+	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
+	$p_provid = isset($param['provid'])?$param['provid']:null;
+	$p_order = isset($param['order'])?$param['order']:null;
+	$p_number = isset($param['number'])?$param['number']:1000;
+	$p_performanceData=$p_unitOfTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
+	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>2,"levelOfDetails"=>2,"platform"=>$param["platform"],"device"=>$param["device"],'unitOfTime'=>$p_unitOfTime,'performanceData'=>$p_performanceData,'order'=>$p_order,'number'=>$p_number,'provid'=>$p_provid );
+
+	$resultData =json_decode(getReport("RealTimeData",$param1));
 	return json_encode($resultData);
 	
 }
-/*返回相应服务的报告
+/*获取计划实时报告，返回kpi指标数据
+参数，startDate，endDate，device，platform，ids（ids可以不填，默认为全部，也可以填写计划id，数组形式，可以填写多个。）。
+参照api文档的报告规则，计划报告的其他一些参数写死在函数体中
+如reportType，levelOfDetail，statRange为2时表示统计全账户，则ids不填，为3时表示查询指定的ids，unitOfTime指定时间粒度。
+*/
+function getCampaignReport_realtime($param = array("startDate"=>"2018-01-01","endDate"=>"2018-03-03",'device'=>0,'platform'=>0  )){
+	if (!strcmp("2001-09-17", $param["startDate"])) {
+		# code...
+		echo "开始时间不能早于2001-09-17";
+		return false;
+	}
+	if (strcmp($param["startDate"], $param["endDate"])>0) {
+		# code...
+		echo "截止时间不能早于起始时间";
+		return false;
+	}
+	$resultData = array( );
+	/*由于账户层级2，不需要ids，所以如果本方法中如果设置了statids，则可以认为是计划id*/
+	$p_stateRange = isset($param['statIds'])?3:2;
+	$p_statIds = isset($param['statIds'])?$param['statIds']:null;
+	$p_order = isset($param['order'])?$param['order']:null;
+	$p_number = isset($param['number'])?$param['number']:1000;
+	$p_provid = isset($param['provid'])?$param['provid']:null;
+	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
+	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
+	$p_performanceData=$p_unitOfTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
+	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>10,"levelOfDetails"=>3,"platform"=>$param["platform"],"device"=>$param["device"],'statRange'=>$p_stateRange,'unitOfTime'=>$p_unitOfTime,'statIds'=>$p_statIds,'order'=>$p_order,'number'=>$p_number,'performanceData'=>$p_performanceData,'provid'=>$p_provid  );
+	$resultData =json_decode(getReport("RealTimeData",$param1));
+	
+	return json_encode($resultData);
+
+}
+/*查询单元实时报告，返回kpi指标数据
+参数，startDate，endDate，device，platform，statIds（statIids可以不填，默认为全部，也可以填写计划id或者单元id，数组形式，可以填写多个。）。
+参照api文档的报告规则，计划报告的其他一些参数写死在函数体中
+如reportType，levelOfDetail，statRange为2时表示统计全账户，则ids不填，为3时表示查询指定的ids，unitOfTime指定时间粒度。*/
+function getAdgrouReport_realtime($param = array("startDate"=>"2018-01-01","endDate"=>"2018-03-03",'device'=>0,'platform'=>0  )){
+	if (!strcmp("2001-09-17", $param["startDate"])) {
+		# code...
+		echo "开始时间不能早于2001-09-17";
+		return false;
+	}
+	if (strcmp($param["startDate"], $param["endDate"])>0) {
+		# code...
+		echo "截止时间不能早于起始时间";
+		return false;
+	}
+	$resultData = array( );
+	$p_statRange = isset($param['statRange'])?$param['statRange']:2;
+	$p_statIds = isset($param['statIds'])?$param['statIds']:null;
+	$p_order = isset($param['order'])?$param['order']:null;
+	$p_number = isset($param['number'])?$param['number']:1000;
+	$p_provid = isset($param['provid'])?$param['provid']:null;
+	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
+	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
+	$p_performanceData=$p_unitOfTime == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','conversion','phoneConversion','bridgeConversion');
+	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>11,"levelOfDetails"=>5,"platform"=>$param["platform"],"device"=>$param["device"],'statRange'=>$p_statRange,'unitOfTime'=>$p_unitOfTime,'statIds'=>$p_statIds,'order'=>$p_order,'number'=>$p_number,'performanceData'=>$p_performanceData ,'provid'=>$p_provid );
+	$resultData =json_decode(getReport("RealTimeData",$param1));
+	
+	return json_encode($resultData);
+}
+/*查询关键词实时报告，返回kpi指标数据
+参数，startDate，endDate，device，platform，statIds（statIids可以不填，默认为全部，也可以填写计划id或者单元id，数组形式，可以填写多个。）。
+参照api文档的报告规则，计划报告的其他一些参数写死在函数体中
+如reportType，levelOfDetail，statRange为2时表示统计全账户，则statids不填，为3时表示查询指定的计划statids，为5时表示查询指定的单元statids，unitOfTime指定时间粒度。*/
+function getKeywordIdReport_realtime($param = array("startDate"=>"2018-01-01","endDate"=>"2018-03-03",'device'=>0,'platform'=>0  )){
+	if (!strcmp("2001-09-17", $param["startDate"])) {
+		# code...
+		echo "开始时间不能早于2001-09-17";
+		return false;
+	}
+	if (strcmp($param["startDate"], $param["endDate"])>0) {
+		# code...
+		echo "截止时间不能早于起始时间";
+		return false;
+	}
+	$resultData = array( );
+	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
+	
+	$p_performanceData=$param['unitOfTime'] == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','position','conversion','bridgeConversion');
+	$param1 = array("reportType"=>14,"levelOfDetails"=>11,'performanceData'=>$p_performanceData );
+	$param1 = array_merge($param,$param1);
+	
+	$resultData =json_decode(getReport("RealTimeData",$param1));
+	
+	return json_encode($resultData);
+}
+
+
+/*查询创意实时报告，返回kpi指标数据
+参数，startDate，endDate，device，platform，statIds（statIids可以不填，默认为全部，也可以填写计划id或者单元id，数组形式，可以填写多个。）。
+参照api文档的报告规则，计划报告的其他一些参数写死在函数体中
+如reportType，levelOfDetail，statRange为2时表示统计全账户，则statids不填，为3时表示查询指定的计划statids，为5时表示查询指定的单元statids，unitOfTime指定时间粒度。*/
+function getCreativeIdReport_realtime($param = array("startDate"=>"2018-01-01","endDate"=>"2018-03-03",'device'=>0,'platform'=>0  )){
+	if (!strcmp("2001-09-17", $param["startDate"])) {
+		# code...
+		echo "开始时间不能早于2001-09-17";
+		return false;
+	}
+	if (strcmp($param["startDate"], $param["endDate"])>0) {
+		# code...
+		echo "截止时间不能早于起始时间";
+		return false;
+	}
+	$resultData = array( );
+	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
+	
+	$p_performanceData=$param['unitOfTime'] == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','position','conversion','bridgeConversion');
+	$param1 = array("reportType"=>12,"levelOfDetails"=>7,'performanceData'=>$p_performanceData );
+	$param1 = array_merge($param,$param1);
+	
+	$resultData =json_decode(getReport("RealTimeData",$param1));
+	
+	return json_encode($resultData);
+}
+
+
+/*查询操作记录实时报告，返回kpi指标数据
+参数，startDate，endDate，device，platform，statIds（statIids可以不填，默认为全部，也可以填写计划id或者单元id，数组形式，可以填写多个。）。
+参照api文档的报告规则，计划报告的其他一些参数写死在函数体中
+如reportType，levelOfDetail，statRange为2时表示统计全账户，则statids不填，为3时表示查询指定的计划statids，为5时表示查询指定的单元statids，unitOfTime指定时间粒度。*/
+function getHistoryRankReport_realtime($param = array("startDate"=>"2018-01-01","endDate"=>"2018-03-03",'device'=>0,'platform'=>0  )){
+	if (!strcmp("2001-09-17", $param["startDate"])) {
+		# code...
+		echo "开始时间不能早于2001-09-17";
+		return false;
+	}
+	if (strcmp($param["startDate"], $param["endDate"])>0) {
+		# code...
+		echo "截止时间不能早于起始时间";
+		return false;
+	}
+	$resultData = array( );
+	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
+	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
+	$p_provid = isset($param['provid'])?$param['provid']:null;
+	$p_statRange = isset($param['statRange'])?$param['statRange']:2;
+	$p_order = isset($param['order'])?$param['order']:null;
+	$p_number = isset($param['number'])?$param['number']:1000;
+	$p_performanceData=array('rank1shows','rank2shows','rank3shows','rank4shows','rank1to4shows' );
+	$p_device = isset($param['device'])?$param['device']:1;
+	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>38,"levelOfDetails"=>11,"platform"=>$param["platform"],"device"=>$p_device,'unitOfTime'=>$p_unitOfTime,'performanceData'=>$p_performanceData,'order'=>$p_order,'number'=>$p_number,'provid'=>$p_provid );
+
+	$resultData =json_decode(getReport("RealTimeData",$param1));
+	return json_encode($resultData);
+}
+
+function getRegionReport_realtime($param = array("startDate"=>"2018-01-01","endDate"=>"2018-03-03",'device'=>0,'platform'=>0  )){
+	if (!strcmp("2001-09-17", $param["startDate"])) {
+		# code...
+		echo "开始时间不能早于2001-09-17";
+		return false;
+	}
+	if (strcmp($param["startDate"], $param["endDate"])>0) {
+		# code...
+		echo "截止时间不能早于起始时间";
+		return false;
+	}
+	$resultData = array( );
+	/*时间单位设置，1,3,4,5，8 分别对应年、月、周、日、请求时间段*/
+	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
+	$p_provid = isset($param['provid'])?$param['provid']:null;
+	$p_statRange = isset($param['statRange'])?$param['statRange']:2;
+	$p_levelOfDetails = isset($param['levelOfDetails'])?$param['levelOfDetails']:2;
+	$p_order = isset($param['order'])?$param['order']:true;
+	$p_number = isset($param['number'])?$param['number']:1000;
+	$p_performanceData=array('impression','cost','cpc','click','ctr','cpm','position','conversion' );
+	$p_device = isset($param['device'])?$param['device']:0;
+	$p_reportType = isset($param['reportType'])?$param['reportType']:3;
+	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>$p_reportType,"levelOfDetails"=>$p_levelOfDetails,"platform"=>$param["platform"],"device"=>$p_device,'unitOfTime'=>$p_unitOfTime,'performanceData'=>$p_performanceData,'order'=>$p_order,'number'=>$p_number,'provid'=>$p_provid );
+
+	$resultData =json_decode(getReport("RealTimeData",$param1));
+	return json_encode($resultData);
+}
+
+
+
+
+/*返回相应服务的报告，
 参数：
 $param : 数组类型，可以修改请求参数体中 某些Key对应的键值，可为空。
 $serviceName : 服务名称(Account, Campaign , Adgroup, Keyword, Creative,NewCreative,Toolkit , DynamicCreative,DynCreativeExclusion,RealTimeData,RealTimeQueryData,RealTimePairData,ProfessionalReportId, ReportState,ReportFileUrl,BulkJob,AllChangedObjects,FileStatus,FilePath,cancelDownload,ChangedId,ChangedItemId,ChangedScale)
@@ -100,11 +284,20 @@ function getReport($serviceName='Account',$param=array()){
 		$post_data_temp = updateItem($post_data_temp,$key,$value);
 		}
 	}
-	
+	//var_dump($post_data_temp);
 /*将修改好的消息体 encode成json格式*/
 	$post_data = json_encode($post_data_temp);
+	//echo $url;
 	//echo $post_data;
-	$output = send_post($url,$post_data);
+	if (S($post_data)) {
+		# code...
+		$output = S($post_data);
+	}else{
+		$output = send_post($url,$post_data);
+		S($post_data,$output,604800);
+	}
+	
+
 	return $output;
 
 }
@@ -169,7 +362,251 @@ function getAccountList(){
     
     return $result;
 }
+/*获取计划的名字*/
+function getCampaignIdList(){
+	$temp = json_decode(getReport('Campaign'))->body->data ;
+	if (empty($temp)) {
+		# code...
+		$params = array('mobileExtend' => 1 );
+		//var_dump($temp);
+		$temp = json_decode(getReport('Campaign',$params))->body->data;
+	}
+	$result = array( );
+    foreach ($temp as $key => $value) {
+        $result[session('username_normal')][]=$value;
+    }
 
+	//var_dump($result);
+	return $result;
+}
+function getAdgroupIdList(){
+	$temp = json_decode(getReport('Campaign'))->body->data ;
+	
+	$result = array( );
+	$ids = array( );
+	foreach ($temp as $key => $value) {
+
+		$ids[]=$value->campaignId;
+	}
+	$idtype = 3;
+	$params = array('ids' => $ids,'idType'=>$idtype );
+
+	$adgroupdata = json_decode(getReport('Adgroup',$params))->body->data;
+
+	//var_dump($adgroupdata);
+	foreach ($adgroupdata as $key1 => $value1) {
+		# code...
+		$tt = $temp;
+		foreach ($tt as $key2 => $value2) {
+			if ($value2->campaignId == $value1->campaignId) {
+				$result[session('username_normal')][$value2->campaignName][]=$value1;
+			}
+			
+		}
+		
+	}
+	
+	//var_dump($result);
+	return $result;
+}
+/**/
+function getKeyWordIDList($param = array()){
+	if (empty($param)) {
+		# code...
+		$all_temp = getAdgroupIdList();
+		$result = array();
+		$ids = array( );
+		$idtype = 5;
+		foreach ($all_temp as $key1 => $value1) {
+			# code...
+			foreach ($value1 as $key2 => $value2) {
+				# code...
+				foreach ($value2 as $key3 => $value3) {
+					# code...
+					$ids[] = $value3->adgroupId;
+				}
+			}
+		}
+		$param1 = array('ids' => $ids,'idType'=>$idtype,'getTemp'=>0 );
+		$keywordData = json_decode(getReport('Keyword',$param1))->body->data;
+		$param2 = array('ids' => $ids,'idType'=>$idtype,'getTemp'=>1);
+		$keywordShadowData=json_decode(getReport('Keyword',$param2))->body->data;
+		foreach ($keywordShadowData as $k => $v) {
+			# code...
+			$keywordData[] = $v;
+		}
+		foreach ($keywordData as $key => $value) {
+			# code...
+			$d1 = $all_temp;
+			foreach ($d1 as $key1 => $value1) {
+				# code...
+				$d2 = $value1;
+				foreach ($d2 as $key2 => $value2) {
+					# code...
+					$d3 =$value2;
+					foreach ($d3 as $key3 => $value3) {
+						# code...
+						if ($value->adgroupId ==$value3->adgroupId) {
+						# code...
+						$result[$key1][$key2][$value3->adgroupName][]=$value;
+						}
+					}	
+				}
+			}
+		}
+
+		return $result;
+	}else{
+
+	}
+}
+function getCreativeIdList($param = array()){
+	if (empty($param)) {
+		# code...
+		$all_temp = getAdgroupIdList();
+		$result = array();
+		$ids = array( );
+		$idtype = 5;
+		foreach ($all_temp as $key1 => $value1) {
+			# code...
+			foreach ($value1 as $key2 => $value2) {
+				# code...
+				foreach ($value2 as $key3 => $value3) {
+					# code...
+					$ids[] = $value3->adgroupId;
+				}
+			}
+		}
+		$param1 = array('ids' => $ids,'idType'=>$idtype,'getTemp'=>0 );
+		$keywordData = json_decode(getReport('Creative',$param1))->body->data;
+		$param2 = array('ids' => $ids,'idType'=>$idtype,'getTemp'=>1);
+		$keywordShadowData=json_decode(getReport('Creative',$param2))->body->data;
+		foreach ($keywordShadowData as $k => $v) {
+			# code...
+			$keywordData[] = $v;
+		}
+		var_dump($keywordData);
+		foreach ($keywordData as $key => $value) {
+			# code...
+			$d1 = $all_temp;
+			foreach ($d1 as $key1 => $value1) {
+				# code...
+				$d2 = $value1;
+				foreach ($d2 as $key2 => $value2) {
+					# code...
+					$d3 =$value2;
+					foreach ($d3 as $key3 => $value3) {
+						# code...
+						if ($value->adgroupId ==$value3->adgroupId) {
+						# code...
+						$result[$key1][$key2][$value3->adgroupName][]=$value;
+						}
+					}	
+				}
+			}
+		}
+
+		return $result;
+	}else{
+
+	}
+}
+function dispatch_kpijob($param_string="计划",$params = array()){
+	$result = array();
+	//var_dump($params);
+	/*echo "dispatch_myjob";
+	echo $param_string;*/
+	switch ($param_string) {
+		case '账户':
+			# code...
+		return getAccountReport_realtime($params);
+			break;
+		case '计划':
+			# code...
+		return getCampaignReport_realtime($params);
+			break;
+		case '单元':
+		return getAdgrouReport_realtime($params);
+			break;
+		case '关键词':
+			# code...
+		return getKeywordIdReport_realtime($params);
+			break;
+		case '创意':
+			# code...
+		return getCreativeIdReport_realtime($params);
+			break;
+		default:
+			# code...
+		return false;
+			break;
+	}
+
+}
+function dispatch_myjob($param_string="计划"){
+	$result = array();
+	//var_dump($param_string);
+	/*echo "dispatch_myjob";
+	echo $param_string;*/
+	switch ($param_string) {
+		case '计划':
+			# code...
+		return getCampaignIdList();
+			break;
+		case '单元':
+		return getAdgroupIdList();
+			break;
+		case '关键词':
+			# code...
+		return getKeyWordIDList();
+			break;
+		case '创意':
+			# code...
+		return getCreativeIdList();
+			break;
+        case '账户':
+            # code...
+        return getAccountList();
+            break;
+		default:
+			# code...
+		return false;
+			break;
+	}
+}
+ function mysort($array, $desc = false){
+     	//var_dump($array);
+       foreach ($array as $k => &$v) {
+         if ($desc) {
+
+         	for ($i= count($v['data']); $i >0 ; $i--) { 
+         		# code...
+
+         		for ($j=0; $j < $i-1 ; $j++) { 
+         			# code...
+         			
+         			if ($v['data'][$j] < $v['data'][$j+1] ) {
+         				$temp = $v['data'][$j];
+         				$v['data'][$j]=$v['data'][$j+1];
+         				$v['data'][$j+1]=$temp;
+         				$temp1 = $v['name'][$j];
+         				$v['name'][$j]=$v['name'][$j+1];
+         				$v['name'][$j+1]=$temp1;
+         			}else{
+         				
+         				continue;
+         			}
+         			
+         		}
+         	}
+         }
+       }
+       unset($v);
+       //var_dump($array);
+       return $array;
+
+
+    }
 function test(){
 	echo "function test successfuly";
 }

@@ -34,7 +34,7 @@ class MainController extends AdminbaseController {
             session('username_normal',$target);
         }
         
-       /*static $p_temp = array();*/
+      
         /*设置默认值*/
       
         $datepicker = explode(" ",  $_REQUEST['datepicker']);
@@ -42,7 +42,11 @@ class MainController extends AdminbaseController {
         
         S('firtp_startDate',$datepicker[0]?$datepicker[0]:S('firtp_startDate'),300);
         S('firtp_endDate',$datepicker[2]?$datepicker[2]:S('firtp_endDate'),300);
-        S('firtp_device',$_REQUEST['device']?$_REQUEST['device']==3?0:$_REQUEST['firtp_device']:S(device),300);
+       
+        
+        S('firtp_device',$_REQUEST['device']?$_REQUEST['device']:S('firtp_device'),300);
+        S('firtp_device',S('firtp_device')=='3'?0:S('firtp_device'));
+       
         $area_str = $_REQUEST['area_value'];
         /*S('provid',$_REQUEST)*/
         S('firtp_area_city',$_REQUEST['area_city']?$_REQUEST['area_city']:S('firtp_area_city'),300);
@@ -51,32 +55,16 @@ class MainController extends AdminbaseController {
         $p_temp['endDate']=S('firtp_endDate')?S('firtp_endDate'):date('Y-m-d',strtotime("-1 day"));
         $p_temp['device']=S('firtp_device')?S('firtp_device'):0;
         $p_temp['unitOfTime']=8;
-        
+        /*var_dump(S('firtp_device')) ;
+        var_dump($p_temp['device']) ;*/
         $p_temp['area_city'] = S('firtp_area_city');
         $p_temp['provid'] = explode("-", $p_temp['area_city']);
         $p_temp['datepicker'] = S('firtp_datepicker');
         
-       /* echo $p_temp['startDate'];
-       echo "<br>";
-       echo $p_temp['endDate'];
-       echo "<br>";
-       echo $p_temp['device'];
-       echo "<br>";
-       echo $p_temp['area_city'];
-       echo "<br>";*/
-        //var_dump(S('startDate')[0]);
-       /* $this->assign("area_city",$p_temp['area_city']);
-        $this->assign("device_selected",$p_temp['device']);
-        $this->assign("datepicked",$p_temp['datepicker']);*/
-        /*echo $p_temp['area_city'];echo "<br>";
-        echo $p_temp['device'];echo "<br>";
-        echo $p_temp['datepicker'];echo "<br>";*/
+
         $param = array("startDate"=>$p_temp['startDate'],"endDate"=>$p_temp['endDate'],"platform"=>0,"device"=>$p_temp['device'],'unitOfTime'=>$p_temp['unitOfTime'],'provid'=>$p_temp['provid']);
         
-
-        /*$paramr = $param;
-        $paramr['device']='2';
-            */      
+    
         /*86400*/
         $param0 = $param;
         $n_t = strtotime($param['endDate'])-strtotime($param['startDate']);
@@ -125,20 +113,20 @@ class MainController extends AdminbaseController {
        // $r_temp = json_decode($rank_string)->body->data;
         //var_dump($k_temp);
         $k_temp_0 =json_decode($json_string_0)->body->data;
-        foreach ($k_temp_0 as $key => $value) {
-            $key_data['0']['impression'] =$value->kpis[0];
-            $key_data['0']['cost'] =$value->kpis[1];
-            $key_data['0']['cpc'] =round($value->kpis[2],2);
-            $key_data['0']['click'] =$value->kpis[3];
-            $key_data['0']['ctr'] = round($value->kpis[4],2);
-        }
-        foreach ($k_temp as $key => $value) {
-            $key_data['1']['impression'] =$value->kpis[0];
-            $key_data['1']['cost'] =$value->kpis[1];
-            $key_data['1']['cpc'] =round($value->kpis[2],2);
-            $key_data['1']['click'] =$value->kpis[3];
-            $key_data['1']['ctr'] = round($value->kpis[4],2);
-        }
+        /*foreach ($k_temp_0 as $key => $value) {*/
+            $key_data['0']['impression'] =$k_temp_0[0]->kpis[0];
+            $key_data['0']['cost'] =$k_temp_0[0]->kpis[1];
+            $key_data['0']['cpc'] =round($k_temp_0[0]->kpis[2],2);
+            $key_data['0']['click'] =$k_temp_0[0]->kpis[3];
+            $key_data['0']['ctr'] = round($k_temp_0[0]->kpis[4],2);
+        /*}*/
+        /*foreach ($k_temp as $key => $value) {*/
+            $key_data['1']['impression'] =$k_temp[0]->kpis[0];
+            $key_data['1']['cost'] =$k_temp[0]->kpis[1];
+            $key_data['1']['cpc'] =round($k_temp[0]->kpis[2],2);
+            $key_data['1']['click'] =$k_temp[0]->kpis[3];
+            $key_data['1']['ctr'] = round($k_temp[0]->kpis[4],2);
+        /*}*/
        // echo json_encode($k_temp);
         $key_data['0']['position'] = $avgrank0;
         $key_data['1']['position'] = $avgrank1;
@@ -153,6 +141,21 @@ class MainController extends AdminbaseController {
        $k_avgrank_trend = json_decode(getKeywordIdReport_realtime($params_trend))->body->data;
        //var_dump($k_avgrank_trend);
        $k_trend = json_decode(getAccountReport_realtime($params_trend))->body->data;
+       if (!$k_trend) {
+         $trend_data['date'][] =0;
+           $trend_data['impression'][] =0;
+           $trend_data['cost'][] =0;
+           $trend_data['cpc'][] =0;
+           $trend_data['click'][] =0;
+           $trend_data['ctr'][] =0;
+           $trend_data['cpm'][] =0;
+           $trend_data['conversion'][] =0;
+           $trend_data['phoneConversion'][] =0;
+           $trend_data['bridgeConversion'][] =0;
+           $trend_data['name']=0;
+           $trend_data['position'][] = 0;
+                    
+       }
        foreach ($k_trend as $key => $value) {
            $trend_data['date'][] =$value->date;
            $trend_data['impression'][] =$value->kpis[0];

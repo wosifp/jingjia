@@ -127,8 +127,8 @@ app 下载报告 / 推广电话报告，不支
 	'endDate'=> '2018-01-30',
 	/* 选填，默认为账户  2 ：账户粒度  3 ：计划粒度  5 ：单元粒度  7 ：创意粒度  11 ：关键词 (keywordid) 粒度  12 ：关键词 (keywordid)+ 创意粒度  6 ：关键词 (wordid) 粒度    */
 	'levelOfDetails'=>2,
-/* 	选填；  为 NULL 表示统计全部地域。  key:provid  ；  value: 地域代码数组  说明： app 下载报告 / 推广电话不支持 attributes  */
-	'attributes'=>null,
+/* 	选填；  为 NULL 表示统计全部地域。  key:provid  ；  value: 地域代码数组  说明： app 下载报告 / 推广电话不支持 provid  */
+	'provid'=>null,
 /* 	必填；  2 ：账户  10 ：计划  11 ：单元  14 ：关键词 (keywordid) 12 ：创意  3 ：地域  9 ：关键词 (wordid) 5 ：二级地域报告  21 ：蹊径报告  38 ：历史数据排名报告  40 ： app 下载报告  41 ：推广电话报告   */
 	'reportType'=>2,
 	/* 统计范围下的 id 集合。根据 StatRange 的不同类型填写不同 id  
@@ -162,7 +162,7 @@ app 下载报告 / 推广电话报告，不支
 	'levelOfDetails'=>12,
 	/*  AttibuteType  针对特定的数据层级设置特定的统计范围   选填；  为 NULL 表示统计全部地域。  key:provid  ；  value: 地域代码数组  
 	key  String 针对特定的报告类型设置特定的统计范围 目前仅对地域报告和搜索词报告使用，合法值：provid value  intarray() 针对特定的报告类型设置特定的统计范围 目前仅对地域报告和搜索词报告使用，key取 provid 时，value 值为地域代码数组，为空则表示全部地域 	*/
-	'attributes'=>null,
+	'provid'=>null,
 	/* 实时数据类型   必填；  6 ：搜索词   */
 	'reportType'=>6,
 	/* Longarray()  选填，默认 NULL ，表示统计范围为全账户  staRange 为 3 时填写计划 id;  */
@@ -191,7 +191,7 @@ app 下载报告 / 推广电话报告，不支
 	'levelOfDetails'=>12,
 	/* AttibuteType  为 NULL 表示统计全部地域。  key:provid  ；  value: 地域代码数组  
 	key  String 针对特定的报告类型设置特定的统计范围 目前仅对地域报告和搜索词报告使用，合法值：provid value  intarray() 针对特定的报告类型设置特定的统计范围 目前仅对地域报告和搜索词报告使用，key取 provid 时，value 值为地域代码数组，为空则表示全部地域 	*/
-	'attributes'=>null,
+	'provid'=>null,
 	/* 必填；  15 ：配对   */
 	'reportType'=>15,
 	/* Longarray()  选填，默认 NULL ，表示统计范围为全账户  staRange 为 3 时填写计划 id; staRange 为 5 时填写单元 id; staRange 为 7 时填写创意 id; staRange 为 11 时填写关键词keywordid;  */
@@ -218,9 +218,9 @@ app 下载报告 / 推广电话报告，不支
 	'idOnly'=>false,
 	/* 选填；不同的 ReportType 对应的默认值和取值范围不同，请参见规则描述 2：账户粒度 3：计划粒度 5：单元粒度 7：创意粒度 11：关键词(keywordid)粒度 12：关键词(keywordid)+创意粒度 6：关键词(wordid)粒度  */
 	'levelOfDetails'=>2,
-	/*AttibuteTypearray( ) 选填； 目前仅地域报告和搜索词报告使用了该字段，若为 NULL 表示统计全部地域。 key:provid  ； value:地域代码数组 说明： app 下载报告 / 推广电话不支持attributes  
+	/*AttibuteTypearray( ) 选填； 目前仅地域报告和搜索词报告使用了该字段，若为 NULL 表示统计全部地域。 key:provid  ； value:地域代码数组 说明： app 下载报告 / 推广电话不支持provid  
 	key  String 针对特定的报告类型设置特定的统计范围 目前仅对地域报告和搜索词报告使用，合法值：provid value  intarray() 针对特定的报告类型设置特定的统计范围 目前仅对地域报告和搜索词报告使用，key取 provid 时，value 值为地域代码数组，为空则表示全部地域 */
-	'attributes'=>null,
+	'provid'=>null,
 	/* 选填，默认值为 2；2：csv 格式  */
 	'format'=>2,
 	/* 必填； 2：账户报告 10：计划报告 11：单元报告 14：关键词报告(keywordid)报告 12：创意报告 15：配对报告 3：地域报告 6：搜索词报告 9：关键词报告(wordid) 5 ：二级地域报告  38 ：历史数据排名报告  40 ： app 下载报告  41 ：推广电话报告  */

@@ -10,15 +10,17 @@ li {
     list-style: none;
 }
 </style>
+<script src="__PUBLIC__/js/jquery.js"></script>
 <link href="__PUBLIC__/admin/css/bootstrap.min.css" rel="stylesheet">
 
 <link href="__PUBLIC__/admin/css/style.css" rel="stylesheet" type="text/css" />
 <script src="__PUBLIC__/admin/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="__PUBLIC__/admin/js/jquery.min.js"></script>
+<!-- <script src="__PUBLIC__/admin/js/jquery.min.js"></script> -->
+
 <script src="__PUBLIC__/admin/js/style.js" type="text/javascript"></script>
 <script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
-<link href="__PUBLIC__/admin/css/bootstrap-multiselect.css" rel="stylesheet">
-<script src="__PUBLIC__/admin/js/bootstrap-multiselect.js" type="text/javascript"></script>
+<link href="__PUBLIC__/admin/css/multiple-select.css" rel="stylesheet">
+<script src="__PUBLIC__/admin/js/multiple-select.js" type="text/javascript"></script>
 <!--<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate.css">
 <link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate(1).css" id="LayDateSkin"> -->
 <script src="__PUBLIC__/js/echarts/echarts.min.js"></script>
@@ -90,12 +92,12 @@ li {
 <!-- 关键指标 -->
         <div class="qi_con_1">
             <p class="qi_p_4">关键指标</p>
-            <div class="qi_bfb_100">
-                <select class="qi_float_r " multiple="multiple" id="keyindex_data_select">
-                    <option value="ccc">消费/点击/CPC</option>
-                    <option value="rcc">平均排名/CPC/CTR</option>
-                    <option value="icr">展现/CTR/平均排名</option>
-                </select>
+            <!-- <div class="qi_bfb_100">
+                <select class="qi_float_r" multiple="multiple" id="keyindex_data_select">
+                    <option value="cost">消费</option>
+                    <option value="rank">平均排名</option>
+                    <option value="impression">展现</option>
+                </select> -->
             </div>
             <div class="jzl-module-body">
                 <div class="row">
@@ -104,25 +106,25 @@ li {
                             <div class="col-lg-2 col-md-4 col-sm-6 col-sx-12" ng-repeat="(index,item) in table_items">
                                 <div class="summary_target summary_target_1 summary_target_bgcolor_1 mb10">
                                     <div class="summary_target_title"><a title="点击">点击</a></div>
-                                    <div class="summary_target_body summary_target_color_1">{$keyindex_data[1].click} <span class="summary_target_body_unit">次</span></div>
+                                    <div class="summary_target_body summary_target_color_1" id="keyindex_click">{$keyindex_data[1].click} <span class="summary_target_body_unit">次</span></div>
                                 </div>
                             </div>
                             <div class="col-lg-2 col-md-4 col-sm-6 col-sx-12" ng-repeat="(index,item) in table_items">
                                 <div class="summary_target summary_target_2 summary_target_bgcolor_2 mb10">
                                     <div class="summary_target_title"><a title="消费">消费</a></div>
-                                    <div class="summary_target_body summary_target_color_2">{$keyindex_data[1].cost} <span class="summary_target_body_unit">元</span></div>
+                                    <div class="summary_target_body summary_target_color_2" id="keyindex_cost">{$keyindex_data[1].cost} <span class="summary_target_body_unit">元</span></div>
                                 </div>
                             </div>
                             <div class="col-lg-2 col-md-4 col-sm-6 col-sx-12" ng-repeat="(index,item) in table_items">
                                 <div class="summary_target summary_target_3 summary_target_bgcolor_3 mb10">
                                     <div class="summary_target_title"><a title="展现">展现</a></div>
-                                    <div class="summary_target_body summary_target_color_3">{$keyindex_data[1].impression} <span class="summary_target_body_unit">次</span></div>
+                                    <div class="summary_target_body summary_target_color_3" id="keyindex_impression">{$keyindex_data[1].impression} <span class="summary_target_body_unit">次</span></div>
                                 </div>
                             </div>
                             <div class="col-lg-2 col-md-4 col-sm-6 col-sx-12" ng-repeat="(index,item) in table_items">
                                 <div class="summary_target summary_target_4 summary_target_bgcolor_4 mb10">
                                     <div class="summary_target_title"><a title="点击价格">点击价格</a></div>
-                                    <div class="summary_target_body summary_target_color_4" >{$keyindex_data[1].cpc} <span class="summary_target_body_unit">元 /点击</span></div>
+                                    <div class="summary_target_body summary_target_color_4" id="keyindex_cpc" >{$keyindex_data[1].cpc} <span class="summary_target_body_unit">元 /点击</span></div>
                                 </div>
                             </div>
                             <div class="col-lg-2 col-md-4 col-sm-6 col-sx-12" ng-repeat="(index,item) in table_items">
@@ -152,7 +154,8 @@ li {
                     <option value="icr">展现/CTR/平均排名</option>
                 </select>
             </div>
-
+            
+             
             <div id="myChart1" style="width: 800px;height: 500px;"></div>
             <div hidden="true">
                 <p id="keyindex_data_rate">{$keyindex_data_rate}</p>
@@ -1022,8 +1025,9 @@ $(".bai_name").click(function() {
         },
         dataType: "json",
         success: function(data) {
+            refresh_doms(data.data);
             console.log(data);
-            alert(1111111);
+            /*alert(1111111);*/
             // window.location = "/Admin/Index/index";
         }
     });
@@ -1053,9 +1057,9 @@ $("#area_action").click(function(event) {
             data: {area_city:$(dataCityinput).data("value") },
         })
         .done(function(data) {
+            refresh_doms(data.data);
             console.log(data.data);
             console.log("success");
-            refresh_doms(data.data);
             
         })
         .fail(function() {
@@ -1083,8 +1087,9 @@ laydate.render({
                             },
                             dataType: "json",
                             success: function(data) {
+                                refresh_doms(data.data);
                                console.log(data.data);
-                                alert(1111111);
+                                /*alert(1111111);*/
                             }
                         });
                     }
@@ -1103,8 +1108,9 @@ $("#device").change(function() {
         },
         dataType: "json",
         success: function(data) {
+            refresh_doms(data.data);
             console.log(data.data);
-            alert(1111111);
+            /*alert(1111111);*/
             // window.location = "/Admin/Index/index";
         }
     });
@@ -1112,15 +1118,38 @@ $("#device").change(function() {
 $(function(){
     $("#device").val('{$device_selected}')
 })
-function refresh_doms(argument) {
+function refresh_doms(data) {
     // body...
-    $("#keyindex_ctr").text(0.5);
-    $("#avg_rank").text(1);
-    alert("refresh_doms");
+    /*关键指标更新*/
+    $("#keyindex_ctr").text(data.key_data[1].ctr);
+    $("#avg_rank").text(data.key_data[1].position);
+    $("#keyindex_click").text(data.key_data[1].click);
+    $("#keyindex_cost").text(data.key_data[1].cost);
+    $("#keyindex_cpc").text(data.key_data[1].cpc);
+    $("#keyindex_impression").text(data.key_data[1].impression);
+    /*关键词变化率更新*/
+    $("#keyindex_data_rate").text(JSON.stringify(data.key_data));
+    $("#keyindex_select").trigger('change');
+    /*趋势图数据更新 trend_data*/
+    
+    $("#trend_data").text(JSON.stringify(data.trend_data));
+    $("#qushitu_select").trigger('change');
+    /*地域数据更新 region_data*/
+    $("#region_data").text(JSON.stringify(data.region_data));
+    $("#region_data2").text(JSON.stringify(data.region_data2));
+    $("#region_select").trigger('change');
+    /*分时数据更新 fenshi_data*/
+    $("#fenshi_data").text(JSON.stringify(data.fenshi_data));
+    $("#fenshi_select").trigger('change');
+   /* alert("refresh_doms");*/
 }
 </script>
-<script type="text/javascript">
-    $(document).ready(function() {
-        $('#keyindex_data_select').multiselect();
+<!-- <script type="text/javascript">
+    $(function() {
+        $('#keyindex_data_select').change(function() {
+            console.log($(this).val());
+        }).multipleSelect({
+            width: '50%'
+        });
     });
-</script>
+</script> -->

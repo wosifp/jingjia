@@ -5,14 +5,14 @@ class IndexController extends HomebaseController {
 
 	/* firstpage*/
 	public function index() {
-	   $target =  $_GET['target'] ? $_GET['target'] : 0;
+	   /*$target =  $_GET['target'] ? $_GET['target'] : 0;*/
 		/* echo "this is blog index !"; */
 		/* 	1、获取url
 			2、获取请求数据
 			3、发送请求 */
 		/* Account, Campaign , Adgroup, Keyword, Creative,NewCreative,Toolkit , DynamicCreative,DynCreativeExclusion,RealTimeData,RealTimeQueryData,RealTimePairData,ProfessionalReportId, ReportState,ReportFileUrl,BulkJob,AllChangedObjects,FileStatus,FilePath,cancelDownload,ChangedId,ChangedItemId,ChangedScale*/
 
-		echo getReport("Toolkit");
+		echo getReport("Creative");
 	}
 
 

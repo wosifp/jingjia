@@ -1,115 +1,191 @@
 <admintpl file="header" />
 </head>
-
+<script src="__PUBLIC__/js/jquery.js"></script>
 <link href="__PUBLIC__/admin/css/bootstrap.min.css" rel="stylesheet">
-<link href="__PUBLIC__/admin/css/style.css" rel="stylesheet" type="text/css"/>
+<link href="__PUBLIC__/admin/css/style.css" rel="stylesheet" type="text/css" />
 <script src="__PUBLIC__/admin/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="__PUBLIC__/admin/js/jquery.min.js"></script>
 <script src="__PUBLIC__/admin/js/style.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/jquery-ui.min.js"></script>
 <script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
 <script src="__PUBLIC__/js/echarts/echarts.min.js"></script>
 <script src="__PUBLIC__/js/echarts/china.js"></script>
 
+<script src="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.js"></script>
+<link rel="stylesheet" href="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.min.css">
+
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid.css" />
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid-theme.css" />
+<link href="__PUBLIC__/js/areapicker/zyzn_1.css" type="text/css" rel="stylesheet">
+
+<script type="text/javascript" src="__PUBLIC__/js/jsgrid/jsgrid.js"></script>
+<script src="__PUBLIC__/js/areapicker/City_data.js"></script>
+<script src="__PUBLIC__/js/areapicker/areadata.js"></script>
+<script src="__PUBLIC__/js/areapicker/auto_area.js"></script>
 
 <body>
+
 <div class="qi_right_1">
-    <div class="qi_con_1">
-        <div class="qi_float_l qi_bfb_30">
-                <p class="qi_p_2">
-                    账户：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
+<!-- 范围选择  -->
+        <div class="qi_con_1">
+            <div class="qi_float_l qi_bfb_30">
+                <p class="qi_p_2" style="display: block"  id="fanwei">
+                    <span id="set_fanwei"></span>范围：
+                    <a class="btn btn-default" href="javascript:" role="button" id="account_select">选择 <span class="caret"></span></a>
+                    <span id="cengji" style="display: none"></span>
                 </p>
                 <div id="firstpane" class="menu_list" style="display:none">
                     <hr>
-                    <p class="qi_p_3">
-                        <span>可获取对象</span>
-                        <input type="text">
-                        <a href="javascript:" class="qi_a_1">搜索</a>
-                        <!--<input id="r2" type="radio" value="1" name="">精确 </input>-->
-                    </p>
-                    <foreach name="trade" item="vo" key="k">
-                        <h3 class="menu_head">{$k}</h3>
-                        <div style="display: none;" class="menu_body">
-                            <foreach name="vo" item="companyname" key="kk">
-                                <a href="javascript:" >{$kk}</a>
-                                <div style="display: none;" class="menu_body">
-                                    <foreach name="companyname" item="user_login" key="kkk">
-                                        <a href="javascript:"><span class="bai_name">{$user_login.user_login}</span></a>
-                                    </foreach>
-                                </div>
-                            </foreach>
-                        </div>
-                    </foreach>
+                    <select id="mytreeselect" multiple="multiple"></select>
+                    <button id="send_mytree" class="btn">确定</button>
                 </div>
             </div>
-
-        <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
-        </div>
+            
         <!--时间-->
-        <div class="qi_float_l qi_bfb_40">
-            时间：<input class="qi_inp_wid" id="datepicker1">
-            <script>
-                laydate.render({
-                    elem: '#datepicker1' ,
-                    range: true,//指定元素
-                    done: function(value){
-                        $.ajax({
-                            type: "post",
-                            url: "/Admin/Data/top_rank",
-                            data: {
-                                datepicker:value
-                            },
-                            dataType: "json",
-                            success: function(data){
-                                alert(1111111);
-                            }
-                        });
-                    }
-                });
-            </script>
-        </div>
+            <div class="qi_float_l qi_bfb_30">
+                时间：
+                <input type="text" name="date_pick" id="datepicker1">
+            </div>
         <!--时间 end-->
+        </div>
+</div>
 
-    </div>
-
-
+<!-- 计划单元关键词创意层级选择 -->
     <div class="qi_con_1">
-
-        <ul class="pager qi_mag_bott" id="Level_to_choose">层级选择：
-            <li><a href="javascript:">计划</a></li>
-            <li><a href="javascript:">单元</a></li>
-            <li><a href="javascript:">关键词</a></li>
-            <li><a href="javascript:">创意</a></li>
+            <ul class="pager qi_mag_bott" id="Level_to_choose">     层级选择：
+                <li><a href="javascript:">计划</a></li>
+                <li><a href="javascript:">单元</a></li>
+                <li><a href="javascript:">关键词</a></li>
+                <li><a href="javascript:">创意</a></li>
+            </ul>
+    </div>
+<!-- 设备选择 -->
+    <div class="qi_con_1">
+        
+            <ul class="pager qi_mag_bott" id="device">设备：
+            <li value="3"><a href="javascript:">全部</a></li>
+            <li value="1"><a href="javascript:">PC</a></li>
+            <li value="2"><a href="javascript:">移动</a></li>
         </ul>
-
-        <ul class="pager qi_mag_bott" id="device">设备：
-            <li value="0"><a href="javascript:">全部</a></li>
-            <li value="2"><a href="javascript:">PC</a></li>
-            <li value="1"><a href="javascript:">移动</a></li>
-        </ul>
-
-        <ul class="pager qi_mag_bott" id="Indexselection">指标选择：
+        
+    </div>
+<!-- 指标选择 -->
+    <div class="qi_con_1">
+        
+            <ul class="pager qi_mag_bott" id="Indexselection">指标选择：
             <li><a href="javascript:">消费</a></li>
             <li><a href="javascript:">展现</a></li>
             <li><a href="javascript:">点击</a></li>
             <li><a href="javascript:">点击率</a></li>
             <li><a href="javascript:">平均价格</a></li>
         </ul>
-
-        <ul class="pager qi_mag_bott" id="TOP_choice">TOP选择：
-            <li><a href="javascript:">10</a></li>
-            <li><a href="javascript:">20</a></li>
-            <li><a href="javascript:">50</a></li>
-            <li><a href="javascript:">100</a></li>
-        </ul>
-
+        
+    </div>
+<!-- top数量选择 -->
+    <div class="qi_con_1">
+        
+            <ul class="pager qi_mag_bott" id="TOP_choice">        TOP选择：
+                <li><a href="javascript:">10</a></li>
+                <li><a href="javascript:">20</a></li>
+                <li><a href="javascript:">50</a></li>
+                <li><a href="javascript:">100</a></li>
+            </ul>
+       
+    </div>
+<!-- 地域选择 -->
+   <!--  <div class="qi_con_1">
         <ul class="pager qi_mag_bott">地域：
             <li><a href="javascript:">全部</a></li>
             <li><a href="javascript:">自定义</a></li>
-        </ul>
+        </ul>        
+    </div> -->
+<!--  -->
+<!--柱状图-->
+    <div class="qi_con_1">
+        <div id="myChart1" style="width: 900px;height:500px;"></div>
+        <div id="top_rank_data" hidden="true">{$top_rank_data}</div>
+    <!--柱状图 end-->
+    </div>
+<!-- 详细grid -->
+    <div class="qi_con_1">
+        <p class="qi_p_4">详细</p>
+        <div id="jsGrid"></div>
+        <div id="grid_data" hidden="true">{$grid_data}</div>
+    </div>
 
-        <!--柱状图-->
-        <div id="myChart1" style="width: 600px;height:400px;display: none;"></div>
+<!-- 账户选择 -->
+    <script type="text/javascript">
+                $("#account_select").click(function(event) {
+                    $.ajax({
+                    type: "post",
+                    url: "__MODULE__/Ajax/handle_data_check",
+                    data: {
+                        pager_select: "账户"
+                    },
+                    async: false,
+                    dataType: "json",
+                    success: function(data) {
 
+                        $test_data = data.data;
+
+                    }
+                });
+                $("#mytreeselect").empty();
+                $("#firstpane div").empty();
+                $("#firstpane div").remove();
+                $.each($test_data, function(index, val) {
+                    $.each(val, function(index1, val1) {
+                        $.each(val1, function(index2, val2) {
+                            $("#mytreeselect ").append('<option value=' + val2.id + ' data-section="' + index+'/'+index1 + '">' + val2.user_login + '</option>');
+                        });
+                    });
+                });
+            
+                option_tree1_0 = {
+                    allowBatchSelection: true,
+                    enableSelectAll: true,
+                    searchable: true,
+                    sortable: true,
+                    startCollapsed: true,
+                    onChange: function(text, value, initialIndex, section) {
+                        $temp = text;
+                        console.log($temp);
+                    }
+                };
+                $tree1 = $("#mytreeselect").treeMultiselect(option_tree1_0);
+                });
+                 $("#send_mytree").click(function() {
+                $("#firstpane").hide();
+                $("#beixuan").html('');
+                // 0417添加
+                $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
+                /*使用JSON.stringify($temp)方法将object转换为json字符串*/
+               /* console.log(typeof(jQuery.parseJSON(JSON.stringify($temp))));*/
+
+                $.ajax({
+                    url: '__CONTROLLER__/top_rank',
+                    type: 'POST',
+                    dataType: 'json',
+                    data:{statIds:jQuery.parseJSON(JSON.stringify($temp)),
+                     pager_select: "账户"
+                 },
+                })
+                .done(function(data) {
+                    refreshDOM(data.data);
+                    console.log("success");
+                    /*console.log(data);
+                    alert("account_select");*/
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
+               /* console.log($temp);*/
+            });
+            </script>
+<!-- 柱状图 myChart1 -->
         <script>
             var myChart1 = echarts.init(document.getElementById('myChart1'));
             var option1 = {
@@ -120,114 +196,72 @@
                         }
                     }
                 },
+                grid:{
+                    left:'10%',
+                    bottom:'25%'
+                },
                 xAxis: {
                     type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    axisLabel:{
+                        interval:0,
+                        rotate:45,
+                    },
+                    
+                    data: $.parseJSON($("#top_rank_data").text()).name
                 },
                 yAxis: {
                     type: 'value'
                 },
+                tooltip : {
+
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} "
+                },
                 series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    name:'top_排行',
+                    data: $.parseJSON($("#top_rank_data").text())['data'],
                     type: 'bar',
                     smooth: true
                 }]
             };
             myChart1.setOption(option1);
         </script>
-
-        <!--柱状图 end-->
-
-        <div class="qi_con_1">
-            <p class="qi_p_5">详细</p>
-            <ul class="pager qi_float_r qi_mag_bott">
-                <li><a href="javascript:">下载</a></li>
-            </ul>
-            <div class="table-responsive">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>排序</th>
-                        <th>时间</th>
-                        <th>账户</th>
-                        <th>计划</th>
-                        <th>单元</th>
-                        <th>关键词</th>
-                        <th>消费</th>
-                        <th>消费占比</th>
-                        <th>展现</th>
-                        <th>点击</th>
-                        <th>点击占比</th>
-                        <th>点击率</th>
-                        <th>价格平均</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td>list</td>
-                        <td>list</td>
-                        <td>sit</td>
-                        <td>list</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>list</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                    </tr>
-                    <tr>
-                        <td>1,002</td>
-                        <td>amet</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>consectetur</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>adipiscing</td>
-                        <td>elit</td>
-                    </tr>
-                    <tr>
-                        <td>list</td>
-                        <td>list</td>
-                        <td>sit</td>
-                        <td>list</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>list</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                        <td>sit</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-
-
-
-    </div>
-
-
-
-</div>
-
+<!-- jsGrid -->
+    <script type="text/javascript">
+        console.log($.parseJSON($("#grid_data").text()));
+        /*var clients = $.parseJSON($("#grid_data").text());*/
+        var matchType=[
+            {name:"精确匹配",id:1},
+            {name:"高级短语匹配",id:2},
+            {name:"广泛匹配",id:3},
+            {name:"同义包含",id:11},
+            {name:"精确包含",id:12},
+            {name:"核心包含",id:13}
+        ];
+        var grid_option1 ={
+        width: "100%",
+        height: "400px",
+        sorting: true,
+        paging: true,
+        /*data: clients,*/
+        data:$.parseJSON($("#grid_data").text()).data,
+        fields:$.parseJSON($("#grid_data").text()).fields
+        /*fields: [
+            { name: "日期", type: "text", width: 110},
+            { name: "账户", type: "text", width: 'auto' },
+            { name: "mobile质量度", type: "text",width:'auto',visible:false  },
+            { name: "匹配模式", type: "select",width:'auto',items: matchType, valueField: "id", textField: "name",visible:false  }
+        ]
+*/
+        };
+        $("#jsGrid").jsGrid(grid_option1);
+    </script>
 </body>
 </html>
 
 <script>
     //账户
-    $(".bai_name").click(function () {
+    /*    $(".bai_name").click(function () {
         var target = $(this).text();
         $("#zhanghu").html(target);
         $("#firstpane").css('display','none');
@@ -244,20 +278,43 @@
                 // window.location = "/Admin/Data/data_check";
             }
         });
-    })
+    })*/
+    /*日期选择*/
+
+    laydate.render({
+        elem: '#datepicker1' ,
+        range: true,//指定元素
+        done: function(value){
+        $.ajax({
+            type: "post",
+            url: "__CONTROLLER__/top_rank",
+            data: {
+                datepicker:value
+                },
+            dataType: "json",
+            success: function(data){
+                console.log(data.data);
+                refreshDOM(data.data);
+/*
+                alert(1111111);*/
+                }
+            });
+        }
+    });
     //设备device
     $("#device li").click(function () {
-        var unit_data=$(this).val();
+        var device=$(this).val();
         //console.log($unit_data);
         $.ajax({
             type:"post",
-            url:"/Admin/Data/top_rank",
+            url:"__CONTROLLER__/top_rank",
             data:{
-                unit_data:unit_data
+                device:device
             },
             dataType:"json",
             success:function (data) {
-                alert(111111);
+                refreshDOM(data.data);
+               /* alert(111111);*/
             }
         })
     })
@@ -267,13 +324,15 @@
         //console.log($unit_data);
         $.ajax({
             type:"post",
-            url:"/Admin/Data/top_rank",
+            url:"__CONTROLLER__/top_rank",
             data:{
                 level_to_choose:level_to_choose
             },
             dataType:"json",
             success:function (data) {
-                alert(111111);
+               /* console.log(data);*/
+                refreshDOM(data.data);
+               /* alert(111111);*/
             }
         })
     })
@@ -283,13 +342,14 @@
         //console.log($unit_data);
         $.ajax({
             type:"post",
-            url:"/Admin/Data/top_rank",
+            url:"__CONTROLLER__/top_rank",
             data:{
                 indexselection:indexselection
             },
             dataType:"json",
             success:function (data) {
-                alert(111111);
+                refreshDOM(data.data);
+               /* alert(111111);*/
             }
         })
     })
@@ -299,15 +359,37 @@
         //console.log($unit_data);
         $.ajax({
             type:"post",
-            url:"/Admin/Data/top_rank",
+            url:"__CONTROLLER__/top_rank",
             data:{
                 top_choice:top_choice
             },
             dataType:"json",
             success:function (data) {
-                alert(111111);
+                refreshDOM(data.data);
+                /*alert(111111);*/
             }
         })
     })
+/*refreshDOM(data)*/
+    function refreshDOM(data){
 
+        $("#grid_data").text(JSON.stringify(data.grid_data));
+        grid_option1.data = data.grid_data.data;
+        grid_option1.fields= data.grid_data.fields;
+        $("#jsGrid").jsGrid(grid_option1);
+
+        $("#top_rank_data").text(JSON.stringify(data.top_rank_data));
+        option1.xAxis.data=data.top_rank_data.name;
+        option1.series[0].data= data.top_rank_data.data;
+        myChart1.setOption(option1);
+      /*  console.log("-----------------");
+        console.log(typeof(data));
+        console.log(data.grid_data);
+        console.log(data.top_rank_data.name);*/
+        /*
+        $("#matchType_data").text(JSON.stringify(data.matchType_data));
+        $("#matchType_select").trigger('change');
+        $("#cost_analysis").text(JSON.stringify(data.cost_analysis));
+        $("#all_count").trigger('click');*/
+    }
 </script>

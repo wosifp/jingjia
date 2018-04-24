@@ -1,102 +1,147 @@
 <admintpl file="header" />
 </head>
-
+<script src="__PUBLIC__/js/jquery.js"></script>
 <link href="__PUBLIC__/admin/css/bootstrap.min.css" rel="stylesheet">
-<link href="__PUBLIC__/admin/css/style.css" rel="stylesheet" type="text/css"/>
+<link href="__PUBLIC__/admin/css/style.css" rel="stylesheet" type="text/css" />
 <script src="__PUBLIC__/admin/js/bootstrap.min.js" type="text/javascript"></script>
-<script src="__PUBLIC__/admin/js/jquery.min.js"></script>
 <script src="__PUBLIC__/admin/js/style.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/jquery-ui.min.js"></script>
+<!--<script src="__PUBLIC__/admin/js/laydate.js"></script>-->
+<!--<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate.css">-->
+<!--<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate(1).css" id="LayDateSkin">-->
 <script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
 <script src="__PUBLIC__/js/echarts/echarts.min.js"></script>
 <script src="__PUBLIC__/js/echarts/china.js"></script>
 
+<script src="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.js"></script>
+<link rel="stylesheet" href="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.min.css">
+
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid.css" />
+<link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid-theme.css" />
+<link href="__PUBLIC__/js/areapicker/zyzn_1.css" type="text/css" rel="stylesheet">
+
+<script type="text/javascript" src="__PUBLIC__/js/jsgrid/jsgrid.js"></script>
+<script src="__PUBLIC__/js/areapicker/City_data.js"></script>
+<script src="__PUBLIC__/js/areapicker/areadata.js"></script>
+<script src="__PUBLIC__/js/areapicker/auto_area.js"></script>
 <body>
+
 <div class="qi_right_1">
+<!-- 层级选择 -->
     <div class="qi_con_1">
-        <div class="qi_float_l qi_bfb_30">
-                <p class="qi_p_2">
-                    账户：<a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
+            <ul class="pager" id="pager_select">
+                <li><a href="#">账户</a></li>
+                <li><a href="#">计划</a></li>
+                <li><a href="#">单元</a></li>
+                <li><a href="#">关键词</a></li>
+            </ul>
+            <!-- <span style="color: red">* 账户必选</span> -->
+        </div>
+<!-- 范围选择  -->
+        <div class="qi_con_1">
+            <div class="qi_float_l qi_bfb_30">
+                <p class="qi_p_2" style="display: block"  id="fanwei">
+                    <span id="set_fanwei"></span>范围：
+                    <a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
+                    <span id="cengji" style="display: none"></span>
                 </p>
                 <div id="firstpane" class="menu_list" style="display:none">
                     <hr>
-                    <p class="qi_p_3">
-                        <span>可获取对象</span>
-                        <input type="text">
-                        <a href="javascript:" class="qi_a_1">搜索</a>
-                        <!--<input id="r2" type="radio" value="1" name="">精确 </input>-->
-                    </p>
-                    <foreach name="trade" item="vo" key="k">
-                        <h3 class="menu_head">{$k}</h3>
-                        <div style="display: none;" class="menu_body">
-                            <foreach name="vo" item="companyname" key="kk">
-                                <a href="javascript:" >{$kk}</a>
-                                <div style="display: none;" class="menu_body">
-                                    <foreach name="companyname" item="user_login" key="kkk">
-                                        <a href="javascript:"><span class="bai_name">{$user_login.user_login}</span></a>
-                                    </foreach>
-                                </div>
-                            </foreach>
-                        </div>
-                    </foreach>
+                    <select id="mytreeselect" multiple="multiple"></select>
+                    <button id="send_mytree" class="btn">确定</button>
                 </div>
             </div>
-
-        <!--设备-->
-        <div class="qi_float_l qi_bfb_30">
-            设备：<select id="device">
-            <option value="0">全部</option>
-            <option value="2">PC</option>
-            <option value="1">移动</option>
-        </select>
         </div>
-        <!--设备 end-->
-
-
-        <!--时间-->
-        <div class="qi_float_l qi_bfb_40">
-            时间：<input type="text" class="qi_inp_wid" id="datepicker1">
-            <script>
-                laydate.render({
-                      elem: '#datepicker1' ,
-                      range: true,//指定元素
-                     done: function(value){
-                         $.ajax({
-                             type: "post",
-                             url: "/Admin/Data/keywords_check",
-                             data: {
-                                 datepicker:value
-                                    },
-                             dataType: "json",
-                             success: function(data){
-                             alert(1111111);
-                            }
-                         });
-                    }
-                });
-            </script>
-        </div>
-        <!--时间 end-->
-        <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
-        </div>
-    </div>
-    <div class="qi_con_0">
-        <ul class="pager qi_0_mag_bott">地域：
-            <li><a href="javascript:">全部</a></li>
-            <li><a href="javascript:">自定义</a></li>
-        </ul>
+<!-- 设备时间地域选择 -->
     <div class="qi_con_1">
-        <p class="qi_p_5">匹配模式分析</p>
-        <select class="qi_float_r">
-            <option value="volvo">关键词数量</option>
-            <option value="saab">展现</option>
-            <option value="opel">点击</option>
-            <option value="audi">消费</option>
-        </select>
+    <!--设备-->
+        <div class="qi_float_l qi_bfb_30">
+            设备：
+            <select id="device">
+                <option value="0">全部</option>
+                <option value="1">PC</option>
+                <option value="2">移动</option>
+            </select>
 
-        <!--饼图-->
-        <div id="myChart0" style="width: 600px;height:400px;display: none;"></div>
+        </div>
+    <!--设备 end-->
+    <!--时间-->
+        <div class="qi_float_l qi_bfb_30">
+            时间：
+            <input type="text" name="date_pick" id="datepicker1">
+            <input type="hidden" value="" id="riqi">
+        </div>
+    <!--时间 end-->
+    <!-- 地域 -->
+        <div class="qi_float_l qi_bfb_30">
+            <ul class="pager qi_0_mag_bott">地域：
+                <li><a href="javascript:">全部</a></li>
+                <li id="selfdefine_region"><a href="javascript:">自定义</a></li>
+            </ul>
+        <div hidden="true">
+            <input type="text" name="area_pick" class="area-duoxuan" id="area_multipicker"value="{$area_city}" data-value="" hidden="true">
+        </div>
+        <button id="area_action" hidden="true"></button>
+            </div>
+    <!-- 地域end -->
+    </div>
+    <div class="qi_con_1">
+   </div>
+</div>
 
-        <script>
+<!-- 匹配模式分析 -->
+<div class="qi_con_1">
+    <p class="qi_p_4">匹配模式分析</p>
+    <!-- 指标选择 -->
+        <div class="qi_bfb_100">
+            <select class="qi_float_r" id="matchType_select">
+                <option value="words_count">关键词数量</option>
+                <option value="impression">展现</option>
+                <option value="click">点击</option>
+                <option value="cost">消费</option>
+            </select>
+        </div>
+        <ul class="pager">
+            <li id="pipei_1"><a href="javascript:">柱状图</a> </li>
+            <li id="pipei_0"><a href="javascript:">饼图</a></li>
+        </ul>
+    <!-- 指标选择end -->
+    <!--饼图-->
+    <div id="myChart0" style="width: 600px;height:400px;"></div>
+    <!--饼图 end-->
+    <div id="matchType_data" hidden="true">{$matchType_data}</div>
+</div>
+         
+<!-- 消费分析 -->
+    <div class="qi_con_1">
+        <p class="qi_p_4">消费分析</p>
+        <ul class="pager">
+            <li id="all_count"><a href="javascript:">有消费/总账户词量</a></li>
+            <li id="had_impression"><a href="javascript:">有消费/有展现</a></li>
+        </ul>
+
+        <!--饼图2-->
+        <div id="myChart2" style="width: 600px;height:400px;"></div>
+        <div id="cost_analysis" hidden="true">{$cost_analysis}</div>
+        <!--饼图2 end-->
+    </div>
+
+<!-- 表格 -->
+    <div class="qi_con_1">
+        <p class="qi_p_4">详细</p>
+       <!--  <ul class="pager">
+            <li><a href="javascript:">匹配模式分析详情</a></li>
+            <li><a href="javascript:">消费分析详情</a></li>
+            <li><a href="javascript:">View</a></li>
+        </ul> -->
+        <div id="jsGrid"></div>
+        <div id="grid_data" hidden="true">{$grid_data}</div>
+
+    </div>
+
+<!-- script  -->
+<!-- 饼状图chart0 -->
+    <script>
             var myChart0 = echarts.init(document.getElementById('myChart0'));
             var option0 = {
                 toolbox: {
@@ -107,8 +152,8 @@
                     }
                 },
                 title : {
-                    text: '某站点用户访问来源',
-                    subtext: '纯属虚构',
+                    text: '',
+                    subtext: '',
                     x:'center'
                 },
                 tooltip : {
@@ -118,21 +163,15 @@
                 legend: {
                     orient: 'vertical',
                     left: 'left',
-                    data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+                    data: $.parseJSON($("#matchType_data").text()).words_count.name
                 },
                 series : [
                     {
-                        name: '访问来源',
+                        name: '匹配模式',
                         type: 'pie',
                         radius : '55%',
                         center: ['50%', '60%'],
-                        data:[
-                            {value:335, name:'直接访问'},
-                            {value:310, name:'邮件营销'},
-                            {value:234, name:'联盟广告'},
-                            {value:135, name:'视频广告'},
-                            {value:1548, name:'搜索引擎'}
-                        ],
+                        data:$.parseJSON($("#matchType_data").text()).words_count.data,
                         itemStyle: {
                             emphasis: {
                                 shadowBlur: 10,
@@ -145,52 +184,37 @@
             };
             myChart0.setOption(option0);
         </script>
-        <!--饼图 end-->
-
-        <!--柱状图-->
-        <div id="myChart1" style="width: 600px;height:400px;display: none;"></div>
-
-        <script>
-            var myChart1 = echarts.init(document.getElementById('myChart1'));
-            var option1 = {
-                toolbox: {
-                    feature: {
-                        saveAsImage: {
-                            pixelRatio:3
-                        }
+<!-- 柱状图  option1 -->
+    <script>
+        var option1 = {
+            toolbox: {
+                feature: {
+                    saveAsImage: {
+                        pixelRatio:3
                     }
+                }
+            },
+            tooltip : {
+                    trigger: 'item',
+                    formatter: "{a} <br/>{b} : {c} "
                 },
-                xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    type: 'bar',
-                    smooth: true
-                }]
-            };
-            myChart1.setOption(option1);
+            xAxis: {
+                type: 'category',
+                data: $.parseJSON($("#matchType_data").text()).words_count.name
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                name:"匹配模式",
+                data: $.parseJSON($("#matchType_data").text()).words_count.data,
+                type: 'bar',
+                smooth: true
+            }]
+        };
         </script>
-
-        <!--柱状图 end-->
-
-    </div>
-
-    <div class="qi_con_1">
-        <p class="qi_p_5">消费分析</p>
-        <ul class="pager">
-            <li><a href="javascript:">有消费/总账户词量</a></li>
-            <li><a href="javascript:">有消费/有展现</a></li>
-        </ul>
-
-        <!--饼图2-->
-        <div id="myChart2" style="width: 600px;height:400px;display: none;"></div>
-
-        <script>
+<!-- 消费分析 饼图 chart2 -->
+    <script>
             var myChart2 = echarts.init(document.getElementById('myChart2'));
             var option2 = {
                 toolbox: {
@@ -201,8 +225,8 @@
                     }
                 },
                 title : {
-                    text: '某站点用户访问来源',
-                    subtext: '纯属虚构',
+                    text: '',
+                    subtext: '',
                     x:'center'
                 },
                 tooltip : {
@@ -212,20 +236,17 @@
                 legend: {
                     orient: 'vertical',
                     left: 'left',
-                    data: ['直接访问','邮件营销','联盟广告','视频广告','搜索引擎']
+                    data: ['有消费关键词','未消费关键词']
                 },
                 series : [
                     {
-                        name: '访问来源',
+                        name: '消费数量及占比',
                         type: 'pie',
                         radius : '55%',
                         center: ['50%', '60%'],
                         data:[
-                            {value:335, name:'直接访问'},
-                            {value:310, name:'邮件营销'},
-                            {value:234, name:'联盟广告'},
-                            {value:135, name:'视频广告'},
-                            {value:1548, name:'搜索引擎'}
+                            {value:$.parseJSON($("#cost_analysis").text()).had_cost, name:'有消费'},
+                            {value:$.parseJSON($("#cost_analysis").text()).all_count-$.parseJSON($("#cost_analysis").text()).had_cost, name:'未消费'}  
                         ],
                         itemStyle: {
                             emphasis: {
@@ -239,132 +260,75 @@
             };
             myChart2.setOption(option2);
         </script>
-        <!--饼图2 end-->
 
-    </div>
+<!-- 详细数据 JSGrid -->
 
+<!-- jsGrid -->
+    <script type="text/javascript">
+        console.log($.parseJSON($("#grid_data").text()));
+        var clients = $.parseJSON($("#grid_data").text());
+        var matchType=[
+            {name:"精确匹配",id:1},
+            {name:"高级短语匹配",id:2},
+            {name:"广泛匹配",id:3},
+            {name:"同义包含",id:11},
+            {name:"精确包含",id:12},
+            {name:"核心包含",id:13}
+        ];
+        var grid_option1 ={
+        width: "100%",
+        height: "400px",
+        sorting: true,
+        paging: true,
+        /*data: clients,*/
+        data:$.parseJSON($("#grid_data").text()),
+        fields: [
+            { name: "日期", type: "text", width: 110},
+            { name: "账户", type: "text", width: 'auto' },
+            { name: "计划", type: "text", width: 'auto' },
+            { name: "单元", type: "text",width:'auto' },
+            { name: "关键词", type: "text",width:110 },
+           /* { name: "关键词id", type: "text",width:'auto' },*/
+            { name: "展现", type: "text",width:'auto' },
+            { name: "消费", type: "text",width:'auto' },
+            { name: "点击", type: "text",width:'auto' },
+            { name: "cpc", type: "text",width:'auto' },
+            { name: "ctr", type: "text",width:'auto' },
+            { name: "平均排名", type: "text",width:'auto' },
+            { name: "pc质量度", type: "text",width:'auto' },
+            { name: "mobile质量度", type: "text",width:'auto' },
+            { name: "匹配模式", type: "select",width:'auto',items: matchType, valueField: "id", textField: "name" }
+        ]
 
-    <div class="qi_con_1">
-        <p class="qi_p_5">表格</p>
-        <ul class="pager">
-            <li><a href="javascript:">匹配模式分析详情</a></li>
-            <li><a href="javascript:">消费分析详情</a></li>
-            <li><a href="javascript:">View</a></li>
-        </ul>
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>时间</th>
-                    <th>关键词</th>
-                    <th>单元</th>
-                    <th>计划</th>
-                    <th>展现</th>
-                    <th>点击</th>
-                    <th>消费</th>
-                    <th>匹配模式</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>list</td>
-                    <td>list</td>
-                    <td>sit</td>
-                    <td>list</td>
-                    <td>list</td>
-                    <td>sit</td>
-                    <td>sit</td>
-                    <td>sit</td>
-                </tr>
-                <tr>
-                    <td>1,002</td>
-                    <td>amet</td>
-                    <td>sit</td>
-                    <td>consectetur</td>
-                    <td>sit</td>
-                    <td>sit</td>
-                    <td>adipiscing</td>
-                    <td>elit</td>
-                </tr>
-                <tr>
-                    <td>list</td>
-                    <td>list</td>
-                    <td>sit</td>
-                    <td>list</td>
-                    <td>list</td>
-                    <td>sit</td>
-                    <td>sit</td>
-                    <td>sit</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        };
+        $("#jsGrid").jsGrid(grid_option1);
+        /*$("#jsGrid").jsGrid({
+        width: "100%",
+        height: "400px",
+        //inserting: true,
+        //editing: true,
+        sorting: true,
+        paging: true,
 
-        <div class="table-responsive">
-            <table class="table table-striped">
-                <thead>
-                <tr>
-                    <th>时间</th>
-                    <th>关键词</th>
-                    <th>单元</th>
-                    <th>计划</th>
-                    <th>消费</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <td>list</td>
-                    <td>list</td>
-                    <td>sit</td>
-                    <td>list</td>
-                    <td>list</td>
-                </tr>
-                <tr>
-                    <td>1,002</td>
-                    <td>amet</td>
-                    <td>consectetur</td>
-                    <td>sit</td>
-                    <td>adipiscing</td>
-                </tr>
-                <tr>
-                    <td>list</td>
-                    <td>list</td>
-                    <td>sit</td>
-                    <td>list</td>
-                    <td>list</td>
-                </tr>
-                </tbody>
-            </table>
-        </div>
+        data: clients,
 
-    </div>
-
-
-
-</div>
-
+        fields: [
+            { name: "Name", type: "text", width: 150, validate: "required" },
+            { name: "Age", type: "number", width: 50 },
+            { name: "Address", type: "text", width: 200 },
+            { name: "Country", type: "select", items: countries, valueField: "Id", textField: "Name" },
+            { name: "Married", type: "checkbox", title: "Is Married", sorting: false },
+            { type: "control" }
+            ]
+         });*/
+    </script>
 </body>
 </html>
 
 <script>
-    $(".bai_name").click(function () {
-        var target = $(this).text();
-        $("#zhanghu").html(target);
-        $("#firstpane").css('display','none');
-        $("#zhanghu").css('color','red');
-        $.ajax({
-            type: "post",
-            url: "/Admin/Data/data_check",
-            data: {
-                target:target
-            },
-            dataType: "json",
-            success: function(data){
-                alert(1111111);
-                // window.location = "/Admin/Data/data_check";
-            }
-        });
-    })
+/*账户选择事件*/
+
+/*设备选择事件*/
     $("#device").change(function () {
         var device = $('#device :selected').val();
         $.ajax({
@@ -375,9 +339,290 @@
             },
             dataType: "json",
             success: function(data){
-                alert(data);
+                 refreshDOM(data.data);
+                /*alert(data);*/
                 // window.location = "/Admin/Data/data_check";
             }
         });
     })
+/*时间选择事件*/
+    laydate.render({
+        elem: '#datepicker1' ,
+        range: true,//指定元素
+        done: function(value){
+        $.ajax({
+            type: "post",
+            url: "__CONTROLLER__/keywords_check",
+            data: {
+                datepicker:value
+                },
+            dataType: "json",
+            success: function(data){
+                /*console.log(data.data);*/
+                refreshDOM(data.data);
+
+                alert(1111111);
+                }
+            });
+        }
+    });
+/*地域自定义事件 */
+    $("#selfdefine_region").click(function(event) {
+        $("#area_multipicker").trigger('click');
+    });      
+/*区域选择响应事件*/  
+    $("#area_action").click(function(event) {
+    /* Act on the event */
+    if ($(dataCityinput).val() != null) {
+        console.log($(dataCityinput).val());
+        console.log($(dataCityinput).data());
+       
+        /*window.location.href = "__CONTROLLER__/index?area_value=" + $(dataCityinput).data("value");*/
+        $.ajax({
+            url: '__CONTROLLER__/keywords_check',
+            type: 'POST',
+            dataType: 'json',
+            data: {area_city:$(dataCityinput).data("value") },
+        })
+        .done(function(data) {
+            refreshDOM(data.data);
+            console.log(data.data);
+            console.log("success");
+            
+        })
+        .fail(function() {
+            console.log("error");
+        })
+        .always(function() {
+            console.log("complete");
+        });
+        
+    }
+    console.log($("input[name='area']").val());
+    
+    });
+/*匹配模式图表切换事件*/
+    $("#pipei_0").click(function(event) {
+        myChart0.setOption(option0,true);
+    });
+    $("#pipei_1").click(function(event) {
+        myChart0.setOption(option1,true);
+    });
+/*refreshDOM(data)*/
+    function refreshDOM(data){
+
+        $("#grid_data").text(JSON.stringify(data.grid_data));
+        grid_option1.data = data.grid_data;
+        $("#jsGrid").jsGrid(grid_option1);
+        if (!data.matchType_data) {
+            $("myChart0").append('display:none')
+        }else{
+             $("myChart0").append('display:block')
+        }
+        $("#matchType_data").text(JSON.stringify(data.matchType_data));
+        $("#matchType_select").trigger('change');
+        $("#cost_analysis").text(JSON.stringify(data.cost_analysis));
+        $("#all_count").trigger('click');
+    }
+/*matchType_select*/
+    $("#matchType_select").change(function(event) {
+        switch($(this).val()){
+            case "words_count":
+            option0.legend.data =$.parseJSON($("#matchType_data").text()).words_count.name;
+            option0.series[0].data= $.parseJSON($("#matchType_data").text()).words_count.data;
+            option1.xAxis.data=$.parseJSON($("#matchType_data").text()).words_count.name;
+            option1.series[0].data=$.parseJSON($("#matchType_data").text()).words_count.data;
+            myChart0.setOption(option0,true);
+            break;
+            case "impression":
+            option0.legend.data =$.parseJSON($("#matchType_data").text()).impression.name;
+            option0.series[0].data= $.parseJSON($("#matchType_data").text()).impression.data;
+            option1.xAxis.data=$.parseJSON($("#matchType_data").text()).impression.name;
+            option1.series[0].data=$.parseJSON($("#matchType_data").text()).impression.data;
+            myChart0.setOption(option0,true);
+            break;
+            case "cost":
+            option0.legend.data =$.parseJSON($("#matchType_data").text()).cost.name;
+            option0.series[0].data= $.parseJSON($("#matchType_data").text()).cost.data;
+            option1.xAxis.data=$.parseJSON($("#matchType_data").text()).cost.name;
+            option1.series[0].data=$.parseJSON($("#matchType_data").text()).cost.data;
+            myChart0.setOption(option0,true);
+            break;
+            case "click":
+            option0.legend.data =$.parseJSON($("#matchType_data").text()).click.name;
+            option0.series[0].data= $.parseJSON($("#matchType_data").text()).click.data;
+            option1.xAxis.data=$.parseJSON($("#matchType_data").text()).click.name;
+            option1.series[0].data=$.parseJSON($("#matchType_data").text()).click.data;
+            myChart0.setOption(option0,true);
+            break;
+            default:
+            break;
+        
+        }
+    });
+/*有消费点击，有展现点击事件*/
+    $("#all_count").click(function(event) {
+        option2.legend.data = ["有消费关键词","未消费关键词"];
+        option2.series[0].data =[
+            {value:$.parseJSON($("#cost_analysis").text()).had_cost, name:'有消费'},
+            {value:$.parseJSON($("#cost_analysis").text()).all_count-$.parseJSON($("#cost_analysis").text()).had_cost, name:'未消费'}
+        ];
+        myChart2.setOption(option2,true);
+    });
+    $("#had_impression").click(function(event) {
+       /* console.log($("#cost_analysis").text());*/
+        option2.legend.data = ["有消费关键词","有展现未消费关键词"];
+        option2.series[0].data =[
+            {value:$.parseJSON($("#cost_analysis").text()).had_cost, name:'有消费'},
+            {value:$.parseJSON($("#cost_analysis").text()).had_impression-$.parseJSON($("#cost_analysis").text()).had_cost, name:'有展现未消费'}
+        ];
+        myChart2.setOption(option2,true);
+    });
 </script>
+<!--层级 计划单元关键词创意选择pager_select-->
+            <script type="text/javascript">
+                var tier_selected = '';
+            $("#pager_select a").click(function(event) {
+                /* Act on the event */
+
+                tier_selected = $(this).text();
+                // 0415添加
+                $("#fanwei").show();
+                $("#set_fanwei").text(tier_selected);
+                $("#beixuan").html("*默认为全部");
+                // 0415结束
+
+                console.log(tier_selected);
+                $.ajax({
+                    url: '__CONTROLLER__/keywords_check',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {pager_select: tier_selected},
+                })
+                .done(function(e) {
+                    refreshDOM(e.data);
+                    console.log("success");
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                $.ajax({
+                    type: "post",
+                    url: "__MODULE__/Ajax/handle_data_check",
+                    data: {
+                        pager_select: tier_selected
+                    },
+                    async: false,
+                    dataType: "json",
+                    success: function(data) {
+
+                        $test_data = data.data;
+
+                    }
+                });
+                $("#mytreeselect").empty();
+                $("#firstpane div").empty();
+                $("#firstpane div").remove();
+                // $test_data =$.parseJSON('{$page_1}');
+                console.log($test_data);
+                console.log(11111111111111);
+
+                if (tier_selected == "账户") {
+                    $.each($test_data, function(index, val) {
+                        $.each(val, function(index1, val1) {
+                            $.each(val1, function(index2, val2) {
+                                $("#mytreeselect ").append('<option value=' + val2.id + ' data-section="' + index+'/'+index1 + '">' + val2.user_login + '</option>');
+                            });
+                        });
+                    });
+                }
+
+                if (tier_selected == "计划") {
+                    $.each($test_data, function(index, val) {
+                        $.each(val, function(index1, val1) {
+                            $("#mytreeselect ").append('<option value=' + val1.campaignId + ' data-section="' + index + '">' + val1.campaignName + '</option>');
+                        });
+                    });
+                }
+                if (tier_selected == "单元") {
+                    $.each($test_data, function(index, val) {
+                        $.each(val, function(index1, val1) {
+                            $.each(val1, function(index2, val2) {
+                                 $("#mytreeselect ").append('<option value=' + val2.adgroupId + ' data-section="' + index+'/'+index1 + '">' + val2.adgroupName + '</option>');
+                            });
+                        });
+                    });
+                }
+                if (tier_selected=="关键词") {
+                    $.each($test_data, function(index, val) {
+                        $.each(val, function(index1, val1) {
+                            $.each(val1, function(index2, val2) {
+                                 $.each(val2, function(index3, val3) {
+                                    $("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.keyword + '</option>');
+                                 });   
+                            });
+                        });
+                    });  
+                }
+                if (tier_selected=="创意") {
+                    $.each($test_data, function(index, val) {
+                        $.each(val, function(index1, val1) {
+                            $.each(val1, function(index2, val2) {
+                                 $.each(val2, function(index3, val3) {
+                                     $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.title + '</option>');
+                                 });  
+                            });
+                        });
+                    });  
+                }
+
+                option_tree1_0 = {
+                    allowBatchSelection: true,
+                    enableSelectAll: true,
+                    searchable: true,
+                    sortable: true,
+                    startCollapsed: true,
+                    onChange: function(text, value, initialIndex, section) {
+                        $temp = text;
+                        console.log($temp);
+                    }
+                };
+                $tree1 = $("#mytreeselect").treeMultiselect(option_tree1_0);
+
+
+            });
+            $("#send_mytree").click(function() {
+                $("#firstpane").hide();
+                $("#beixuan").html('');
+                // 0417添加
+                $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
+                /*使用JSON.stringify($temp)方法将object转换为json字符串*/
+                console.log(typeof(jQuery.parseJSON(JSON.stringify($temp))));
+
+                $.ajax({
+                    url: '__CONTROLLER__/keywords_check',
+                    type: 'POST',
+                    dataType: 'json',
+                    data:{statIds:jQuery.parseJSON(JSON.stringify($temp)),
+                     pager_select: tier_selected
+                 },
+                })
+                .done(function(e) {
+                    refreshDOM(e.data);
+                    console.log("success");
+                    console.log(e);
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
+                console.log($temp);
+            });
+            </script>
+            <!--计划单元关键词创意选择 end-->

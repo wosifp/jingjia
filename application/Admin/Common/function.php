@@ -112,7 +112,7 @@ function getCampaignReport_realtime($param = array("startDate"=>"2018-01-01","en
 	return json_encode($resultData);
 
 }
-/*查询计划实时报告，返回kpi指标数据
+/*查询单元实时报告，返回kpi指标数据
 参数，startDate，endDate，device，platform，statIds（statIids可以不填，默认为全部，也可以填写计划id或者单元id，数组形式，可以填写多个。）。
 参照api文档的报告规则，计划报告的其他一些参数写死在函数体中
 如reportType，levelOfDetail，statRange为2时表示统计全账户，则ids不填，为3时表示查询指定的ids，unitOfTime指定时间粒度。*/
@@ -141,7 +141,7 @@ function getAdgrouReport_realtime($param = array("startDate"=>"2018-01-01","endD
 	
 	return json_encode($resultData);
 }
-/*查询计划实时报告，返回kpi指标数据
+/*查询关键词实时报告，返回kpi指标数据
 参数，startDate，endDate，device，platform，statIds（statIids可以不填，默认为全部，也可以填写计划id或者单元id，数组形式，可以填写多个。）。
 参照api文档的报告规则，计划报告的其他一些参数写死在函数体中
 如reportType，levelOfDetail，statRange为2时表示统计全账户，则statids不填，为3时表示查询指定的计划statids，为5时表示查询指定的单元statids，unitOfTime指定时间粒度。*/
@@ -169,7 +169,35 @@ function getKeywordIdReport_realtime($param = array("startDate"=>"2018-01-01","e
 }
 
 
-/*查询计划实时报告，返回kpi指标数据
+/*查询创意实时报告，返回kpi指标数据
+参数，startDate，endDate，device，platform，statIds（statIids可以不填，默认为全部，也可以填写计划id或者单元id，数组形式，可以填写多个。）。
+参照api文档的报告规则，计划报告的其他一些参数写死在函数体中
+如reportType，levelOfDetail，statRange为2时表示统计全账户，则statids不填，为3时表示查询指定的计划statids，为5时表示查询指定的单元statids，unitOfTime指定时间粒度。*/
+function getCreativeIdReport_realtime($param = array("startDate"=>"2018-01-01","endDate"=>"2018-03-03",'device'=>0,'platform'=>0  )){
+	if (!strcmp("2001-09-17", $param["startDate"])) {
+		# code...
+		echo "开始时间不能早于2001-09-17";
+		return false;
+	}
+	if (strcmp($param["startDate"], $param["endDate"])>0) {
+		# code...
+		echo "截止时间不能早于起始时间";
+		return false;
+	}
+	$resultData = array( );
+	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
+	
+	$p_performanceData=$param['unitOfTime'] == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','position','conversion','bridgeConversion');
+	$param1 = array("reportType"=>12,"levelOfDetails"=>7,'performanceData'=>$p_performanceData );
+	$param1 = array_merge($param,$param1);
+	
+	$resultData =json_decode(getReport("RealTimeData",$param1));
+	
+	return json_encode($resultData);
+}
+
+
+/*查询操作记录实时报告，返回kpi指标数据
 参数，startDate，endDate，device，platform，statIds（statIids可以不填，默认为全部，也可以填写计划id或者单元id，数组形式，可以填写多个。）。
 参照api文档的报告规则，计划报告的其他一些参数写死在函数体中
 如reportType，levelOfDetail，statRange为2时表示统计全账户，则statids不填，为3时表示查询指定的计划statids，为5时表示查询指定的单元statids，unitOfTime指定时间粒度。*/
@@ -261,7 +289,15 @@ function getReport($serviceName='Account',$param=array()){
 	$post_data = json_encode($post_data_temp);
 	//echo $url;
 	//echo $post_data;
-	$output = send_post($url,$post_data);
+	if (S($post_data)) {
+		# code...
+		$output = S($post_data);
+	}else{
+		$output = send_post($url,$post_data);
+		S($post_data,$output,604800);
+	}
+	
+
 	return $output;
 
 }
@@ -449,6 +485,7 @@ function getCreativeIdList($param = array()){
 			# code...
 			$keywordData[] = $v;
 		}
+		var_dump($keywordData);
 		foreach ($keywordData as $key => $value) {
 			# code...
 			$d1 = $all_temp;
@@ -497,7 +534,7 @@ function dispatch_kpijob($param_string="计划",$params = array()){
 			break;
 		case '创意':
 			# code...
-		return getCreativeIdList();
+		return getCreativeIdReport_realtime($params);
 			break;
 		default:
 			# code...
@@ -529,7 +566,7 @@ function dispatch_myjob($param_string="计划"){
 			break;
         case '账户':
             # code...
-            return getAccountList();
+        return getAccountList();
             break;
 		default:
 			# code...

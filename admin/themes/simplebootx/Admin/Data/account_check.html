@@ -13,8 +13,10 @@
 <script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
 <script src="__PUBLIC__/js/echarts/echarts.min.js"></script>
 <script src="__PUBLIC__/js/echarts/china.js"></script>
+
 <script src="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.js"></script>
 <link rel="stylesheet" href="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.min.css">
+
 <link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid.css" />
 <link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid-theme.css" />
 <link href="__PUBLIC__/js/areapicker/zyzn_1.css" type="text/css" rel="stylesheet">
@@ -50,7 +52,7 @@
                 </div>
             </div>
         </div>
-
+<!-- 设备 -->
         <div class="qi_con_1">
             <!--设备-->
             <div class="qi_float_l qi_bfb_30">
@@ -64,13 +66,9 @@
             </div>
             <span style="color: red">*必填；默认为全部</span>
             <!--设备 end-->
-
-
         </div>
-
+<!-- 时间 -->
         <div class="qi_con_1">
-
-
             <!--时间-->
             <div class="qi_float_l qi_bfb_30">
                 时间：
@@ -78,11 +76,9 @@
                 <input type="hidden" value="" id="riqi">
             </div>
             <span style="color: red">*必填；默认为昨天——今天</span>
-            <!--时间 end-->
-
-
+        <!--时间 end-->
         </div>
-
+<!-- 地域 -->
         <div class="qi_con_1">
             <!-- 地域 -->
             <div class="qi_float_l qi_bfb_30">
@@ -93,7 +89,7 @@
             <span id="attributes" style="display: none"></span>
             <!-- 地域end -->
         </div>
-
+<!-- 分时分日类型 -->
         <div class="qi_con_1">
             查看类型:
             <ul class="pager" id="unitoftime">
@@ -136,7 +132,7 @@
                     <li style="display: none" class="sandian"><a href="#">散点图</a></li>
                 </ul>
             </div>
-            <!--计划单元关键词创意选择pager_select-->
+<!--计划单元关键词创意选择pager_select-->
             <script type="text/javascript">
                 var tier_selected = '';
             $("#pager_select a").click(function(event) {
@@ -176,7 +172,7 @@
                     success: function(data) {
 
                         $test_data = data.data;
-
+                        console.log($test_data);
                     }
                 });
                 $("#mytreeselect").empty();
@@ -287,11 +283,11 @@
                 console.log($temp);
             });
             </script>
-            <!--计划单元关键词创意选择 end-->
-            <!--折线图-->
+<!--计划单元关键词创意选择 end-->
+<!--折线图-->
             <div id="myChart0" style="width: 600px;height:400px;display: block;"></div>
             
-            <!--柱状图-->
+<!--柱状图-->
             <div id="myChart1" style="width: 600px;height:400px;display: none;"></div>
             <script>
             var myChart1 = echarts.init(document.getElementById('myChart1'));
@@ -318,7 +314,7 @@
             };
             myChart1.setOption(option1);
             </script>
-            <!--平涂-->
+<!--平涂-->
             <div id="myChart2" style="width: 600px;height:400px;display: none;"></div>
             <script>
             var myChart2 = echarts.init(document.getElementById('myChart2'));
@@ -345,7 +341,7 @@
             };
             myChart2.setOption(option2);
             </script>
-            <!--饼图-->
+<!--饼图-->
             <div id="myChart3" style="width: 600px;height:400px;display: none;"></div>
             <script>
             var myChart3 = echarts.init(document.getElementById('myChart3'));
@@ -403,7 +399,7 @@
             };
             myChart3.setOption(option3);
             </script>
-            <!--区域图-->
+<!--区域图-->
             <div id="myChart4" style="width: 600px;height:400px;display: none;"></div>
             <script>
             var myChart4 = echarts.init(document.getElementById('myChart4'));
@@ -527,7 +523,7 @@
                 document.getElementById("download_img").href = img.src;
             }
             </script>
-            <!--散点图-->
+<!--散点图-->
             <div id="myChart5" style="width: 600px;height:400px;display: none;"></div>
             <script>
             var myChart5 = echarts.init(document.getElementById('myChart5'));
@@ -641,7 +637,7 @@ $("#device").change(function() {
         url: '__CONTROLLER__/account_check',
         type: 'POST',
         dataType: 'json',
-        data: {Device: $device,
+        data: {device: $device,
             pager_select:tier_selected},
     })
     .done(function() {

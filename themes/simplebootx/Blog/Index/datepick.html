@@ -6,7 +6,13 @@
     <script src="__PUBLIC__/js/jquery.js"></script>
     <script src="__PUBLIC__/js/echarts/echarts.js"></script>
     <script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
-
+    <script src="__PUBLIC__/admin/js/bootstrap.min.js" type="text/javascript"></script>
+    <!-- <link href="__PUBLIC__/blog/js/bootstrap/css/bootstrap.css" rel="stylesheet"> -->
+<!-- <script src="__PUBLIC__/blog/js/bootstrap-multiselect.js" type="text/javascript"></script> -->
+<link href="__PUBLIC__/admin/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="__PUBLIC__/blog/js/multiple-select.css" />
+   <!--  <script src="assets/jquery.min.js"></script> -->
+<script src="__PUBLIC__/blog/js/multiple-select.js"></script>
     <style>#echarts1 {width:500px; height: 600px;margin: auto;}</style>
 </head>
 <body>
@@ -14,7 +20,35 @@
        
        <input type="text" name="date_pick" id="datepicker1"><label>riqi</label></input>
    </div>
+  <div >
+        <label>Month</label>
+        <select id="ms" multiple="multiple">
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+        </select>
+    </div>
 <script>
+    $(function() {
+        $('#ms').change(function() {
+            console.log($(this).val());
+        }).multipleSelect({
+            width: '100%'
+        });
+    });
+</script>
+   
+<script>
+
 //执行一个laydate实例
 
 laydate.render({
