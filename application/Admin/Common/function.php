@@ -578,13 +578,8 @@ function dispatch_myjob($param_string="计划"){
      	//var_dump($array);
        foreach ($array as $k => &$v) {
          if ($desc) {
-
          	for ($i= count($v['data']); $i >0 ; $i--) { 
-         		# code...
-
          		for ($j=0; $j < $i-1 ; $j++) { 
-         			# code...
-         			
          			if ($v['data'][$j] < $v['data'][$j+1] ) {
          				$temp = $v['data'][$j];
          				$v['data'][$j]=$v['data'][$j+1];
@@ -592,11 +587,24 @@ function dispatch_myjob($param_string="计划"){
          				$temp1 = $v['name'][$j];
          				$v['name'][$j]=$v['name'][$j+1];
          				$v['name'][$j+1]=$temp1;
-         			}else{
-         				
+         			}else{	
          				continue;
-         			}
-         			
+         			}	
+         		}
+         	}
+         }else{
+         	for ($i= count($v['data']); $i >0 ; $i--) { 
+         		for ($j=0; $j < $i-1 ; $j++) { 
+         			if ($v['data'][$j] > $v['data'][$j+1] ) {
+         				$temp = $v['data'][$j];
+         				$v['data'][$j]=$v['data'][$j+1];
+         				$v['data'][$j+1]=$temp;
+         				$temp1 = $v['name'][$j];
+         				$v['name'][$j]=$v['name'][$j+1];
+         				$v['name'][$j+1]=$temp1;
+         			}else{	
+         				continue;
+         			}	
          		}
          	}
          }
@@ -607,6 +615,24 @@ function dispatch_myjob($param_string="计划"){
 
 
     }
+/*在数组中查找key键，有则返回true，没有则返回false*/
+function deep_in_array($needle,$arr)
+{
+
+	foreach ($arr as $k => $v) {
+		if ($v == $needle) {
+			return true;
+		}
+		if (is_array($v) || is_object($v)) {
+			if (deep_in_array($needle,$v)) {
+				return true;
+			}else{
+				continue;
+			}
+		}
+	}
+	return false;
+}
 function test(){
 	echo "function test successfuly";
 }
