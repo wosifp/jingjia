@@ -128,7 +128,7 @@ function getAdgrouReport_realtime($param = array("startDate"=>"2018-01-01","endD
 		return false;
 	}
 	$resultData = array( );
-	$p_statRange = isset($param['statRange'])?$param['statRange']:2;
+	$p_statRange = isset($param['statRange'])?$param['statRange']:5;
 	$p_statIds = isset($param['statIds'])?$param['statIds']:null;
 	$p_order = isset($param['order'])?$param['order']:null;
 	$p_number = isset($param['number'])?$param['number']:1000;
@@ -158,9 +158,9 @@ function getKeywordIdReport_realtime($param = array("startDate"=>"2018-01-01","e
 	}
 	$resultData = array( );
 	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
-	
+	$p_statRange = isset($param['statRange'])?$param['statRange']:11;
 	$p_performanceData=$param['unitOfTime'] == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','position','conversion','bridgeConversion');
-	$param1 = array("reportType"=>14,"levelOfDetails"=>11,'performanceData'=>$p_performanceData );
+	$param1 = array("reportType"=>14,"levelOfDetails"=>11,'performanceData'=>$p_performanceData,'statRange'=>$p_statRange );
 	$param1 = array_merge($param,$param1);
 	
 	$resultData =json_decode(getReport("RealTimeData",$param1));
@@ -186,7 +186,7 @@ function getCreativeIdReport_realtime($param = array("startDate"=>"2018-01-01","
 	}
 	$resultData = array( );
 	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
-	
+	$p_statRange = isset($param['statRange'])?$param['statRange']:7;
 	$p_performanceData=$param['unitOfTime'] == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','position','conversion','bridgeConversion');
 	$param1 = array("reportType"=>12,"levelOfDetails"=>7,'performanceData'=>$p_performanceData );
 	$param1 = array_merge($param,$param1);
@@ -632,6 +632,92 @@ function deep_in_array($needle,$arr)
 		}
 	}
 	return false;
+}
+
+function account_function_byyear($category='账户',$params=array()){
+	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
+
+	return $result_json;
+}
+
+function account_function_bymonth($category='账户',$params=array()){
+	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
+	return $result_json;
+}
+
+function account_function_byweek($category='账户',$params=array()){
+	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
+	return $result_json;
+}
+
+function account_function_byday($category='账户',$params=array()){
+	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
+
+	$k_avgrank_trend = json_decode(getKeywordIdReport_realtime($params))->body->data;
+	if (!$result_json) {
+         $trend_data['date'][] =0;
+           $trend_data['impression'][] =0;
+           $trend_data['cost'][] =0;
+           $trend_data['cpc'][] =0;
+           $trend_data['click'][] =0;
+           $trend_data['ctr'][] =0;
+           $trend_data['cpm'][] =0;
+           $trend_data['conversion'][] =0;
+           $trend_data['phoneConversion'][] =0;
+           $trend_data['bridgeConversion'][] =0;
+           $trend_data['name']=0;
+           $trend_data['position'][] = 0;
+                    
+       }
+       foreach ($result_json as $key => $value) {
+           $trend_data['date'][] =$value->date;
+           $trend_data['impression'][] =$value->kpis[0];
+           $trend_data['cost'][] =$value->kpis[1];
+           $trend_data['cpc'][] =round($value->kpis[2],2);
+           $trend_data['click'][] =$value->kpis[3];
+           $trend_data['ctr'][] =round($value->kpis[4],2);
+           $trend_data['cpm'][] =round($value->kpis[5],2);
+           $trend_data['conversion'][] =$value->kpis[6];
+           $trend_data['phoneConversion'][] =$value->kpis[7];
+           $trend_data['bridgeConversion'][] =$value->kpis[8];
+           $trend_data['name']=$value->name;
+           $n_count =0;
+           $sum_temp=0;
+           foreach ($k_avgrank_trend as $k1 => $v1) {
+              if (strcmp($v1->date, $value->date)) {
+                  $sum_temp += $v1->kpis[6];
+                  if ($v1->kpis[6] > 0) {
+                    $n_count++;
+                  }
+              }
+            }  
+            $trend_data['position'][] = round($sum_temp/$n_count,2);     
+       }
+	return $trend_data;
+}
+
+function account_function_byhour($category='账户',$params=array()){
+	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
+	return $result_json;
+}
+
+function account_function_byDrate($category='账户',$params=array()){
+	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
+	return $result_json;
+}
+
+function account_function_byregion($category='账户',$params=array()){
+	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
+	return $result_json;
+}
+
+function account_function_bytire($category='账户',$params=array()){
+	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
+	return $result_json;
+}
+function account_function_bydata($category='账户',$params=array()){
+	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
+	return $result_json;
 }
 function test(){
 	echo "function test successfuly";

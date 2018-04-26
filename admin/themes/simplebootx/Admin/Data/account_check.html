@@ -27,6 +27,7 @@
 <script src="__PUBLIC__/js/areapicker/auto_area.js"></script>
 <body>
     <div class="qi_right_1">
+<!--层级选择 pager_select -->
         <div class="qi_con_1">
             <ul class="pager" id="pager_select">
                 <li><a href="#">账户</a></li>
@@ -35,7 +36,6 @@
                 <li><a href="#">关键词</a></li>
                 <li><a href="#">创意</a></li>
             </ul>
-            <span style="color: red">* 账户必选</span>
         </div>
         <div class="qi_con_1">
             <div class="qi_float_l qi_bfb_30">
@@ -43,7 +43,6 @@
                     <span id="set_fanwei"></span>范围：
                     <a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
                     <span id="cengji" style="display: none"></span>
-                    <span style="color: red" id="beixuan">*默认为全部</span>
                 </p>
                 <div id="firstpane" class="menu_list" style="display:none">
                     <hr>
@@ -52,246 +51,118 @@
                 </div>
             </div>
         </div>
-<!-- 设备 -->
-        <div class="qi_con_1">
-            <!--设备-->
-            <div class="qi_float_l qi_bfb_30">
-                设备：
-                <select id="device">
-                    <option value="0">全部</option>
-                    <option value="1">PC</option>
-                    <option value="2">移动</option>
-                </select>
-
-            </div>
-            <span style="color: red">*必填；默认为全部</span>
-            <!--设备 end-->
-        </div>
 <!-- 时间 -->
         <div class="qi_con_1">
-            <!--时间-->
             <div class="qi_float_l qi_bfb_30">
                 时间：
                 <input type="text" name="date_pick" id="datepicker1">
-                <input type="hidden" value="" id="riqi">
+               <!--  <input type="hidden" value="" id="riqi"> -->
             </div>
-            <span style="color: red">*必填；默认为昨天——今天</span>
+          <!--   <span style="color: red">*必填；默认为昨天——今天</span> -->
         <!--时间 end-->
         </div>
-<!-- 地域 -->
+<!-- 设备与地域 -->
         <div class="qi_con_1">
+            <div class="qi_float_l qi_bfb_30">
+                设备：
+                <select id="device">
+                    <option value="3">全部</option>
+                    <option value="1">PC</option>
+                    <option value="2">移动</option>
+                </select>
+            </div>
+           <!--  <span style="color: red">*必填；默认为全部</span> -->
+            <!--设备 end-->
             <!-- 地域 -->
             <div class="qi_float_l qi_bfb_30">
-                地域：
-                <input type="text" class="area-duoxuan" value="" data-value="" name="area_pick" id="area_multipicker">
-            </div>
-            <span style="color: red" >*必填；默认为全部</span>
-            <span id="attributes" style="display: none"></span>
-            <!-- 地域end -->
+            <ul class="pager qi_0_mag_bott">地域：
+                <li><a href="javascript:">全部</a></li>
+                <li id="selfdefine_region"><a href="javascript:">自定义</a></li>
+            </ul>
+        <div hidden="true">
+            <input type="text" name="area_pick" class="area-duoxuan" id="area_multipicker"value="{$area_city}" data-value="" hidden="true">
         </div>
+        <button id="area_action" hidden="true"></button>
+            </div>
+        </div>
+
+
 <!-- 分时分日类型 -->
         <div class="qi_con_1">
             查看类型:
-            <ul class="pager" id="unitoftime">
-                <li id="points" value="5"><a href="#">分日</a></li>
-                <li value="7"><a href="#">分时</a></li>
-                <li value="4"><a href="#">分周</a></li>
-                <li value="3"><a href="#" id="monthly">分月</a></li>
-                <li value="1"><a href="#">分季度</a></li>
-                <li value="22"><a href="#">设备对比</a></li>
-                <li value="33"><a href="#">地域分布</a></li>
-                <li value="44"><a href="#">层级分布</a></li>
-                <li value="55"><a href="#">数据构成</a></li>
+            <ul class="pager" id="filter_select">
+                <li id="points" value="5" ><a href="javascript:">分日</a></li>
+                <li value="7"><a href="javascript:">分时</a></li>
+                <li value="4"><a href="javascript:">分周</a></li>
+                <li value="3"><a href="javascript:" id="monthly">分月</a></li>
+                <li value="1"><a href="javascript:">分季度</a></li>
+                <li value="22"><a href="javascript:">设备对比</a></li>
+                <li value="33"><a href="javascript:">地域分布</a></li>
+                <li value="44"><a href="javascript:">层级分布</a></li>
+                <li value="55"><a href="javascript:">数据构成</a></li>
                 <!--<li value="66"><a href="#">关键词对比</a></li>-->
                 <!--<li value="77"><a href="#">质量度</a></li>-->
             </ul>
-            <span style="color: red" >*选填</span>
-            <button id="chakan">查看</button>
+           <!--  <span style="color: red" >*选填</span>
+            <button id="chakan">查看</button> -->
         </div>
-
-
-
         <div class="qi_con_1">
-
             <div class="qi_bfb_100 qi_padt_30">
                 <select class="qi_float_r">
-                    <option value="saab">展现</option>
-                    <option value="volvo">消费</option>
-                    <option value="opel">点击</option>
-                    <option value="audi">CPC</option>
-                    <option value="audi">CTR</option>
-                    <option value="audi">平均排名</option>
+                    <option value="impression">展现</option>
+                    <option value="cost">消费</option>
+                    <option value="click">点击</option>
+                    <option value="cpc">CPC</option>
+                    <option value="ctr">CTR</option>
+                    <option value="avgrank">平均排名</option>
                 </select>
-                <ul class="pager" id="page_select">
-                    <li style="display: none" class="zhexian"><a href="#">折线图</a></li>
-                    <li style="display: none" class="zhutu"><a href="#">柱状体</a></li>
-                    <li style="display: none" class="pingtu"><a href="#">平涂</a></li>
-                    <li style="display: none" class="dietu"><a href="#">堆叠图</a></li>
-                    <li style="display: none" class="bingtu"><a href="#">饼图</a></li>
-                    <li style="display: none" class="quyu"><a href="#">区域图</a></li>
-                    <li style="display: none" class="sandian"><a href="#">散点图</a></li>
+                <ul class="pager" id="chart_select">
+                    <li style="display: block" class="zhexian"><a href="javascript:">折线图</a></li>
+                    <li style="display: block" class="zhutu"><a href="javascript:">柱状体</a></li>
+                    <li style="display: none" class="pingtu"><a href="javascript:">平涂</a></li>
+                    <li style="display: none" class="dietu"><a href="javascript:">堆叠图</a></li>
+                    <li style="display: none" class="bingtu"><a href="javascript:">饼图</a></li>
+                    <li style="display: none" class="quyu"><a href="javascript:">区域图</a></li>
+                    <li style="display: none" class="sandian"><a href="javascript:">散点图</a></li>
                 </ul>
             </div>
-<!--计划单元关键词创意选择pager_select-->
-            <script type="text/javascript">
-                var tier_selected = '';
-            $("#pager_select a").click(function(event) {
-                /* Act on the event */
-
-                tier_selected = $(this).text();
-                // 0415添加
-                $("#fanwei").show();
-                $("#set_fanwei").text(tier_selected);
-                $("#beixuan").html("*默认为全部");
-                // 0415结束
-
-                console.log(tier_selected);
-                $.ajax({
-                    url: '__CONTROLLER__/account_check',
-                    type: 'POST',
-                    dataType: 'json',
-                    data: {pager_select: tier_selected},
-                })
-                .done(function(e) {
-                    console.log("success");
-                })
-                .fail(function() {
-                    console.log("error");
-                })
-                .always(function() {
-                    console.log("complete");
-                });
-                $.ajax({
-                    type: "post",
-                    url: "__MODULE__/Ajax/handle_data_check",
-                    data: {
-                        pager_select: tier_selected
-                    },
-                    async: false,
-                    dataType: "json",
-                    success: function(data) {
-
-                        $test_data = data.data;
-                        console.log($test_data);
-                    }
-                });
-                $("#mytreeselect").empty();
-                $("#firstpane div").empty();
-                $("#firstpane div").remove();
-                // $test_data =$.parseJSON('{$page_1}');
-                console.log($test_data);
-                console.log(11111111111111);
-
-                if (tier_selected == "账户") {
-                    $.each($test_data, function(index, val) {
-
-                        $.each(val, function(index1, val1) {
-
-                            $.each(val1, function(index2, val2) {
-                                /* iterate through array or object */
-                                $("#mytreeselect ").append('<option value=' + val2.id + ' data-section="' + index+'/'+index1 + '">' + val2.user_login + '</option>');
-                            });
-                        });
-                    });
-                }
-
-                if (tier_selected == "计划") {
-                    $.each($test_data, function(index, val) {
-                        $.each(val, function(index1, val1) {
-                            $("#mytreeselect ").append('<option value=' + val1.campaignId + ' data-section="' + index + '">' + val1.campaignName + '</option>');
-                        });
-                    });
-                }
-                if (tier_selected == "单元") {
-                    $.each($test_data, function(index, val) {
-
-                        $.each(val, function(index1, val1) {
-            
-                            $.each(val1, function(index2, val2) {
-                                 /* iterate through array or object */
-                                 $("#mytreeselect ").append('<option value=' + val2.adgroupId + ' data-section="' + index+'/'+index1 + '">' + val2.adgroupName + '</option>');
-                            });
-                        });
-                    });
-                }
-                if (tier_selected=="关键词") {
-                    $.each($test_data, function(index, val) {
-                        $.each(val, function(index1, val1) {
-                            $.each(val1, function(index2, val2) {
-                                 $.each(val2, function(index3, val3) {
-                                    $("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.keyword + '</option>');
-                                 });
-                                 
-                            });
-                        });
-                    });  
-                }
-                if (tier_selected=="创意") {
-                    $.each($test_data, function(index, val) {
-                        $.each(val, function(index1, val1) {
-                            $.each(val1, function(index2, val2) {
-                                 $.each(val2, function(index3, val3) {
-                                     $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.title + '</option>');
-                                 });
-                                 
-                            });
-                        });
-                    });  
-                }
-
-
-                $tree1 = $("#mytreeselect").treeMultiselect({
-                    allowBatchSelection: true,
-                    enableSelectAll: true,
-                    searchable: true,
-                    sortable: true,
-                    startCollapsed: true,
-                    onChange: function(text, value, initialIndex, section) {
-                        $temp = text;
-                    }
-                });
-
-
-            });
-            $("#send_mytree").click(function() {
-                $("#firstpane").hide();
-                $("#beixuan").html('');
-                // 0417添加
-                $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
-                /*使用JSON.stringify($temp)方法将object转换为json字符串*/
-                console.log(typeof(jQuery.parseJSON(JSON.stringify($temp))));
-
-                $.ajax({
-                    url: '__CONTROLLER__/account_check',
-                    type: 'POST',
-                    dataType: 'json',
-                    data:{statIds:jQuery.parseJSON(JSON.stringify($temp)),
-                     pager_select: tier_selected
-                 },
-                })
-                .done(function(e) {
-                    console.log("success");
-                    console.log(e);
-                })
-                .fail(function() {
-                    console.log("error");
-                })
-                .always(function() {
-                    console.log("complete");
-                });
-                
-                console.log($temp);
-            });
-            </script>
-<!--计划单元关键词创意选择 end-->
 <!--折线图-->
-            <div id="myChart0" style="width: 600px;height:400px;display: block;"></div>
-            
+            <div id="myChart0" style="width: 900px;height:500px;display: block;"></div>         
+        </div>
+    </div>
+<!-- 折线图 -->
+    <script>
+        var myChart0 = echarts.init(document.getElementById('myChart0'));
+        var option0 = {
+            toolbox: {
+                feature: {
+                    saveAsImage: {
+                        pixelRatio: 3
+                    }
+                }
+            },
+            tooltip:{
+                trigger:'item',
+                formatter:'{a} , {b} , {c}'
+            },
+            xAxis: {
+                type: 'category',
+                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                type: 'line',
+                smooth: true
+            }]
+        };
+        myChart0.setOption(option0);
+    </script>
 <!--柱状图-->
-            <div id="myChart1" style="width: 600px;height:400px;display: none;"></div>
-            <script>
-            var myChart1 = echarts.init(document.getElementById('myChart1'));
-            var option1 = {
+    <script>
+        var option1 = {
                 toolbox: {
                     feature: {
                         saveAsImage: {
@@ -312,13 +183,10 @@
                     smooth: true
                 }]
             };
-            myChart1.setOption(option1);
-            </script>
+    </script>
 <!--平涂-->
-            <div id="myChart2" style="width: 600px;height:400px;display: none;"></div>
-            <script>
-            var myChart2 = echarts.init(document.getElementById('myChart2'));
-            var option2 = {
+    <script>
+        var option2 = {
                 toolbox: {
                     feature: {
                         saveAsImage: {
@@ -339,35 +207,33 @@
                     smooth: true
                 }]
             };
-            myChart2.setOption(option2);
-            </script>
+    </script>
+
 <!--饼图-->
-            <div id="myChart3" style="width: 600px;height:400px;display: none;"></div>
-            <script>
-            var myChart3 = echarts.init(document.getElementById('myChart3'));
-            var option3 = {
-                toolbox: {
-                    feature: {
-                        saveAsImage: {
-                            pixelRatio: 3
-                        }
+    <script type="text/javascript">
+        var option3 = {
+            toolbox: {
+                feature: {
+                    saveAsImage: {
+                        pixelRatio: 3
                     }
-                },
-                title: {
-                    text: '计划构成',
-                    subtext: '纯属虚构',
-                    x: 'center'
-                },
-                tooltip: {
-                    trigger: 'item',
-                    formatter: "{a} <br/>{b} : {c} ({d}%)"
-                },
-                legend: {
-                    orient: 'vertical',
-                    left: 'left',
-                    data: ['计划1', '计划2', '计划3', '计划4', '计划5']
-                },
-                series: [{
+                }
+            },
+            title: {
+                text: '计划构成',
+                subtext: '纯属虚构',
+                x: 'center'
+            },
+            tooltip: {
+                trigger: 'item',
+                formatter: "{a} <br/>{b} : {c} ({d}%)"
+            },
+            legend: {
+                orient: 'vertical',
+                left: 'left',
+                data: ['计划1', '计划2', '计划3', '计划4', '计划5']
+            },
+            series: [{
                     name: '计划构成',
                     type: 'pie',
                     radius: '55%',
@@ -397,118 +263,112 @@
                     }
                 }]
             };
-            myChart3.setOption(option3);
-            </script>
+    </script>
 <!--区域图-->
-            <div id="myChart4" style="width: 600px;height:400px;display: none;"></div>
-            <script>
-            var myChart4 = echarts.init(document.getElementById('myChart4'));
-            myChart4.showLoading();
-            myChart4.hideLoading();
-            var option4 = {
-                title: [{
-                    color: '#033',
-                    text: "ditu ",
+    <script>
+        var option4 = {
+            title: [{
+                color: '#033',
+                text: "ditu ",
+                textStyle: {
+                    fontWeight: 'bold',
+                }
+            }],
+            toolbox: {
+                show: true,
+                orient: 'vertical',
+                left: 'right',
+                top: 'center',
+                feature: {
+                    dataView: {
+                        readOnly: false
+                    },
+                    restore: {},
+                    saveAsImage: {
+                        pixelRatio: 4,
+                        backgroundColor: '#fff'
+                    }
+                }
+            },
+            legend: [{
+                type: 'plain',
+                left: 'auto',
+                top: 'auto',
+                orient: 'vertical',
+                formatter: "ddddddd",
+                tooltip: {
+                    show: true
+                },
+                data: [{
+                    name: '系列1',
+                        // 强制设置图形为圆。
+                    icon: 'circle',
+                        // 设置文本为红色
                     textStyle: {
-                        fontWeight: 'bold',
+                        color: 'red'
                     }
                 }],
+                icon: 'rect'
+            }],
+            tooltip: {
+                    // show: false, //不显示提示标签
+                formatter: '{b}',
+                    /*提示标签格式*/
+                backgroundColor: "#ff7f50", //提示标签背景颜色
+                    textStyle: {
+                        color: "#fff"
+                    } //提示标签字体颜色
+                },
+            series: [{
+                type: 'map',
+                mapType: 'china',
+                label: {
+                    normal: {
+                        show: true, //显示省份标签
+                        textStyle: {
+                            color: "#c71585"
+                        } //省份标签字体颜色
+                    },
+                    emphasis: {
+                            //对应的鼠标悬浮效果
+                        show: true,
+                        textStyle: {
+                            color: "#800080"
+                        }
+                    }
+                },
                 toolbox: {
                     show: true,
-                    orient: 'vertical',
-                    left: 'right',
-                    top: 'center',
                     feature: {
                         dataView: {
                             readOnly: false
                         },
                         restore: {},
                         saveAsImage: {
-                            pixelRatio: 4,
-                            backgroundColor: '#fff'
-
+                            pixelRatio: 4
                         }
                     }
                 },
-                legend: [{
-                    type: 'plain',
-                    left: 'auto',
-                    top: 'auto',
-                    orient: 'vertical',
-                    formatter: "ddddddd",
-                    tooltip: {
-                        show: true
+                itemStyle: {
+                    normal: {
+                        borderWidth: .5, //区域边框宽度
+                        borderColor: '#009fe8', //区域边框颜色
+                        areaColor: "#ffefd5", //区域颜色
                     },
-                    data: [{
-                        name: '系列1',
-                        // 强制设置图形为圆。
-                        icon: 'circle',
-                        // 设置文本为红色
-                        textStyle: {
-                            color: 'red'
-                        }
-                    }],
-                    icon: 'rect'
-                }],
-                tooltip: {
-                    // show: false, //不显示提示标签
-                    formatter: '{b}',
-                    /*提示标签格式*/
-                    backgroundColor: "#ff7f50", //提示标签背景颜色
-                    textStyle: {
-                        color: "#fff"
-                    } //提示标签字体颜色
+                    emphasis: {
+                        borderWidth: .5,
+                        borderColor: '#4b0082',
+                        areaColor: "#ffdead",
+                    }
                 },
-                series: [{
-                    type: 'map',
-                    mapType: 'china',
-                    label: {
-                        normal: {
-                            show: true, //显示省份标签
-                            textStyle: {
-                                color: "#c71585"
-                            } //省份标签字体颜色
-                        },
-                        emphasis: {
-                            //对应的鼠标悬浮效果
-                            show: true,
-                            textStyle: {
-                                color: "#800080"
-                            }
-                        }
-                    },
-                    toolbox: {
-                        show: true,
-                        feature: {
-                            dataView: {
-                                readOnly: false
-                            },
-                            restore: {},
-                            saveAsImage: {
-                                pixelRatio: 4
-                            }
-                        }
-                    },
-                    itemStyle: {
-                        normal: {
-                            borderWidth: .5, //区域边框宽度
-                            borderColor: '#009fe8', //区域边框颜色
-                            areaColor: "#ffefd5", //区域颜色
-                        },
-                        emphasis: {
-                            borderWidth: .5,
-                            borderColor: '#4b0082',
-                            areaColor: "#ffdead",
-                        }
-                    },
-                    data: [{
-                            name: '福建',
-                            selected: true
-                        } //福建为选中状态
+                data: [{
+                    name: '福建',
+                    selected: true
+                    } //福建为选中状态
                     ]
-                }]
-            };
-            myChart4.setOption(option4);
+            }]
+        };
+           /* myChart4.setOption(option4);
             myChart4.on('mouseover', function(params) {
                 var dataIndex = params.dataIndex;
             });
@@ -521,25 +381,24 @@
             img.src = myChart4.getDataURL();
             document.getElementById("button_download").onclick = function() {
                 document.getElementById("download_img").href = img.src;
-            }
-            </script>
+            }*/
+    </script>
+
 <!--散点图-->
-            <div id="myChart5" style="width: 600px;height:400px;display: none;"></div>
-            <script>
-            var myChart5 = echarts.init(document.getElementById('myChart5'));
-            var option5 = {
-                toolbox: {
-                    feature: {
-                        saveAsImage: {
-                            pixelRatio: 3
-                        }
+    <script>
+        var option5 = {
+            toolbox: {
+                feature: {
+                    saveAsImage: {
+                        pixelRatio: 3
                     }
-                },
-                xAxis: {},
-                yAxis: {},
-                series: [{
-                    symbolSize: 20,
-                    data: [
+                }
+            },
+            xAxis: {},
+            yAxis: {},
+            series: [{
+                symbolSize: 20,
+                data: [
                         [10.0, 8.04],
                         [8.0, 6.95],
                         [13.0, 7.58],
@@ -553,83 +412,297 @@
                         [5.0, 5.68],
                         [6.0, 4.68]
                     ],
-                    type: 'scatter'
-                }]
-            };
-            myChart5.setOption(option5);
-            </script>
-            <div id="jsGrid"></div>
-        </div>
-    </div>
-    
-                <script>
-            var myChart0 = echarts.init(document.getElementById('myChart0'));
-            var option0 = {
-                toolbox: {
-                    feature: {
-                        saveAsImage: {
-                            pixelRatio: 3
-                        }
-                    }
-                },
-                tooltip:{
-                    trigger:'item',
-                    formatter:'{a} , {b} , {c}'
-                },
-                xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    type: 'line',
-                    smooth: true
-                }]
-            };
-            myChart0.setOption(option0);
-            </script>
-            <script>
-                var chart_data=[];
-                laydate.render({
-                    elem: '#datepicker1',
-                    range: true, //指定元素
-                    done: function(value) {
-                        $("#riqi").val(value);
-                        $.ajax({
-                            url: '__CONTROLLER__/account_check',
-                            type: 'POST',
-                            dataType: 'json',
-                            data: {
-                                datepicker: value,
-                                pager_select:tier_selected
-                            },
-                        })
-                        .done(function(e) {
-                            chart_data = e.data;
-                            console.log("success");
-                            console.log(typeof(e));
-                            console.log(chart_data);
-                            console.log(option0);
-                            option0.xAxis.data=chart_data.date;
-                            option0.series[0].data=chart_data.impression;
-                            myChart0.setOption(option0);
-                        })
-                        .fail(function() {
-                            console.log("error");
-                        })
-                        .always(function() {
-                            console.log("complete");
-                        });
-                    }
-                });
-                </script>
+                type: 'scatter'
+            }]
+        };
+    </script>
+
+
 </body>
 
 </html>
-<script>
+<!--计划单元关键词创意选择pager_select-->
+    <script type="text/javascript">
+        var tier_selected = '';
+        $("#pager_select a").click(function(event) {
+            tier_selected = $(this).text();
+                // 0415添加
+            $("#fanwei").show();
+            $("#set_fanwei").text(tier_selected);
+               /* $("#beixuan").html("*默认为全部");*/
+                // 0415结束
+
+            console.log(tier_selected);
+            $.ajax({
+                url: '__CONTROLLER__/account_check',
+                type: 'POST',
+                dataType: 'json',
+                data: {pager_select: tier_selected},
+            })
+            .done(function(e) {
+                    console.log("success");
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
+            $.ajax({
+                type: "post",
+                url: "__MODULE__/Ajax/handle_data_check",
+                data: {
+                    pager_select: tier_selected
+                },
+                async: false,
+                dataType: "json",
+                success: function(data) {
+
+                    $test_data = data.data;
+                    console.log($test_data);
+                }
+            });
+            $("#mytreeselect").empty();
+            $("#firstpane div").empty();
+            $("#firstpane div").remove();
+                // $test_data =$.parseJSON('{$page_1}');
+            console.log($test_data);
+            console.log(11111111111111);
+
+            if (tier_selected == "账户") {
+                $.each($test_data, function(index, val) {
+                    $.each(val, function(index1, val1) {
+                        $.each(val1, function(index2, val2) {
+                            $("#mytreeselect ").append('<option value=' + val2.id + ' data-section="' + index+'/'+index1 + '">' + val2.user_login + '</option>');
+                            });
+                        });
+                    });
+                }
+
+            if (tier_selected == "计划") {
+                $.each($test_data, function(index, val) {
+                    $.each(val, function(index1, val1) {
+                        $("#mytreeselect ").append('<option value=' + val1.campaignId + ' data-section="' + index + '">' + val1.campaignName + '</option>');
+                    });
+                });
+            }
+            if (tier_selected == "单元") {
+                $.each($test_data, function(index, val) {
+                    $.each(val, function(index1, val1) {
+                        $.each(val1, function(index2, val2) {
+                            $("#mytreeselect ").append('<option value=' + val2.adgroupId + ' data-section="' + index+'/'+index1 + '">' + val2.adgroupName + '</option>');
+                        });
+                    });
+                });
+            }
+            if (tier_selected=="关键词") {
+                $.each($test_data, function(index, val) {
+                    $.each(val, function(index1, val1) {
+                        $.each(val1, function(index2, val2) {
+                            $.each(val2, function(index3, val3) {
+                                $("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.keyword + '</option>');
+                            });     
+                        });
+                    });
+                });  
+            }
+            if (tier_selected=="创意") {
+                $.each($test_data, function(index, val) {
+                    $.each(val, function(index1, val1) {
+                        $.each(val1, function(index2, val2) {
+                            $.each(val2, function(index3, val3) {
+                                $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.title + '</option>');
+                            });        
+                        });
+                    });
+                });  
+            }
+
+
+            $tree1 = $("#mytreeselect").treeMultiselect({
+                allowBatchSelection: true,
+                enableSelectAll: true,
+                searchable: true,
+                sortable: true,
+                startCollapsed: true,
+                onChange: function(text, value, initialIndex, section) {
+                    $temp = text;
+                }
+            });
+        });
+            $("#send_mytree").click(function() {
+                $("#firstpane").hide();
+                /*$("#beixuan").html('');*/
+                // 0417添加
+                $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
+                /*使用JSON.stringify($temp)方法将object转换为json字符串*/
+                console.log(typeof(jQuery.parseJSON(JSON.stringify($temp))));
+
+                $.ajax({
+                    url: '__CONTROLLER__/account_check',
+                    type: 'POST',
+                    dataType: 'json',
+                    data:{statIds:jQuery.parseJSON(JSON.stringify($temp)),
+                     pager_select: tier_selected
+                 },
+                })
+                .done(function(e) {
+                    console.log("success");
+                    console.log(e);
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+                
+                console.log($temp);
+            });
+    </script>
+<!-- 设备选择 -->
+    <script type="text/javascript">
+        $("#device").change(function(event) {
+            
+        });
+    </script>
+<!-- 日期选择 -->
+    <script>
+        laydate.render({
+            elem: '#datepicker1',
+            range: true, //指定元素
+            done: function(value) {
+                       /* $("#riqi").val(value);*/
+            $.ajax({
+                url: '__CONTROLLER__/account_check',
+                type: 'POST',
+                dataType: 'json',
+                    data: {
+                        datepicker: value,
+                        pager_select:tier_selected
+                    },
+                })
+                .done(function(e) {
+                    console.log("success");
+                    console.log(typeof(e));
+                    console.log(option0);
+                })
+                .fail(function() {
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
+                });
+            }
+        });
+    </script>
+<!-- 查看类型选择 -->
+    <script type="text/javascript">
+        $("#filter_select li").click(function() {
+            var unit_data = $(this).val();
+            //console.log($unit_data);
+            if (unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7) {
+                $("#chart_select li").css('display', 'none');
+                $(".zhexian").css('display', 'block');
+                $(".zhutu").css('display', 'block');
+            }
+            if (unit_data == 22) { //设备对比 平涂
+                $("#chart_select li").css('display', 'none');
+                $(".pingtu").css('display', 'block');  
+            } 
+            if (unit_data == 33) { // 地域分布 区域图、散点图
+                $("#chart_select li").css('display', 'none');
+                $(".quyu").css('display', 'block');
+                $(".sandian").css('display', 'block');   
+            }
+            if (unit_data == 44) { // 数据构成 饼图
+                $("#chart_select li").css('display', 'none');
+                $(".bingtu").css('display', 'block');   
+            }
+            if (unit_data == 55) { // 数据构成 饼图
+                $("#chart_select li").css('display', 'none');
+                $(".bingtu").css('display', 'block');
+            }
+
+            $.ajax({
+                url: '__CONTROLLER__/account_check',
+                type: 'POST',
+                dataType: 'json',
+                data: {filter_type: unit_data},
+            })
+            .done(function(data) {
+                console.log("success");
+            })
+            .fail(function(e) {
+                console.log("error");
+            })
+            .always(function(e) {
+                console.log("complete");
+            });
+            
+        });
+    </script>
+<!-- 区域选择 -->
+    <script type="text/javascript">
+    /*地域自定义事件 */
+    $("#selfdefine_region").click(function(event) {
+        $("#area_multipicker").trigger('click');
+    });      
+    /*区域选择响应事件*/  
+    $("#area_action").click(function(event) {
+    /* Act on the event */
+    if ($(dataCityinput).val() != null) {
+        console.log($(dataCityinput).val());
+        console.log($(dataCityinput).data());
+       
+        /*window.location.href = "__CONTROLLER__/index?area_value=" + $(dataCityinput).data("value");*/
+        $.ajax({
+            url: '__CONTROLLER__/account_check',
+            type: 'POST',
+            dataType: 'json',
+            data: {area_city:$(dataCityinput).data("value") },
+        })
+        .done(function(data) {
+            refreshDOM(data.data);
+            console.log(data.data);
+            console.log("success");
+            
+        })
+        .fail(function() {
+            console.log("error");
+        })
+        .always(function() {
+            console.log("complete");
+        });
+        
+    }
+    console.log($("input[name='area']").val());
+    
+    });
+    </script>
+<!-- chart_select click -->
+    <script type="text/javascript">
+        $(".zhexian").click(function(event) {
+            myChart0.setOption(option0,true);
+        });
+        $(".zhutu").click(function(event) {
+            myChart0.setOption(option1,true);
+        });
+        $(".pingtu").click(function(event) {
+            myChart0.setOption(option2,true);
+        });
+        $(".bingtu").click(function(event) {
+            myChart0.setOption(option3,true);
+        });
+        $(".quyu").click(function(event) {
+            myChart0.setOption(option4,true);
+        });
+        $(".sandian").click(function(event) {
+            myChart0.setOption(option5,true);
+        });
+
+    </script>
+<!-- <script>
 
 $("#device").change(function() {
     $device = $('#device :selected').val();
@@ -652,7 +725,7 @@ $("#device").change(function() {
 
 });
 
-$("#unitoftime li").click(function() {
+$("#filter_select li").click(function() {
     var unit_data = $(this).val();
     //console.log($unit_data);
     if (unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7) {
@@ -775,10 +848,10 @@ $(".sandian").click(function() {
     $("#myChart4").css('display', 'none');
     $("#myChart5").css('display', 'block');
 });
-</script>
+</script> -->
 
 <!--0415 提交查询条件-->
-<script>
+<!-- <script>
     $("#chakan").click(function () {
         // 层级（账户、计划、单元、关键词等）
         var section_name = $(".section-name").text();
@@ -830,4 +903,4 @@ $(".sandian").click(function() {
 
     })
 </script>
-
+ -->

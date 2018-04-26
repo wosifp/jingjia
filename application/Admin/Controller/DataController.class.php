@@ -28,55 +28,105 @@ class DataController extends AdminbaseController {
 
 /*数据查看-->账户查看account_check() */
     public function account_check(){
+        $p_temp = array( );
+        /*获取用户列表并压到模板*/
         $this->assign('trade',getAccountList());
-
-    /*参数处理*/
-    /*参数处理end*/
-        static $p_temp = array();
-        /*设置默认值*/
-
-        $p_temp['startDate']=isset($p_temp['startDate'])?$p_temp['startDate']:date('Y-m-d',strtotime('-1 day'));
-        $p_temp['endDate']=isset($p_temp['endDate'])?$p_temp['endDate']:date('Y-m-d');
-        $p_temp['device']=isset($p_temp['device'])?$p_temp['device']:0;
-        $p_temp['unitOfTime']=isset($p_temp['unitOfTime'])?$p_temp['unitOfTime']:5;
-
-        if (IS_AJAX) {
-            # code...
-            var_dump($_POST);
-            $statIds_temp = $_POST['statIds'];
-            //var_dump($_POST['statIds']);
+        /*获取要被查看的账户名字*/
+        $statIds_temp = $_REQUEST["statIds"];
+        S('account_check_pager_select',$_REQUEST['pager_select']?$_REQUEST['pager_select']:S('account_check_pager_select'),900);
+        if ($_REQUEST['pager_select']=='账户') {
+            $targets = array();
+            foreach ($statIds_temp as $key => $value) {
+                $targets[] = $value['text'];
+            }
+        
+            $target = $targets[0] ?$targets[0]:0;
+            if($target){
+                session('username_normal',$target);
+            }
+        }else{
             foreach ($statIds_temp as $key => $value) {
                 $p_temp['statIds'][] =$value['value'];
             }
-            //var_dump($p_temp);
-            $p_temp['unitOfTime'] = $_POST['unitOfTime']?$_POST['unitOfTime']:$p_temp['unitOfTime'];
-            $p_temp['order']=$_POST['order']?$_POST['order']:$p_temp['order'];
-            $datepick = explode(" ",  $_POST['datepicker']);
-            $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
-            $p_temp['endDate']=$datepick[2]?$datepick[2]:$p_temp['endDate'];
-            $p_temp['device']=$_POST['device']?$_POST['device']:$p_temp['device'];
+        }
+        S('account_check_filter_type',$_REQUEST['filter_type']?$_REQUEST['filter_type']:S('account_check_filter_type'),500);
+        $filter_type = S('account_check_filter_type')?S('account_check_filter_type'):5;
+       
+    /*参数处理*/
+
+        $datepicker = explode(" ",  $_REQUEST['datepicker']);
+
+       S('account_check_statIds',$p_temp['statIds']?$p_temp['statIds']:S('account_check_statIds'),300);
+        S('account_check_startDate',$datepicker[0]?$datepicker[0]:S('account_check_startDate'),300);
+        S('account_check_endDate',$datepicker[2]?$datepicker[2]:S('account_check_endDate'),300);
+       
+        
+        S('account_check_device',$_REQUEST['device']?$_REQUEST['device']:S('account_check_device'),300);
+        S('account_check_device',S('account_check_device')=='3'?0:S('account_check_device'));
+       
+       /* $area_str = $_REQUEST['area_value'];*/
+        /*S('provid',$_REQUEST)*/
+        S('account_check_area_city',$_REQUEST['area_city']?$_REQUEST['area_city']:S('account_check_area_city'),300);
+        
+        $p_temp['startDate']=S('account_check_startDate')?S('account_check_startDate'):date('Y-m-d',strtotime("-2 day"));
+        $p_temp['endDate']=S('account_check_endDate')?S('account_check_endDate'):date('Y-m-d',strtotime("-1 day"));
+        $p_temp['device']=S('account_check_device')?S('account_check_device'):0;
+        $p_temp['statIds']=S('account_check_statIds')?S('account_check_statIds'):array();
+        /*var_dump(S('account_check_device')) ;
+        var_dump($p_temp['device']) ;*/
+        $p_temp['area_city'] = S('account_check_area_city');
+        $p_temp['provid'] = explode("-", $p_temp['area_city']);
+        /*$p_temp['datepicker'] = S('account_check_datepicker');*/
+        
+        /* $p_temp['unitOfTime']=$_REQUEST['unitOfTime']?$_REQUEST['unitOfTime']: 5;*/
+        //var_dump($p_temp);
+    /*参数处理end*/
+        switch ($filter_type) {
+            case '1':
+                $p_temp['unitOfTime'] = 1;
+                $filter_result = account_function_byyear(S('account_check_pager_select'),$p_temp);
+                break;
+            case '3':
+                $p_temp['unitOfTime'] = 3;
+                $filter_result = account_function_bymonth(S('account_check_pager_select'),$p_temp);
+                break;
+            case '4':
+                $p_temp['unitOfTime'] = 4;
+                $filter_result = account_function_byweek(S('account_check_pager_select'),$p_temp);
+                break;
+            case '5':
+                $p_temp['unitOfTime'] = 5;
+                $filter_result = account_function_byday(S('account_check_pager_select'),$p_temp);
+                break;
+            case '7':
+                $p_temp['unitOfTime'] = 7;
+                $filter_result = account_function_byhour(S('account_check_pager_select'),$p_temp);
+                break;
+            case '22':
+                $p_temp['unitOfTime'] = 8;
+                $filter_result = account_function_byDrate(S('account_check_pager_select'),$p_temp);
+                break;
+            case '33':
+                $p_temp['unitOfTime'] = 8;
+                $filter_result = account_function_byregion(S('account_check_pager_select'),$p_temp);
+                break;
+            case '44':
+                $p_temp['unitOfTime'] = 8;
+                $filter_result = account_function_bytire(S('account_check_pager_select'),$p_temp);
+                break;
+            case '55':
+                $p_temp['unitOfTime'] = 8;
+                $filter_result = account_function_bydata(S('account_check_pager_select'),$p_temp);
+                break;
             
-            $param_data  = dispatch_kpijob($_POST['pager_select'],$p_temp);
-            $param_r=json_decode($param_data)->body->data;
-            //var_dump($param_r);
-            $param_return = array( );
-            foreach ($param_r as $key => $value) {
+            default:
                 # code...
-                $param_return['data']['id'][]=$value->id;
-                $param_return['data']['impression'][]=$value->kpis[0];
-                $param_return['data']['cost'][]=$value->kpis[1];
-                $param_return['data']['cpc'][]=round($value->kpis[2]);
-                $param_return['data']['click'][]=$value->kpis[3];
-                $param_return['data']['ctr'][]=round($value->kpis[4]);
-                $param_return['data']['cpm'][]=$value->kpis[5];
-                $param_return['data']['name'][]=$value->name;
-                $param_return['data']['date'][]=$value->date;
-                
-            }
-            //var_dump(json_decode($param));
-            //var_dump($param_data);
-            //var_dump(gettype($param));
-           $this->ajaxReturn($param_return);
+                break;
+        }
+        /*$account_data_json = json_decode(dispatch_kpijob(S('account_check_pager_select'),$p_temp))->body->data;*/
+        var_dump($filter_result);
+        if (IS_AJAX) {
+            
         }
         
         $this->display();

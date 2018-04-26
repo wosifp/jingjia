@@ -168,11 +168,17 @@ class MainController extends AdminbaseController {
            $trend_data['phoneConversion'][] =$value->kpis[7];
            $trend_data['bridgeConversion'][] =$value->kpis[8];
            $trend_data['name']=$value->name;
+           $n_count =0;
+           $sum_temp=0;
            foreach ($k_avgrank_trend as $k1 => $v1) {
-                    if (strcmp($v1->date, $value->date)) {
-                        $trend_data['position'][] = round($v1->kpis[6]);
-                    }
-                }     
+              if (strcmp($v1->date, $value->date)) {
+                  $sum_temp += $v1->kpis[6];
+                  if ($v1->kpis[6] > 0) {
+                    $n_count++;
+                  }
+              }
+            }  
+            $trend_data['position'][] = round($sum_temp/$n_count,2);   
        }
        //var_dump($trend_data);
        $this->assign("trend_data",json_encode($trend_data));

@@ -97,8 +97,8 @@ li {
                     <option value="cost">消费</option>
                     <option value="rank">平均排名</option>
                     <option value="impression">展现</option>
-                </select> -->
-            </div>
+                </select>
+            </div> -->
             <div class="jzl-module-body">
                 <div class="row">
                     <div class="col-md-12">
@@ -349,7 +349,7 @@ li {
             ki_b1 = $.parseJSON($("#keyindex_data_rate").text())[1].cpc;
             ki_c0 = $.parseJSON($("#keyindex_data_rate").text())[0].ctr;
             ki_c1 = $.parseJSON($("#keyindex_data_rate").text())[1].ctr;
-            myChart1.setOption(option1);
+            myChart1.setOption(option1,true);
         } else if ($(this).val() == "icr") {
             option1.series[0].data[0].name = "展现";
             option1.series[1].data[0].name = "ctr";
@@ -360,7 +360,7 @@ li {
             ki_b1 = $.parseJSON($("#keyindex_data_rate").text())[1].ctr;
             ki_c0 = $.parseJSON($("#keyindex_data_rate").text())[0].position;
             ki_c1 = $.parseJSON($("#keyindex_data_rate").text())[1].position;
-            myChart1.setOption(option1);
+            myChart1.setOption(option1,true);
         }
     });
     </script>
@@ -378,8 +378,16 @@ li {
                 }
             }
         },
+        grid:{
+                    left:'10%',
+                    bottom:'25%'
+                },
         xAxis: {
             type: 'category',
+            axisLabel:{
+                        interval:0,
+                        rotate:45,
+                    },
             data: $.parseJSON($("#trend_data").text())['date']
         },
         yAxis: {
@@ -396,39 +404,41 @@ li {
     myChart2.setOption(option2);
     $("#qushitu_select").change(function(event) {
         /* Act on the event */
+        option2.xAxis.data =$.parseJSON($("#trend_data").text()).date;
         switch ($(this).val()) {
             case "trend_impression":
+                
                 option2.series[0].data = $.parseJSON($("#trend_data").text())['impression'];
-                myChart2.setOption(option2);
+                /*myChart2.setOption(option2,true);*/
                 break;
             case "trend_cost":
                 option2.series[0].data = $.parseJSON($("#trend_data").text())['cost'];
-                myChart2.setOption(option2);
+               /* myChart2.setOption(option2,true);*/
                 break;
             case "trend_cpc":
                 option2.series[0].data = $.parseJSON($("#trend_data").text())['cpc'];
-                myChart2.setOption(option2);
+               /* myChart2.setOption(option2,true);*/
                 break;
             case "trend_ctr":
                 option2.series[0].data = $.parseJSON($("#trend_data").text())['ctr'];
-                myChart2.setOption(option2);
+               /* myChart2.setOption(option2,true);*/
                 break;
             case "trend_click":
                 option2.series[0].data = $.parseJSON($("#trend_data").text())['click'];
-                myChart2.setOption(option2);
+               /* myChart2.setOption(option2,true);*/
                 break;
             case "trend_cpm":
                 option2.series[0].data = $.parseJSON($("#trend_data").text())['cpm'];
-                myChart2.setOption(option2);
+               /* myChart2.setOption(option2,true);*/
                 break;
             case "trend_avgrank":
                 option2.series[0].data = $.parseJSON($("#trend_data").text())['position'];
-                myChart2.setOption(option2);
+                /*myChart2.setOption(option2,true);*/
                 break;
             default:
                 break;
         }
-
+         myChart2.setOption(option2,true);
     });
     </script>
 <!-- 地域分布 myChart3****************************-->
@@ -938,7 +948,7 @@ li {
         option3.series[2].data = region_map_city_data;
         option3.series[3].data = region_map_province_data;
         option3.visualMap.max = Math.max.apply(null, region_grid_province_data);
-        myChart3.setOption(option3);
+        myChart3.setOption(option3,true);
     });
     </script>
 <!-- 分时汇总 myChart4*********************** -->
@@ -975,32 +985,32 @@ li {
             case "fenshi_impression":
                 option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
                 option4.series[0].data = jQuery.parseJSON($("#fenshi_data").text())['kpis']['impression'];
-                myChart4.setOption(option4);
+                myChart4.setOption(option4,true);
                 break;
             case "fenshi_cost":
                 option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
                 option4.series[0].data = jQuery.parseJSON($("#fenshi_data").text())['kpis']['cost'];
-                myChart4.setOption(option4);
+                myChart4.setOption(option4,true);
                 break;
             case "fenshi_click":
                 option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
                 option4.series[0].data = jQuery.parseJSON($("#fenshi_data").text())['kpis']['click'];
-                myChart4.setOption(option4);
+                myChart4.setOption(option4,true);
                 break;
             case "fenshi_avgrank":
                 option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
                 option4.series[0].data = jQuery.parseJSON($("#fenshi_data").text())['kpis']['avgrank'];
-                myChart4.setOption(option4);
+                myChart4.setOption(option4,true);
                 break;
             case "fenshi_cpc":
                 option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
                 option4.series[0].data = jQuery.parseJSON($("#fenshi_data").text())['kpis']['cpc'];
-                myChart4.setOption(option4);
+                myChart4.setOption(option4,true);
                 break;
             case "fenshi_ctr":
                 option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
                 option4.series[0].data = jQuery.parseJSON($("#fenshi_data").text())['kpis']['ctr'];
-                myChart4.setOption(option4);
+                myChart4.setOption(option4,true);
                 break;
             default:
                 break;
@@ -1134,13 +1144,17 @@ function refresh_doms(data) {
     
     $("#trend_data").text(JSON.stringify(data.trend_data));
     $("#qushitu_select").trigger('change');
+
     /*地域数据更新 region_data*/
     $("#region_data").text(JSON.stringify(data.region_data));
     $("#region_data2").text(JSON.stringify(data.region_data2));
     $("#region_select").trigger('change');
     /*分时数据更新 fenshi_data*/
     $("#fenshi_data").text(JSON.stringify(data.fenshi_data));
-    $("#fenshi_select").trigger('change');
+   /* $("#fenshi_select").trigger('change');*/
+    option4.xAxis.data = jQuery.parseJSON($("#fenshi_data").text())['date'];
+    option4.series[0].data = jQuery.parseJSON($("#fenshi_data").text())['kpis']['impression'];
+    myChart4.setOption(option4,true);
    /* alert("refresh_doms");*/
 }
 </script>
