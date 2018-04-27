@@ -646,11 +646,54 @@ function account_function_bymonth($category='账户',$params=array()){
 }
 
 function account_function_byweek($category='账户',$params=array()){
+	
 	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
-	return $result_json;
+
+	$k_avgrank_trend = json_decode(getKeywordIdReport_realtime($params))->body->data;
+	if (!$result_json) {
+         $trend_data['date'][] =0;
+           $trend_data['impression'][] =0;
+           $trend_data['cost'][] =0;
+           $trend_data['cpc'][] =0;
+           $trend_data['click'][] =0;
+           $trend_data['ctr'][] =0;
+           $trend_data['cpm'][] =0;
+           $trend_data['conversion'][] =0;
+           $trend_data['phoneConversion'][] =0;
+           $trend_data['bridgeConversion'][] =0;
+           $trend_data['name']=0;
+           $trend_data['position'][] = 0;
+                    
+       }
+       foreach ($result_json as $key => $value) {
+           $trend_data['date'][] =$value->date;
+           $trend_data['impression'][] =$value->kpis[0];
+           $trend_data['cost'][] =$value->kpis[1];
+           $trend_data['cpc'][] =round($value->kpis[2],2);
+           $trend_data['click'][] =$value->kpis[3];
+           $trend_data['ctr'][] =round($value->kpis[4],2);
+           $trend_data['cpm'][] =round($value->kpis[5],2);
+           $trend_data['conversion'][] =$value->kpis[6];
+           $trend_data['phoneConversion'][] =$value->kpis[7];
+           $trend_data['bridgeConversion'][] =$value->kpis[8];
+           $trend_data['name']=$value->name;
+           $n_count =0;
+           $sum_temp=0;
+           foreach ($k_avgrank_trend as $k1 => $v1) {
+              if (strcmp($v1->date, $value->date)) {
+                  $sum_temp += $v1->kpis[6];
+                  if ($v1->kpis[6] > 0) {
+                    $n_count++;
+                  }
+              }
+            }  
+            $trend_data['position'][] = round($sum_temp/$n_count,2);     
+       }
+	return $trend_data;
 }
 
 function account_function_byday($category='账户',$params=array()){
+
 	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
 
 	$k_avgrank_trend = json_decode(getKeywordIdReport_realtime($params))->body->data;
@@ -697,8 +740,27 @@ function account_function_byday($category='账户',$params=array()){
 }
 
 function account_function_byhour($category='账户',$params=array()){
-	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
-	return $result_json;
+	$fenshi_t = json_decode(dispatch_kpijob($category,$params))->body->data;
+	$fenshi_temp['date'] = array('00','01','02','03','04','05','06','07','08','09','10','11','12','13','14','15','16','17','18','19','20','21','22','23');
+       $fenshi_temp['name']=$fenshi_t[0]->name;
+        foreach ($fenshi_temp['date'] as $key => $value) {
+            $fenshi_temp['impression'][(int)$value] = isset($fenshi_temp['impression'][$value])?$fenshi_temp['impression'][$value]:0;
+            $fenshi_temp['cost'][(int)$value] = isset($fenshi_temp['cost'][$value])?$fenshi_temp['cost'][$value]:0;
+            $fenshi_temp['click'][(int)$value] = isset($fenshi_temp['click'][$value])?$fenshi_temp['click'][$value]:0;
+       }
+
+       foreach ($fenshi_t as $key => $value) {
+            $n = explode(' ', $value->date);
+            $nn = explode(':',$n[1]);
+           $fenshi_temp['impression'][(int)$nn[0]] += $value->kpis[0];
+           $fenshi_temp['cost'][(int)$nn[0]] += $value->kpis[1];
+           $fenshi_temp['click'][(int)$nn[0]] += $value->kpis[3];
+       }
+       foreach ($fenshi_temp['date'] as $key => $value) {
+           $fenshi_temp['cpc'][(int)$value] = $fenshi_temp['click'][(int)$value]==0?0:round($fenshi_temp['cost'][(int)$value]/$fenshi_temp['click'][(int)$value],2);
+           $fenshi_temp['ctr'][(int)$value] = $fenshi_temp['impression'][(int)$value]==0?0:round($fenshi_temp['click'][(int)$value]/$fenshi_temp['impression'][(int)$value],2);
+       }
+	return $fenshi_temp;
 }
 
 function account_function_byDrate($category='账户',$params=array()){

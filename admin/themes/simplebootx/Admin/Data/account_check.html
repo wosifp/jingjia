@@ -107,16 +107,7 @@
             <button id="chakan">查看</button> -->
         </div>
         <div class="qi_con_1">
-            <div class="qi_bfb_100 qi_padt_30">
-                <select class="qi_float_r">
-                    <option value="impression">展现</option>
-                    <option value="cost">消费</option>
-                    <option value="click">点击</option>
-                    <option value="cpc">CPC</option>
-                    <option value="ctr">CTR</option>
-                    <option value="avgrank">平均排名</option>
-                </select>
-                <ul class="pager" id="chart_select">
+            <ul class="pager "  id="chart_select">
                     <li style="display: block" class="zhexian"><a href="javascript:">折线图</a></li>
                     <li style="display: block" class="zhutu"><a href="javascript:">柱状体</a></li>
                     <li style="display: none" class="pingtu"><a href="javascript:">平涂</a></li>
@@ -125,9 +116,21 @@
                     <li style="display: none" class="quyu"><a href="javascript:">区域图</a></li>
                     <li style="display: none" class="sandian"><a href="javascript:">散点图</a></li>
                 </ul>
-            </div>
+            <div class="qi_bfb_100 qi_padt_30">
+                <select class="qi_float_r" id="kpi_line_select">
+                    <option value="impression">展现</option>
+                    <option value="cost">消费</option>
+                    <option value="click">点击</option>
+                    <option value="cpc">CPC</option>
+                    <option value="ctr">CTR</option>
+                    <option value="position">平均排名</option>
+                </select>
+               </div> 
+                
+            
 <!--折线图-->
-            <div id="myChart0" style="width: 900px;height:500px;display: block;"></div>         
+            <div id="myChart0" style="width: 900px;height:500px;display: block;"></div>    
+            <div id="chart_data" hidden="true">{$chart_data}</div>     
         </div>
     </div>
 <!-- 折线图 -->
@@ -145,20 +148,57 @@
                 trigger:'item',
                 formatter:'{a} , {b} , {c}'
             },
+            grid:{
+                    left:'10%',
+                    top: '12%',
+                    right: '10%',
+                    bottom:'25%',
+                    containLabel: true
+                },
             xAxis: {
                 type: 'category',
-                data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                axisLabel:{
+                        interval:0,
+                        rotate:45,
+                    },
+                data: $.parseJSON($("#chart_data").text()).date
             },
             yAxis: {
                 type: 'value'
             },
+            dataZoom:[
+                {
+                    type: 'slider',
+                    show: true,
+                    start: 0,
+                    end: 100,
+                    handleSize: 8
+                },
+                {
+                    type: 'inside',
+                    start: 0,
+                    end: 100
+                },
+                {
+                    type: 'slider',
+                    show: true,
+                    yAxisIndex: 0,
+                    filterMode: 'empty',
+                    width: 12,
+                    height: '70%',
+                    handleSize: 8,
+                    showDataShadow: false,
+                    left: '93%'
+                }
+            ],
             series: [{
-                data: [820, 932, 901, 934, 1290, 1330, 1320],
+                name: $.parseJSON($("#chart_data").text()).name[0],
+                data: $.parseJSON($("#chart_data").text()).impression,
                 type: 'line',
                 smooth: true
             }]
         };
-        myChart0.setOption(option0);
+        myChart0.setOption(option0,true);
     </script>
 <!--柱状图-->
     <script>
@@ -170,15 +210,65 @@
                         }
                     }
                 },
+                tooltip:{
+                trigger:'item',
+                formatter:'{a} , {b} , {c}'
+            },
+                grid:{
+                    left:'10%',
+                    top: '12%',
+                    right: '10%',
+                    bottom:'25%',
+                    containLabel: true
+                    
+                },
                 xAxis: {
                     type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+                    axisLabel:{
+                        interval:0,
+                        rotate:45,
+                    },
+                    data:  $.parseJSON($("#chart_data").text()).date
                 },
                 yAxis: {
-                    type: 'value'
+                    type: 'value',
+                    /*axisLabel: {
+                    formatter: function (a) {
+                        a = +a;
+                        return isFinite(a)
+                            ? echarts.format.addCommas(+a / 1000)
+                            : '';
+                    }
+                    }*/
                 },
+                dataZoom:[
+                    {
+                        type: 'slider',
+                        show: true,
+                        start: 0,
+                        end: 100,
+                        handleSize: 8
+                    },
+                    {
+                        type: 'inside',
+                        start: 0,
+                        end: 100
+                    },
+                    {
+                        type: 'slider',
+                        show: true,
+                        yAxisIndex: 0,
+                        filterMode: 'empty',
+                        width: 12,
+                        height: '70%',
+                        handleSize: 8,
+                        showDataShadow: false,
+                        left: '93%'
+                    }
+                ],
                 series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    name: $.parseJSON($("#chart_data").text()).name[0],
+                    data: $.parseJSON($("#chart_data").text()).impression,
                     type: 'bar',
                     smooth: true
                 }]
@@ -421,6 +511,55 @@
 </body>
 
 </html>
+<!-- 查看类型选择 -->
+    <script type="text/javascript">
+        var unit_data =5;
+        $("#filter_select li").click(function() {
+             unit_data = $(this).val();
+            //console.log($unit_data);
+            if (unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7) {
+                $("#chart_select li").css('display', 'none');
+                $(".zhexian").css('display', 'block');
+                $(".zhutu").css('display', 'block');
+            }
+            if (unit_data == 22) { //设备对比 平涂
+                $("#chart_select li").css('display', 'none');
+                $(".pingtu").css('display', 'block');  
+            } 
+            if (unit_data == 33) { // 地域分布 区域图、散点图
+                $("#chart_select li").css('display', 'none');
+                $(".quyu").css('display', 'block');
+                $(".sandian").css('display', 'block');   
+            }
+            if (unit_data == 44) { // 数据构成 饼图
+                $("#chart_select li").css('display', 'none');
+                $(".bingtu").css('display', 'block');   
+            }
+            if (unit_data == 55) { // 数据构成 饼图
+                $("#chart_select li").css('display', 'none');
+                $(".bingtu").css('display', 'block');
+            }
+
+            $.ajax({
+                url: '__CONTROLLER__/account_check',
+                type: 'POST',
+                dataType: 'json',
+                data: {filter_type: unit_data},
+            })
+            .done(function(data) {
+                refreshDOM(unit_data,data.data);
+                console.log(data.data);
+                console.log("success");
+            })
+            .fail(function(e) {
+                console.log("error");
+            })
+            .always(function(e) {
+                console.log("complete");
+            });
+            
+        });
+    </script>
 <!--计划单元关键词创意选择pager_select-->
     <script type="text/javascript">
         var tier_selected = '';
@@ -439,7 +578,8 @@
                 dataType: 'json',
                 data: {pager_select: tier_selected},
             })
-            .done(function(e) {
+            .done(function(data) {
+                refreshDOM(5,data.data);
                     console.log("success");
             })
             .fail(function() {
@@ -563,6 +703,25 @@
 <!-- 设备选择 -->
     <script type="text/javascript">
         $("#device").change(function(event) {
+            $device = $(this).val();
+            $.ajax({
+                url: '__CONTROLLER__/account_check',
+                type: 'POST',
+                dataType: 'json',
+                data: {device: $device},
+            })
+            .done(function(data) {
+                console.log("xxxxxxxxxxxxxxxxunit_data");
+                console.log(unit_data);
+                refreshDOM(unit_data,data.data);
+                console.log("success");
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
             
         });
     </script>
@@ -582,10 +741,12 @@
                         pager_select:tier_selected
                     },
                 })
-                .done(function(e) {
+                .done(function(data) {
+                    
                     console.log("success");
-                    console.log(typeof(e));
+                    console.log(data.data);
                     console.log(option0);
+                    refreshDOM(unit_data,data.data);
                 })
                 .fail(function() {
                     console.log("error");
@@ -596,52 +757,7 @@
             }
         });
     </script>
-<!-- 查看类型选择 -->
-    <script type="text/javascript">
-        $("#filter_select li").click(function() {
-            var unit_data = $(this).val();
-            //console.log($unit_data);
-            if (unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7) {
-                $("#chart_select li").css('display', 'none');
-                $(".zhexian").css('display', 'block');
-                $(".zhutu").css('display', 'block');
-            }
-            if (unit_data == 22) { //设备对比 平涂
-                $("#chart_select li").css('display', 'none');
-                $(".pingtu").css('display', 'block');  
-            } 
-            if (unit_data == 33) { // 地域分布 区域图、散点图
-                $("#chart_select li").css('display', 'none');
-                $(".quyu").css('display', 'block');
-                $(".sandian").css('display', 'block');   
-            }
-            if (unit_data == 44) { // 数据构成 饼图
-                $("#chart_select li").css('display', 'none');
-                $(".bingtu").css('display', 'block');   
-            }
-            if (unit_data == 55) { // 数据构成 饼图
-                $("#chart_select li").css('display', 'none');
-                $(".bingtu").css('display', 'block');
-            }
 
-            $.ajax({
-                url: '__CONTROLLER__/account_check',
-                type: 'POST',
-                dataType: 'json',
-                data: {filter_type: unit_data},
-            })
-            .done(function(data) {
-                console.log("success");
-            })
-            .fail(function(e) {
-                console.log("error");
-            })
-            .always(function(e) {
-                console.log("complete");
-            });
-            
-        });
-    </script>
 <!-- 区域选择 -->
     <script type="text/javascript">
     /*地域自定义事件 */
@@ -701,6 +817,41 @@
             myChart0.setOption(option5,true);
         });
 
+    </script>
+<!-- refreshDOM(unit_data,data.data); -->
+    <script type="text/javascript">
+        function refreshDOM($unit_data,$data){
+            $("#chart_data").text(JSON.stringify($data));
+            console.log("refreshDOM--------------");
+            switch ($unit_data){
+                case 5:
+                case 4:
+                case 1:
+                case 3:
+                case 7:
+                console.log("case   5 xxxxxxxxx");
+
+                    option0.xAxis.data=$data.date;
+                    option0.series[0].data=$data.impression;
+                    option1.xAxis.data=$data.date;
+                    option1.series[0].data=$data.impression;
+                    /*myChart0.setOption(option0,true);*/
+                    $("#kpi_line_select").trigger('change');
+                    break;
+                default :
+                    break;
+            }
+        }
+    </script>
+<!-- 指标选择 展现点击消费kpi_line_select -->
+    <script type="text/javascript">
+        $("#kpi_line_select").change(function(event) {
+            $kpi_line_value  = $(this).val();
+            option0.xAxis.data=$.parseJSON($("#chart_data").text()).date;
+            option0.series[0].data=$.parseJSON($("#chart_data").text())[$(this).val()];
+            myChart0.setOption(option0,true);
+            
+        });
     </script>
 <!-- <script>
 

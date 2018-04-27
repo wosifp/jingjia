@@ -84,15 +84,15 @@ class DataController extends AdminbaseController {
         switch ($filter_type) {
             case '1':
                 $p_temp['unitOfTime'] = 1;
-                $filter_result = account_function_byyear(S('account_check_pager_select'),$p_temp);
+                $filter_result = account_function_byday(S('account_check_pager_select'),$p_temp);
                 break;
             case '3':
                 $p_temp['unitOfTime'] = 3;
-                $filter_result = account_function_bymonth(S('account_check_pager_select'),$p_temp);
+                $filter_result = account_function_byday(S('account_check_pager_select'),$p_temp);
                 break;
             case '4':
                 $p_temp['unitOfTime'] = 4;
-                $filter_result = account_function_byweek(S('account_check_pager_select'),$p_temp);
+                $filter_result = account_function_byday(S('account_check_pager_select'),$p_temp);
                 break;
             case '5':
                 $p_temp['unitOfTime'] = 5;
@@ -124,9 +124,11 @@ class DataController extends AdminbaseController {
                 break;
         }
         /*$account_data_json = json_decode(dispatch_kpijob(S('account_check_pager_select'),$p_temp))->body->data;*/
-        var_dump($filter_result);
+        //var_dump($filter_result);
+        $this->assign("chart_data",json_encode($filter_result));
         if (IS_AJAX) {
-            
+            $account_data_ajax['data']=$filter_result;
+            $this->ajaxReturn($account_data_ajax);
         }
         
         $this->display();
