@@ -100,6 +100,8 @@
                 <li value="33"><a href="javascript:">地域分布</a></li>
                 <li value="44"><a href="javascript:">层级分布</a></li>
                 <li value="55"><a href="javascript:">数据构成</a></li>
+                <li value="66"><a href="javascript:">层级对比</a></li>
+                
                 <!--<li value="66"><a href="#">关键词对比</a></li>-->
                 <!--<li value="77"><a href="#">质量度</a></li>-->
             </ul>
@@ -107,16 +109,7 @@
             <button id="chakan">查看</button> -->
         </div>
         <div class="qi_con_1">
-            <ul class="pager "  id="chart_select">
-                    <li style="display: block" class="zhexian"><a href="javascript:">折线图</a></li>
-                    <li style="display: block" class="zhutu"><a href="javascript:">柱状体</a></li>
-                    <li style="display: none" class="pingtu"><a href="javascript:">平涂</a></li>
-                    <li style="display: none" class="dietu"><a href="javascript:">堆叠图</a></li>
-                    <li style="display: none" class="bingtu"><a href="javascript:">饼图</a></li>
-                    <li style="display: none" class="quyu"><a href="javascript:">区域图</a></li>
-                    <li style="display: none" class="sandian"><a href="javascript:">散点图</a></li>
-                </ul>
-            <div class="qi_bfb_100 qi_padt_30">
+            <div class="qi_bfb_100 qi_padt_30" id="div_1" hidden="false">
                 <select class="qi_float_r" id="kpi_line_select">
                     <option value="impression">展现</option>
                     <option value="cost">消费</option>
@@ -126,24 +119,49 @@
                     <option value="position">平均排名</option>
                 </select>
                </div> 
-                
+            <div class="qi_bfb_100" id="div_2" hidden="true">
+                <select class="qi_float_r" id="region_select">
+                    <option value="region_impression">展现</option>
+                    <option value="region_cost">消费</option>
+                    <option value="region_click">点击</option>
+                    <option value="region_cpc">CPC</option>
+                    <option value="region_ctr">CTR</option>
+                    <option value="region_cpm">CPM</option>
+                    <option value="region_avgrank">平均排名</option>
+                </select>
+            </div>
             
 <!--折线图-->
             <div id="myChart0" style="width: 900px;height:500px;display: block;"></div>    
-            <div id="chart_data" hidden="true">{$chart_data}</div>     
+            <div id="chart_data" hidden="true">{$chart_data}</div> 
+
+           <!--  <div id="myChart_map" style="width: 900px;height: 500px;display: block;"></div>    
+            <div id="chart_map_data" hidden="true">{$chart_map_data}</div> -->
         </div>
     </div>
 <!-- 折线图 -->
     <script>
         var myChart0 = echarts.init(document.getElementById('myChart0'));
-        var option0 = {
+        var option0='';
+        function set_option_0($data){
+            option0 = {
+            legend:{
+                data:[$("#kpi_line_select").val()]
+            },
             toolbox: {
+                left:'5%',
+                top:'auto',
+                itemSize:20,
                 feature: {
+                    magicType:{
+                        type:['line','bar']
+                    },
                     saveAsImage: {
                         pixelRatio: 3
                     }
                 }
             },
+
             tooltip:{
                 trigger:'item',
                 formatter:'{a} , {b} , {c}'
@@ -192,16 +210,19 @@
                 }
             ],
             series: [{
-                name: $.parseJSON($("#chart_data").text()).name[0],
+                name: $("#kpi_line_select").val(),
                 data: $.parseJSON($("#chart_data").text()).impression,
                 type: 'line',
                 smooth: true
             }]
         };
         myChart0.setOption(option0,true);
+
+        }
+        
     </script>
 <!--柱状图-->
-    <script>
+    <!-- <script>
         var option1 = {
                 toolbox: {
                     feature: {
@@ -273,35 +294,140 @@
                     smooth: true
                 }]
             };
-    </script>
-<!--平涂-->
+    </script> -->
+<!--平涂 option_device-->
     <script>
-        var option2 = {
+        var option_device = '';
+
+        function set_option_device($data) {
+            option_device = {
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data: ['展现', '消费', '点击', 'cpc', 'ctr', '平均排名']
+                },
                 toolbox: {
+                    show: true,
+                    left: '5%',
                     feature: {
+                        mark: {
+                            show: true
+                        },
+                        dataView: {
+                            show: true,
+                            readOnly: false
+                        },
+                /*magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},*/
+                        magicType: {
+                            show: true,
+                            type: ['bar', 'tiled']
+                        },
+                        restore: {
+                            show: true
+                        },
                         saveAsImage: {
-                            pixelRatio: 3
+                            show: true
                         }
                     }
                 },
-                xAxis: {
+                calculable: true,
+                xAxis: [{
                     type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
+            /*boundaryGap : false,*/
+                    data: ['pc', '移动']
+                }],
+                yAxis: [{
                     type: 'value'
-                },
+                }],
                 series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
+                    name: '展现',
                     type: 'bar',
+            /*stack: '总量',*/
+                    itemStyle: {
+                        normal: {
+                            areaStyle: {
+                                type: 'default'
+                            }
+                        }
+                    },
+                    data: [$.parseJSON($("#chart_data").text()).pc.impression[0], $.parseJSON($("#chart_data").text()).mobile.impression[0]],
+                    smooth: true
+                }, {
+                    name: '消费',
+                    type: 'bar',
+            /*stack: '总量',*/
+                    itemStyle: {
+                        normal: {
+                            areaStyle: {
+                                type: 'default'
+                            }
+                        }
+                    },
+                    data: [$.parseJSON($("#chart_data").text()).pc.cost[0], $.parseJSON($("#chart_data").text()).mobile.cost[0]],
+                    smooth: true
+                }, {
+                    name: '点击',
+                    type: 'bar',
+            /* stack: '总量',*/
+                    itemStyle: {
+                        normal: {
+                            areaStyle: {
+                            type: 'default'
+                            }
+                        }
+                    },
+                    data: [$.parseJSON($("#chart_data").text()).pc.click[0], $.parseJSON($("#chart_data").text()).mobile.click[0]],
+                    smooth: true
+                }, {
+                    name: 'cpc',
+                    type: 'bar',
+            /*stack: '总量',*/
+                    itemStyle: {
+                        normal: {
+                            areaStyle: {
+                                type: 'default'
+                            }
+                        }
+                    },
+            data: [$.parseJSON($("#chart_data").text()).pc.cpc[0], $.parseJSON($("#chart_data").text()).mobile.cpc[0]],
+            smooth: true
+        }, {
+            name: 'ctr',
+            type: 'bar',
+            /*stack: '总量',*/
+            itemStyle: {
+                normal: {
+                    areaStyle: {
+                        type: 'default'
+                    }
+                }
+            },
+            data: [$.parseJSON($("#chart_data").text()).pc.ctr[0], $.parseJSON($("#chart_data").text()).mobile.ctr[0]],
+            smooth: true
+        }, {
+            name: '平均排名',
+            type: 'bar',
+            /*stack: '总量',*/
+            itemStyle: {
+                normal: {
+                    areaStyle: {
+                        type: 'default'
+                    }
+                }
+            },
+            data: [$.parseJSON($("#chart_data").text()).pc.position[0], $.parseJSON($("#chart_data").text()).mobile.position[0]],
                     smooth: true
                 }]
             };
+            myChart0.setOption(option_device,true);
+        }
     </script>
 
-<!--饼图-->
+
+<!--饼图 option_pie-->
     <script type="text/javascript">
-        var option3 = {
+        var option_pie = {
             toolbox: {
                 feature: {
                     saveAsImage: {
@@ -354,64 +480,392 @@
                 }]
             };
     </script>
-<!--区域图-->
+<!--区域图 option_region-->
     <script>
-        var option4 = {
-            title: [{
-                color: '#033',
-                text: "ditu ",
-                textStyle: {
-                    fontWeight: 'bold',
+        /*var myChart_map = echarts.init(document.getElementById('myChart_map'));*/
+    var geoCoordMap = {
+        '海门': [121.15, 31.89],
+        '鄂尔多斯': [109.781327, 39.608266],
+        '招远': [120.38, 37.35],
+        '舟山': [122.207216, 29.985295],
+        '齐齐哈尔': [123.97, 47.33],
+        '盐城': [120.13, 33.38],
+        '赤峰': [118.87, 42.28],
+        '青岛': [120.33, 36.07],
+        '乳山': [121.52, 36.89],
+        '金昌': [102.188043, 38.520089],
+        '泉州': [118.58, 24.93],
+        '莱西': [120.53, 36.86],
+        '日照': [119.46, 35.42],
+        '胶南': [119.97, 35.88],
+        '南通': [121.05, 32.08],
+        '拉萨': [91.11, 29.97],
+        '云浮': [112.02, 22.93],
+        '梅州': [116.1, 24.55],
+        '文登': [122.05, 37.2],
+        '上海': [121.48, 31.22],
+        '攀枝花': [101.718637, 26.582347],
+        '威海': [122.1, 37.5],
+        '承德': [117.93, 40.97],
+        '厦门': [118.1, 24.46],
+        '汕尾': [115.375279, 22.786211],
+        '潮州': [116.63, 23.68],
+        '丹东': [124.37, 40.13],
+        '太仓': [121.1, 31.45],
+        '曲靖': [103.79, 25.51],
+        '烟台': [121.39, 37.52],
+        '福州': [119.3, 26.08],
+        '瓦房店': [121.979603, 39.627114],
+        '即墨': [120.45, 36.38],
+        '抚顺': [123.97, 41.97],
+        '玉溪': [102.52, 24.35],
+        '张家口': [114.87, 40.82],
+        '阳泉': [113.57, 37.85],
+        '莱州': [119.942327, 37.177017],
+        '湖州': [120.1, 30.86],
+        '汕头': [116.69, 23.39],
+        '昆山': [120.95, 31.39],
+        '宁波': [121.56, 29.86],
+        '湛江': [110.359377, 21.270708],
+        '揭阳': [116.35, 23.55],
+        '荣成': [122.41, 37.16],
+        '连云港': [119.16, 34.59],
+        '葫芦岛': [120.836932, 40.711052],
+        '常熟': [120.74, 31.64],
+        '东莞': [113.75, 23.04],
+        '河源': [114.68, 23.73],
+        '淮安': [119.15, 33.5],
+        '泰州': [119.9, 32.49],
+        '南宁': [108.33, 22.84],
+        '营口': [122.18, 40.65],
+        '惠州': [114.4, 23.09],
+        '江阴': [120.26, 31.91],
+        '蓬莱': [120.75, 37.8],
+        '韶关': [113.62, 24.84],
+        '嘉峪关': [98.289152, 39.77313],
+        '广州': [113.23, 23.16],
+        '延安': [109.47, 36.6],
+        '太原': [112.53, 37.87],
+        '清远': [113.01, 23.7],
+        '中山': [113.38, 22.52],
+        '昆明': [102.73, 25.04],
+        '寿光': [118.73, 36.86],
+        '盘锦': [122.070714, 41.119997],
+        '长治': [113.08, 36.18],
+        '深圳': [114.07, 22.62],
+        '珠海': [113.52, 22.3],
+        '宿迁': [118.3, 33.96],
+        '咸阳': [108.72, 34.36],
+        '铜川': [109.11, 35.09],
+        '平度': [119.97, 36.77],
+        '佛山': [113.11, 23.05],
+        '海口': [110.35, 20.02],
+        '江门': [113.06, 22.61],
+        '章丘': [117.53, 36.72],
+        '肇庆': [112.44, 23.05],
+        '大连': [121.62, 38.92],
+        '临汾': [111.5, 36.08],
+        '吴江': [120.63, 31.16],
+        '石嘴山': [106.39, 39.04],
+        '沈阳': [123.38, 41.8],
+        '苏州': [120.62, 31.32],
+        '茂名': [110.88, 21.68],
+        '嘉兴': [120.76, 30.77],
+        '长春': [125.35, 43.88],
+        '胶州': [120.03336, 36.264622],
+        '银川': [106.27, 38.47],
+        '张家港': [120.555821, 31.875428],
+        '三门峡': [111.19, 34.76],
+        '锦州': [121.15, 41.13],
+        '南昌': [115.89, 28.68],
+        '柳州': [109.4, 24.33],
+        '三亚': [109.511909, 18.252847],
+        '自贡': [104.778442, 29.33903],
+        '吉林': [126.57, 43.87],
+        '阳江': [111.95, 21.85],
+        '泸州': [105.39, 28.91],
+        '西宁': [101.74, 36.56],
+        '宜宾': [104.56, 29.77],
+        '呼和浩特': [111.65, 40.82],
+        '成都': [104.06, 30.67],
+        '大同': [113.3, 40.12],
+        '镇江': [119.44, 32.2],
+        '桂林': [110.28, 25.29],
+        '张家界': [110.479191, 29.117096],
+        '宜兴': [119.82, 31.36],
+        '北海': [109.12, 21.49],
+        '西安': [108.95, 34.27],
+        '金坛': [119.56, 31.74],
+        '东营': [118.49, 37.46],
+        '牡丹江': [129.58, 44.6],
+        '遵义': [106.9, 27.7],
+        '绍兴': [120.58, 30.01],
+        '扬州': [119.42, 32.39],
+        '常州': [119.95, 31.79],
+        '潍坊': [119.1, 36.62],
+        '重庆': [106.54, 29.59],
+        '台州': [121.420757, 28.656386],
+        '南京': [118.78, 32.04],
+        '滨州': [118.03, 37.36],
+        '贵阳': [106.71, 26.57],
+        '无锡': [120.29, 31.59],
+        '本溪': [123.73, 41.3],
+        '克拉玛依': [84.77, 45.59],
+        '渭南': [109.5, 34.52],
+        '马鞍山': [118.48, 31.56],
+        '宝鸡': [107.15, 34.38],
+        '焦作': [113.21, 35.24],
+        '句容': [119.16, 31.95],
+        '北京': [116.46, 39.92],
+        '徐州': [117.2, 34.26],
+        '衡水': [115.72, 37.72],
+        '包头': [110, 40.58],
+        '绵阳': [104.73, 31.48],
+        '乌鲁木齐': [87.68, 43.77],
+        '枣庄': [117.57, 34.86],
+        '杭州': [120.19, 30.26],
+        '淄博': [118.05, 36.78],
+        '鞍山': [122.85, 41.12],
+        '溧阳': [119.48, 31.43],
+        '库尔勒': [86.06, 41.68],
+        '安阳': [114.35, 36.1],
+        '开封': [114.35, 34.79],
+        '济南': [117, 36.65],
+        '德阳': [104.37, 31.13],
+        '温州': [120.65, 28.01],
+        '九江': [115.97, 29.71],
+        '邯郸': [114.47, 36.6],
+        '临安': [119.72, 30.23],
+        '兰州': [103.73, 36.03],
+        '沧州': [116.83, 38.33],
+        '临沂': [118.35, 35.05],
+        '南充': [106.110698, 30.837793],
+        '天津': [117.2, 39.13],
+        '富阳': [119.95, 30.07],
+        '泰安': [117.13, 36.18],
+        '诸暨': [120.23, 29.71],
+        '郑州': [113.65, 34.76],
+        '哈尔滨': [126.63, 45.75],
+        '聊城': [115.97, 36.45],
+        '芜湖': [118.38, 31.33],
+        '唐山': [118.02, 39.63],
+        '平顶山': [113.29, 33.75],
+        '邢台': [114.48, 37.05],
+        '德州': [116.29, 37.45],
+        '济宁': [116.59, 35.38],
+        '荆州': [112.239741, 30.335165],
+        '宜昌': [111.3, 30.7],
+        '义乌': [120.06, 29.32],
+        '丽水': [119.92, 28.45],
+        '洛阳': [112.44, 34.7],
+        '秦皇岛': [119.57, 39.95],
+        '株洲': [113.16, 27.83],
+        '石家庄': [114.48, 38.03],
+        '莱芜': [117.67, 36.19],
+        '常德': [111.69, 29.05],
+        '保定': [115.48, 38.85],
+        '湘潭': [112.91, 27.87],
+        '金华': [119.64, 29.12],
+        '岳阳': [113.09, 29.37],
+        '长沙': [113, 28.21],
+        '衢州': [118.88, 28.97],
+        '廊坊': [116.7, 39.53],
+        '菏泽': [115.480656, 35.23375],
+        '合肥': [117.27, 31.86],
+        '武汉': [114.31, 30.52],
+        '大庆': [125.03, 46.58]
+    };
+
+
+    var convertData = function(data) {
+        var res = [];
+        for (var i = 0; i < data.length; i++) {
+            var geoCoord = geoCoordMap[data[i].name];
+            if (geoCoord) {
+                res.push({
+                    name: data[i].name,
+                    value: geoCoord.concat(data[i].value)
+                });
+            }
+        }
+        return res;
+    };
+    var region_grid_city_name = '';
+    var region_grid_city_data = '';
+    var region_grid_province_name = '';
+    var region_grid_province_data = '';
+    var region_map_city_data =  '';
+    var region_map_province_data = '';
+    var option_region ='';
+    function set_option_region($data){
+         region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['impression']['name'].slice(0, 10);
+         region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['impression']['data'].slice(0, 10);
+         region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['impression']['name'].slice(0, 10);
+         region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['impression']['data'].slice(0, 10);
+         region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['impression']);
+         region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['impression'];
+    
+     option_region = {
+
+        toolbox: {
+            show: true,
+            orient: 'horizontal',
+            left: 'right',
+            top: 'top',
+            feature: {
+                dataView: {
+                    readOnly: false
+                },
+                restore: {},
+                saveAsImage: {
+                    pixelRatio: 4,
+                    backgroundColor: '#fff'
                 }
-            }],
-            toolbox: {
-                show: true,
-                orient: 'vertical',
-                left: 'right',
-                top: 'center',
-                feature: {
-                    dataView: {
-                        readOnly: false
-                    },
-                    restore: {},
-                    saveAsImage: {
-                        pixelRatio: 4,
-                        backgroundColor: '#fff'
+            }
+        },
+
+        legend: {
+            orient: 'horizontal',
+            top: '20%',
+            left: '66%',
+            data: ['省份', '城市'],
+            selectedMode: 'single',
+            selected: {
+                '省份': true,
+                '城市': false
+            }
+
+        },
+        grid: {
+            x: '66%',
+            y: '27%',
+            width: '27%',
+            height: '60%',
+            show: true
+        },
+        xAxis: {
+            type: 'value',
+            show: true
+
+        },
+        yAxis: {
+
+            type: 'category',
+            inverse: true,
+            data: region_grid_province_name
+        },
+        /*图例 */
+        visualMap: {
+            orient: 'horizontal',
+
+            type: 'continuous',
+            min: 0,
+            max: Math.ceil(Math.max(...region_grid_province_data)),
+            text: ['High', 'Low'],
+            realtime: false,
+            calculable: true,
+            seriesIndex: 3,
+            color: ['orangered', 'yellow', 'lightskyblue']
+        },
+        geo: {
+            map: 'china',
+            roam: true,
+            left: '7%',
+            label: {
+                normal: {
+                    show: true,
+                    textStyle: {
+                        color: 'rgba(0,0,0,0.4)'
                     }
                 }
             },
-            legend: [{
-                type: 'plain',
-                left: 'auto',
-                top: 'auto',
-                orient: 'vertical',
-                formatter: "ddddddd",
-                tooltip: {
-                    show: true
+            itemStyle: {
+                normal: {
+                    borderColor: 'rgba(0, 0, 0, 0.2)'
                 },
-                data: [{
-                    name: '系列1',
-                        // 强制设置图形为圆。
-                    icon: 'circle',
-                        // 设置文本为红色
-                    textStyle: {
-                        color: 'red'
+                emphasis: {
+                    areaColor: null,
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                    shadowBlur: 20,
+                    borderWidth: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        },
+        /*鼠标移动*/
+        tooltip: {
+            // show: false, //不显示提示标签
+            formatter: function(params) {
+                if (option_region.legend.selected.城市 == true) {
+                    $str = JSON.stringify(params.value).split(",");
+
+                    if ($str[2] == null) {
+                        return params.name + ':' + params.value;
+                    } else {
+                        $value = $str[2].split("]")[0];
+                        return params.name + ':' + $value;
                     }
-                }],
-                icon: 'rect'
-            }],
-            tooltip: {
-                    // show: false, //不显示提示标签
-                formatter: '{b}',
-                    /*提示标签格式*/
-                backgroundColor: "#ff7f50", //提示标签背景颜色
-                    textStyle: {
-                        color: "#fff"
-                    } //提示标签字体颜色
+                } else {
+                    return params.name + ' : ' + params.value;
+                }
+            },
+            /*提示标签格式*/
+            backgroundColor: "#ff7f50", //提示标签背景颜色
+            textStyle: {
+                color: "#fff"
+            } //提示标签字体颜色
+        },
+        series: [{
+                name: '省份',
+                type: 'bar',
+                data: region_grid_province_data,
+                itemStyle: {
+                    normal: {
+                        color: 'lightskyblue'
+                    }
+                }
+            }, {
+                name: '城市',
+                type: 'bar',
+                data: region_grid_city_data,
+                itemStyle: {
+                    normal: {
+                        color: 'lightskyblue'
+                    }
+                }
+            }, {
+                name: "城市",
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                data: region_map_city_data,
+                symbolSize: 12,
+                geoIndex: 0,
+                symbolRotate: 35,
+                label: {
+                    normal: {
+                        /*formatter: function(params){
+                         $str = JSON.stringify(params.value) ;
+                         $value = $str.split(",");
+                         return params.name+':'+$value[2];
+                        },*/
+                        position: 'right',
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
                 },
-            series: [{
+                itemStyle: {
+                    normal: {
+                        color: '#F06C00'
+                    }
+                }
+            }, {
+                name: "省份",
                 type: 'map',
                 mapType: 'china',
+                geoIndex: 0,
                 label: {
                     normal: {
                         show: true, //显示省份标签
@@ -420,25 +874,14 @@
                         } //省份标签字体颜色
                     },
                     emphasis: {
-                            //对应的鼠标悬浮效果
+                        //对应的鼠标悬浮效果
                         show: true,
                         textStyle: {
                             color: "#800080"
                         }
                     }
                 },
-                toolbox: {
-                    show: true,
-                    feature: {
-                        dataView: {
-                            readOnly: false
-                        },
-                        restore: {},
-                        saveAsImage: {
-                            pixelRatio: 4
-                        }
-                    }
-                },
+
                 itemStyle: {
                     normal: {
                         borderWidth: .5, //区域边框宽度
@@ -451,13 +894,115 @@
                         areaColor: "#ffdead",
                     }
                 },
-                data: [{
-                    name: '福建',
-                    selected: true
-                    } //福建为选中状态
-                    ]
-            }]
+                data: region_map_province_data
+            }],
         };
+        myChart0.setOption(option_region,true);
+    }
+        
+        myChart0.on('legendselectchanged', function(params) {
+        if (params.name == "城市") {
+            option_region.yAxis.data = region_grid_city_name;
+            option_region.visualMap.seriesIndex = 2;
+            option_region.legend.selected = {
+                '省份': false,
+                '城市': true
+            };
+            myChart0.setOption(option_region);
+        } else if (params.name == "省份") {
+            option_region.yAxis.data = region_grid_province_name;
+            option_region.visualMap.seriesIndex = 3;
+            option_region.legend.selected = {
+                '省份': true,
+                '城市': false
+            };
+            myChart0.setOption(option_region);
+        }
+        console.log(params);
+    });
+
+    $("#region_select").change(function(event) {
+        console.log("region_select xxxxxxxxxxxxxxxxxxchangeg");
+        console.log($(this).val());
+        switch ($(this).val()) {
+            case 'region_impression':
+                region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['impression']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['impression']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['impression']);
+                region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['impression']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['impression']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['impression'];
+                break;
+            case 'region_cost':
+            
+                region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cost']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cost']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['cost']);
+                region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['cost']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['cost']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['cost'];
+                break;
+            case 'region_click':
+            
+                region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['click']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['click']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['click']);
+                region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['click']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['click']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['click'];
+                break;
+            case 'region_cpc':
+            
+                region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cpc']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cpc']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['cpc']);
+                region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['cpc']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['cpc']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['cpc'];
+                break;
+            case 'region_ctr':
+            
+                region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['ctr']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['ctr']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['ctr']);
+                region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['ctr']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['ctr']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['ctr'];
+                break;
+            case 'region_cpm':
+             
+                region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cpm']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cpm']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['cpm']);
+                region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['cpm']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['cpm']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['cpm'];
+                break;
+            case 'region_avgrank':
+            
+                region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['position']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['position']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['position']);
+                region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['position']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['position']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['position'];
+                break;
+            default:
+                break;
+        }
+        if (option_region.legend.selected.城市 == true) {
+            option_region.yAxis.data = region_grid_city_name;
+        } else {
+            option_region.yAxis.data = region_grid_province_name;
+        }
+
+        option_region.series[0].data = region_grid_province_data;
+        option_region.series[1].data = region_grid_city_data;
+        option_region.series[2].data = region_map_city_data;
+        option_region.series[3].data = region_map_province_data;
+        option_region.visualMap.max = Math.max.apply(null, region_grid_province_data);
+        myChart0.setOption(option_region,true);
+    });
            /* myChart4.setOption(option4);
             myChart4.on('mouseover', function(params) {
                 var dataIndex = params.dataIndex;
@@ -474,9 +1019,9 @@
             }*/
     </script>
 
-<!--散点图-->
+<!--散点图 option_scatter-->
     <script>
-        var option5 = {
+        var option_scatter = {
             toolbox: {
                 feature: {
                     saveAsImage: {
@@ -516,30 +1061,28 @@
         var unit_data =5;
         $("#filter_select li").click(function() {
              unit_data = $(this).val();
-            //console.log($unit_data);
-            if (unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7) {
-                $("#chart_select li").css('display', 'none');
-                $(".zhexian").css('display', 'block');
-                $(".zhutu").css('display', 'block');
-            }
-            if (unit_data == 22) { //设备对比 平涂
-                $("#chart_select li").css('display', 'none');
-                $(".pingtu").css('display', 'block');  
-            } 
-            if (unit_data == 33) { // 地域分布 区域图、散点图
-                $("#chart_select li").css('display', 'none');
-                $(".quyu").css('display', 'block');
-                $(".sandian").css('display', 'block');   
-            }
-            if (unit_data == 44) { // 数据构成 饼图
-                $("#chart_select li").css('display', 'none');
-                $(".bingtu").css('display', 'block');   
-            }
-            if (unit_data == 55) { // 数据构成 饼图
-                $("#chart_select li").css('display', 'none');
-                $(".bingtu").css('display', 'block');
-            }
-
+             switch (unit_data){
+                case 1:
+                case 3:
+                case 4:
+                case 5:
+                case 7:
+                
+                    $("#div_1").show();
+                    $("#div_2").hide();
+                    break;
+                case 22:
+                    $("#div_1").hide();
+                    $("#div_2").hide();
+                    break;
+                case 33:
+                    $("#div_1").hide();
+                    $("#div_2").show();
+                    
+                    break;
+                default :
+                    break;
+             }
             $.ajax({
                 url: '__CONTROLLER__/account_check',
                 type: 'POST',
@@ -566,6 +1109,8 @@
         $("#pager_select a").click(function(event) {
             tier_selected = $(this).text();
                 // 0415添加
+            $("#filter_select li").eq(7).html('<a href="javascript:">'+tier_selected+'分布</a>');
+            $("#filter_select li").eq(9).html('<a href="javascript:">'+tier_selected+'对比</a>');
             $("#fanwei").show();
             $("#set_fanwei").text(tier_selected);
                /* $("#beixuan").html("*默认为全部");*/
@@ -796,32 +1341,13 @@
     
     });
     </script>
-<!-- chart_select click -->
-    <script type="text/javascript">
-        $(".zhexian").click(function(event) {
-            myChart0.setOption(option0,true);
-        });
-        $(".zhutu").click(function(event) {
-            myChart0.setOption(option1,true);
-        });
-        $(".pingtu").click(function(event) {
-            myChart0.setOption(option2,true);
-        });
-        $(".bingtu").click(function(event) {
-            myChart0.setOption(option3,true);
-        });
-        $(".quyu").click(function(event) {
-            myChart0.setOption(option4,true);
-        });
-        $(".sandian").click(function(event) {
-            myChart0.setOption(option5,true);
-        });
-
-    </script>
 <!-- refreshDOM(unit_data,data.data); -->
     <script type="text/javascript">
         function refreshDOM($unit_data,$data){
             $("#chart_data").text(JSON.stringify($data));
+           /* console.log($data);
+            console.log($("#chart_data").text());
+            console.log($unit_data);*/
             console.log("refreshDOM--------------");
             switch ($unit_data){
                 case 5:
@@ -829,19 +1355,24 @@
                 case 1:
                 case 3:
                 case 7:
-                console.log("case   5 xxxxxxxxx");
-
-                    option0.xAxis.data=$data.date;
+                    /*option0.xAxis.data=$data.date;
                     option0.series[0].data=$data.impression;
-                    option1.xAxis.data=$data.date;
-                    option1.series[0].data=$data.impression;
-                    /*myChart0.setOption(option0,true);*/
-                    $("#kpi_line_select").trigger('change');
+                    
+                    $("#kpi_line_select").trigger('change');*/
+                    set_option_0($data);
+                    break;
+                case 22:
+                    set_option_device($data);
+                    break;
+                case 33:
+                    /*地域数据更新 region_data*/
+                    set_option_region($data);
                     break;
                 default :
                     break;
             }
         }
+        
     </script>
 <!-- 指标选择 展现点击消费kpi_line_select -->
     <script type="text/javascript">
@@ -853,205 +1384,3 @@
             
         });
     </script>
-<!-- <script>
-
-$("#device").change(function() {
-    $device = $('#device :selected').val();
-    $.ajax({
-        url: '__CONTROLLER__/account_check',
-        type: 'POST',
-        dataType: 'json',
-        data: {device: $device,
-            pager_select:tier_selected},
-    })
-    .done(function() {
-        console.log("success");
-    })
-    .fail(function() {
-        console.log("error");
-    })
-    .always(function() {
-        console.log("complete");
-    });
-
-});
-
-$("#filter_select li").click(function() {
-    var unit_data = $(this).val();
-    //console.log($unit_data);
-    if (unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7) {
-        $(".zhexian").css('display', 'block');
-        $(".zhutu").css('display', 'block');
-        $("#page_select li").not(".zhexian").not(".zhutu").css('display', 'none');
-        $("#myChart0").css('display', 'block');
-        $("#myChart1").css('display', 'none');
-        $("#myChart2").css('display', 'none');
-        $("#myChart3").css('display', 'none');
-        $("#myChart4").css('display', 'none');
-        $("#myChart5").css('display', 'none');
-    }
-    if (unit_data == 22) { //设备对比 平涂
-        $(".pingtu").css('display', 'block');
-        $("#page_select li").not(".pingtu").css('display', 'none');
-        $("#myChart0").css('display', 'none');
-        $("#myChart1").css('display', 'none');
-        $("#myChart2").css('display', 'block');
-        $("#myChart3").css('display', 'none');
-        $("#myChart4").css('display', 'none');
-        $("#myChart5").css('display', 'none');
-    }
-    if (unit_data == 33) { // 地域分布 区域图、散点图
-        $(".quyu").css('display', 'block');
-        $(".sandian").css('display', 'block');
-        $("#page_select li").not(".quyu").not(".sandian").css('display', 'none');
-        $("#myChart0").css('display', 'none');
-        $("#myChart1").css('display', 'none');
-        $("#myChart2").css('display', 'none');
-        $("#myChart3").css('display', 'none');
-        $("#myChart4").css('display', 'block');
-        $("#myChart5").css('display', 'none');
-
-    }
-    if (unit_data == 44) { // 数据构成 饼图
-        $(".bingtu").css('display', 'none');
-        $("#page_select li").not(".bingtu").css('display', 'none');
-        $("#myChart0").css('display', 'none');
-        $("#myChart1").css('display', 'block');
-        $("#myChart2").css('display', 'none');
-        $("#myChart3").css('display', 'none');
-        $("#myChart4").css('display', 'none');
-        $("#myChart5").css('display', 'none');
-    }
-    if (unit_data == 55) { // 数据构成 饼图
-        $(".bingtu").css('display', 'block');
-        $("#page_select li").not(".bingtu").css('display', 'none');
-        $("#myChart0").css('display', 'none');
-        $("#myChart1").css('display', 'none');
-        $("#myChart2").css('display', 'none');
-        $("#myChart3").css('display', 'block');
-        $("#myChart4").css('display', 'none');
-        $("#myChart5").css('display', 'none');
-    }
-
-    $.ajax({
-        type: "post",
-        url: "__MODULE__/Data/data_check",
-        data: {
-            unit_data: unit_data
-        },
-        dataType: "json",
-        success: function(data) {
-            alert(111111);
-        }
-    })
-})
-
-$(".zhexian").click(function() {
-    $("#myChart0").css('display', 'block');
-    $("#myChart1").css('display', 'none');
-    $("#myChart2").css('display', 'none');
-    $("#myChart3").css('display', 'none');
-    $("#myChart4").css('display', 'none');
-    $("#myChart5").css('display', 'none');
-});
-
-$(".zhutu").click(function() {
-    $("#myChart0").css('display', 'none');
-    $("#myChart1").css('display', 'block');
-    $("#myChart2").css('display', 'none');
-    $("#myChart3").css('display', 'none');
-    $("#myChart4").css('display', 'none');
-    $("#myChart5").css('display', 'none');
-});
-
-$(".pingtu").click(function() {
-    $("#myChart0").css('display', 'none');
-    $("#myChart1").css('display', 'none');
-    $("#myChart2").css('display', 'block');
-    $("#myChart3").css('display', 'none');
-    $("#myChart4").css('display', 'none');
-    $("#myChart5").css('display', 'none');
-});
-
-$(".bingtu").click(function() {
-    $("#myChart0").css('display', 'none');
-    $("#myChart1").css('display', 'none');
-    $("#myChart2").css('display', 'none');
-    $("#myChart3").css('display', 'block');
-    $("#myChart4").css('display', 'none');
-    $("#myChart5").css('display', 'none');
-});
-
-$(".quyu").click(function() {
-    $("#myChart0").css('display', 'none');
-    $("#myChart1").css('display', 'none');
-    $("#myChart2").css('display', 'none');
-    $("#myChart3").css('display', 'none');
-    $("#myChart4").css('display', 'block');
-    $("#myChart5").css('display', 'none');
-});
-
-$(".sandian").click(function() {
-    $("#myChart0").css('display', 'none');
-    $("#myChart1").css('display', 'none');
-    $("#myChart2").css('display', 'none');
-    $("#myChart3").css('display', 'none');
-    $("#myChart4").css('display', 'none');
-    $("#myChart5").css('display', 'block');
-});
-</script> -->
-
-<!--0415 提交查询条件-->
-<!-- <script>
-    $("#chakan").click(function () {
-        // 层级（账户、计划、单元、关键词等）
-        var section_name = $(".section-name").text();
-        // 设备
-        var device = $('#device :selected').val();
-        // 日期
-        var riqi = $("#riqi").val();
-        // 地域
-        var attributes = $("#attributes").text();
-
-        var set_fanwei = $("#set_fanwei").text();
-
-        var cengji = $("#cengji").html();
-
-        if(!section_name && (set_fanwei=='账户')){
-            alert('范围未选择');return false;
-        }
-
-        if(device == ''){
-            alert('设备不能为空');return false;
-        }
-        if(riqi == ''){
-            alert('日期不能为空');return false;
-        }
-        if(attributes == ''){
-            alert('地域不能为空');return false;
-        }
-
-        // 发送ajax
-        $.ajax({
-            url: '__CONTROLLER__/chakan',
-            type: 'POST',
-            dataType: 'json',
-            data: {
-                device: device,
-                riqi:riqi,
-                attributes:attributes,
-                statIds:cengji,
-                pager_select: set_fanwei
-
-            },
-            success:function (data) {
-                console.log(data);
-            }
-        })
-
-
-
-
-    })
-</script>
- -->

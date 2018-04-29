@@ -125,7 +125,12 @@ class DataController extends AdminbaseController {
         }
         /*$account_data_json = json_decode(dispatch_kpijob(S('account_check_pager_select'),$p_temp))->body->data;*/
         //var_dump($filter_result);
-        $this->assign("chart_data",json_encode($filter_result));
+        if ($filter_type==999999) {
+            $this->assign("chart_map_data",json_encode($filter_result));
+        }else{
+            $this->assign("chart_data",json_encode($filter_result));
+        }
+        
         if (IS_AJAX) {
             $account_data_ajax['data']=$filter_result;
             $this->ajaxReturn($account_data_ajax);
