@@ -216,12 +216,13 @@ function getHistoryRankReport_realtime($param = array("startDate"=>"2018-01-01",
 	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
 	$p_unitOfTime = isset($param['unitOfTime'])?$param['unitOfTime']:5;
 	$p_provid = isset($param['provid'])?$param['provid']:null;
+	$p_statIds =isset($param['statIds'])?$param['statIds']:null;
 	$p_statRange = isset($param['statRange'])?$param['statRange']:2;
 	$p_order = isset($param['order'])?$param['order']:null;
 	$p_number = isset($param['number'])?$param['number']:1000;
 	$p_performanceData=array('rank1shows','rank2shows','rank3shows','rank4shows','rank1to4shows' );
 	$p_device = isset($param['device'])?$param['device']:1;
-	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>38,"levelOfDetails"=>11,"platform"=>$param["platform"],"device"=>$p_device,'unitOfTime'=>$p_unitOfTime,'performanceData'=>$p_performanceData,'order'=>$p_order,'number'=>$p_number,'provid'=>$p_provid );
+	$param1 = array('startDate' =>$param['startDate'] ,'endDate'=>$param['endDate'],"reportType"=>38,"levelOfDetails"=>11,"platform"=>$param["platform"],"device"=>$p_device,'unitOfTime'=>$p_unitOfTime,'performanceData'=>$p_performanceData,'order'=>$p_order,'number'=>$p_number,'provid'=>$p_provid ,'statRange'=>$p_statRange,'statIds'=>$p_statIds);
 
 	$resultData =json_decode(getReport("RealTimeData",$param1));
 	return json_encode($resultData);
@@ -1045,6 +1046,121 @@ function account_function_bytire_compare($category='账户',$params=array()){
 		}
 	}
 	return $tire_cmp_data;
+}
+function leftrank_function_byday($params=array()){
+	$result_json = json_decode(getHistoryRankReport_realtime($params))->body->data;
+	foreach ($result_json as $key => $value) {
+		$trend_data[$value->date]['first'] +=$value->kpis[0];
+		$trend_data[$value->date]['second'] +=$value->kpis[1];
+		$trend_data[$value->date]['third'] +=$value->kpis[2];
+		$trend_data[$value->date]['forth'] +=$value->kpis[3];
+	}
+	foreach ($trend_data as $key => $value) {
+		$return_data['date'][]=$key;
+		$return_data['data']['first'][]=array('name'=>'排名第一展现','value'=>$value['first']);
+		$return_data['data']['second'][]=array('name'=>'排名第二展现','value'=>$value['second']);
+		$return_data['data']['third'][]=array('name'=>'排名第三展现','value'=>$value['third']);
+		$return_data['data']['forth'][]=array('name'=>'排名第四展现','value'=>$value['forth']);
+			
+	}
+	/*grid_data*/
+	foreach ($result_json as $key => $value) {
+		$grid_data[$key]['日期']=$value->date;
+		$grid_data[$key]['账户']=$value->name[0];
+		$grid_data[$key]['计划']=$value->name[1];
+		$grid_data[$key]['单元']=$value->name[2];
+		$grid_data[$key]['关键词']=$value->name[3];
+		$grid_data[$key]['第一展现排名']=$value->kpis[0];
+		$grid_data[$key]['第二展现排名']=$value->kpis[1];
+		$grid_data[$key]['第三展现排名']=$value->kpis[2];
+		$grid_data[$key]['第四展现排名']=$value->kpis[3];
+	}
+	/*grid_fields*/
+        foreach ($grid_data[0] as $key => $value) {
+            switch ($key) {
+                case '日期':
+                case '账户':
+                case '关键词':
+                case '创意':
+                
+                    $grid_fields[]=array('name'=>$key,'type'=>'text','width'=>110);
+                    break;
+                case '描述1':
+                case '描述2':
+                case 'url':
+                    $grid_fields[]=array('name'=>$key,'type'=>'textarea','width'=>190);
+                    break;
+                default:
+                     $grid_fields[]=array('name'=>$key,'type'=>'text','width'=>70);
+                    break;
+            }
+           
+        }
+	$return_data['grid_data']=$grid_data;
+	$return_data['grid_fields']=$grid_fields;
+	return $return_data;
+}
+function leftrank_function_byhour($params){
+	$result_json = json_decode(getHistoryRankReport_realtime($params))->body->data;
+	
+	foreach ($result_json as $key => $value) {
+
+		$trend_data[(int)explode(' ', $value->date)[1]]['first'] +=$value->kpis[0];
+		$trend_data[(int)explode(' ', $value->date)[1]]['second'] +=$value->kpis[1];
+		$trend_data[(int)explode(' ', $value->date)[1]]['third'] +=$value->kpis[2];
+		$trend_data[(int)explode(' ', $value->date)[1]]['forth'] +=$value->kpis[3];
+	}
+	$hours = array(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 );
+	foreach ($hours as $key => $value) {
+		$hour_data[$key]['first']=$trend_data[$key]['first']?$trend_data[$key]['first']:0;
+		$hour_data[$key]['second']=$trend_data[$key]['first']?$trend_data[$key]['second']:0;
+		$hour_data[$key]['third']=$trend_data[$key]['first']?$trend_data[$key]['third']:0;
+		$hour_data[$key]['forth']=$trend_data[$key]['first']?$trend_data[$key]['forth']:0;
+	}
+	foreach ($hour_data as $key => $value) {
+		$return_data['date'][]=$key;
+		$return_data['data']['first'][]=array('name'=>'排名第一展现','value'=>$value['first']);
+		$return_data['data']['second'][]=array('name'=>'排名第二展现','value'=>$value['second']);
+		$return_data['data']['third'][]=array('name'=>'排名第三展现','value'=>$value['third']);
+		$return_data['data']['forth'][]=array('name'=>'排名第四展现','value'=>$value['forth']);
+			
+	}
+	/*grid_data*/
+	foreach ($result_json as $key => $value) {
+		$grid_data[$key]['日期']=$value->date;
+		$grid_data[$key]['账户']=$value->name[0];
+		$grid_data[$key]['计划']=$value->name[1];
+		$grid_data[$key]['单元']=$value->name[2];
+		$grid_data[$key]['关键词']=$value->name[3];
+		$grid_data[$key]['第一展现排名']=$value->kpis[0];
+		$grid_data[$key]['第二展现排名']=$value->kpis[1];
+		$grid_data[$key]['第三展现排名']=$value->kpis[2];
+		$grid_data[$key]['第四展现排名']=$value->kpis[3];
+	}
+	/*grid_fields*/
+        foreach ($grid_data[0] as $key => $value) {
+            switch ($key) {
+                case '日期':
+                case '账户':
+                case '关键词':
+                case '创意':
+                
+                    $grid_fields[]=array('name'=>$key,'type'=>'text','width'=>110);
+                    break;
+                case '描述1':
+                case '描述2':
+                case 'url':
+                    $grid_fields[]=array('name'=>$key,'type'=>'textarea','width'=>190);
+                    break;
+                default:
+                     $grid_fields[]=array('name'=>$key,'type'=>'text','width'=>70);
+                    break;
+            }
+           
+        }
+	$return_data['grid_data']=$grid_data;
+	$return_data['grid_fields']=$grid_fields;
+	return $return_data;
 }
 function test(){
 	echo "function test successfuly";

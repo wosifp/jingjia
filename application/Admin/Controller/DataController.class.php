@@ -968,10 +968,85 @@ class DataController extends AdminbaseController {
 /*数据洞察-->左上方排名分析*/
 
     public function left_rank(){
-         $this->assign('trade',getAccountList());
-        /*参数处理*/
+         $p_temp = array( );
+        /*获取用户列表并压到模板*/
+        $this->assign('trade',getAccountList());
+        /*获取要被查看的账户名字*/
+        $statIds_temp = $_REQUEST["statIds"];
+        S('left_rank_pager_select',$_REQUEST['pager_select']?$_REQUEST['pager_select']:S('left_rank_pager_select'),900);
+        if ($_REQUEST['pager_select']=='账户') {
+            $targets = array();
+            foreach ($statIds_temp as $key => $value) {
+                $targets[] = $value['text'];
+            }
         
-        /*参数处理end*/
+            $target = $targets[0] ?$targets[0]:0;
+            if($target){
+                session('username_normal',$target);
+            }
+            S('left_rank_statRange',$_REQUEST['statIds']?11:2,300);
+            
+        }elseif($_REQUEST['pager_select']=='关键词'){
+            foreach ($statIds_temp as $key => $value) {
+                $p_temp['statIds'][] =$value['value'];
+            }
+            S('left_rank_statRange',$_REQUEST['statIds']?11:2,300);
+            
+        }
+        S('left_rank_filter_type',$_REQUEST['filter_type']?$_REQUEST['filter_type']:S('left_rank_filter_type'),500);
+        $filter_type = S('left_rank_filter_type')?S('left_rank_filter_type'):5;
+       
+    /*参数处理*/
+
+        $datepicker = explode(" ",  $_REQUEST['datepicker']);
+
+       S('left_rank_statIds',$p_temp['statIds']?$p_temp['statIds']:S('left_rank_statIds'),300);
+        S('left_rank_startDate',$datepicker[0]?$datepicker[0]:S('left_rank_startDate'),300);
+        S('left_rank_endDate',$datepicker[2]?$datepicker[2]:S('left_rank_endDate'),300);
+       
+        
+        S('left_rank_device',$_REQUEST['device']?$_REQUEST['device']:S('left_rank_device'),300);
+        S('left_rank_device',S('left_rank_device')=='3'?0:S('left_rank_device'));
+       
+       /* $area_str = $_REQUEST['area_value'];*/
+        /*S('provid',$_REQUEST)*/
+        S('left_rank_area_city',$_REQUEST['area_city']?$_REQUEST['area_city']:S('left_rank_area_city'),300);
+        $p_temp['statRange']=S('left_rank_statRange')?S('left_rank_statRange'):2;
+        $p_temp['startDate']=S('left_rank_startDate')?S('left_rank_startDate'):date('Y-m-d',strtotime("-2 day"));
+        $p_temp['endDate']=S('left_rank_endDate')?S('left_rank_endDate'):date('Y-m-d',strtotime("-1 day"));
+        $p_temp['device']=S('left_rank_device')?S('left_rank_device'):1;
+        $p_temp['statIds']=S('left_rank_statIds')?S('left_rank_statIds'):array();
+        /*var_dump(S('left_rank_device')) ;
+        var_dump($p_temp['device']) ;*/
+        $p_temp['area_city'] = S('left_rank_area_city');
+        $p_temp['provid'] = explode("-", $p_temp['area_city']);
+        /*$p_temp['datepicker'] = S('left_rank_datepicker');*/
+        
+        /* $p_temp['unitOfTime']=$_REQUEST['unitOfTime']?$_REQUEST['unitOfTime']: 5;*/
+        //var_dump($p_temp);
+    /*参数处理end*/
+        switch ($filter_type) {
+            case '5':
+                $p_temp['unitOfTime'] = 5;
+                $filter_result = leftrank_function_byday($p_temp);
+                break;
+            case '7':
+                $p_temp['unitOfTime'] = 7;
+                $filter_result = leftrank_function_byhour($p_temp);
+                break;
+            default:
+                # code...
+                break;
+        }
+        /*$account_data_json = json_decode(dispatch_kpijob(S('account_check_pager_select'),$p_temp))->body->data;*/
+        //var_dump($filter_result);
+        $this->assign("chart_data",json_encode($filter_result));
+        
+        
+        if (IS_AJAX) {
+            $leftrank_data_ajax['data']=$filter_result;
+            $this->ajaxReturn($leftrank_data_ajax);
+        }
         $this->display();
     }
 
