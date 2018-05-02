@@ -697,21 +697,7 @@ function account_function_byday($category='账户',$params=array()){
 	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
 
 	$k_avgrank_trend = json_decode(getKeywordIdReport_realtime($params))->body->data;
-	if (!$result_json) {
-         $trend_data['date'][] =0;
-           $trend_data['impression'][] =0;
-           $trend_data['cost'][] =0;
-           $trend_data['cpc'][] =0;
-           $trend_data['click'][] =0;
-           $trend_data['ctr'][] =0;
-           $trend_data['cpm'][] =0;
-           $trend_data['conversion'][] =0;
-           $trend_data['phoneConversion'][] =0;
-           $trend_data['bridgeConversion'][] =0;
-           $trend_data['name']=0;
-           $trend_data['position'][] = 0;
-                    
-       }
+	if ($category =="账户") {
        foreach ($result_json as $key => $value) {
            $trend_data['date'][] =$value->date;
            $trend_data['impression'][] =$value->kpis[0];
@@ -736,6 +722,58 @@ function account_function_byday($category='账户',$params=array()){
             }  
             $trend_data['position'][] = round($sum_temp/$n_count,2);     
        }
+	}else{
+		foreach ($result_json as $key => $value) {
+			$result_temp[$value->date]['date'] = $value->date;
+			$result_temp[$value->date]['impression'] += $value->kpis[0];
+			$result_temp[$value->date]['cost'] += $value->kpis[1] ;
+			$result_temp[$value->date]['click'] += $value->kpis[3];
+			$result_temp[$value->date]['name'] = $value->name;
+		}
+		foreach ($result_temp as $key => $value) {
+			$result_temp[$key]['cpc'] = round($value['cost']/$value['click'],2);
+			$result_temp[$key]['ctr'] =round($value['cost']/$value['impression'],2);
+		}
+		/*var_dump($result_temp);*/
+		foreach ($result_temp as $key => $value) {
+			$trend_data['date'][] =$value['date'];
+            $trend_data['impression'][] =$value['impression'];
+            $trend_data['cost'][] =$value['cost'];
+            $trend_data['cpc'][] =$value['cpc'];
+            $trend_data['click'][] =$value['click'];
+            $trend_data['ctr'][] =$value['ctr'];
+            $trend_data['name']=$value['name'];
+            $n_count =0;
+            $sum_temp=0;
+           foreach ($k_avgrank_trend as $k1 => $v1) {
+              if (strcmp($v1->date, $value->date)) {
+                  $sum_temp += $v1->kpis[6];
+                  if ($v1->kpis[6] > 0) {
+                    $n_count++;
+                  }
+              }
+            }  
+            $trend_data['position'][] = round($sum_temp/$n_count,2);
+		}
+	}
+	
+	if (!$result_json) {
+         $trend_data['date'][] =0;
+           $trend_data['impression'][] =0;
+           $trend_data['cost'][] =0;
+           $trend_data['cpc'][] =0;
+           $trend_data['click'][] =0;
+           $trend_data['ctr'][] =0;
+           $trend_data['cpm'][] =0;
+           $trend_data['conversion'][] =0;
+           $trend_data['phoneConversion'][] =0;
+           $trend_data['bridgeConversion'][] =0;
+           $trend_data['name']=0;
+           $trend_data['position'][] = 0;
+                    
+       }
+       /*var_dump($trend_data);*/
+       
 	return $trend_data;
 }
 
@@ -851,11 +889,162 @@ function account_function_byregion($category='账户',$params=array()){
 
 function account_function_bytire($category='账户',$params=array()){
 	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
-	return $result_json;
+
+	$k_avgrank_trend = json_decode(getKeywordIdReport_realtime())->body->data;
+	switch ($category) {
+		case '账户':
+		case '计划':
+		case '单元':
+			foreach ($result_json as $key => $value) {
+				$trend_data[$key]['date'] =$value->date;
+				$trend_data[$key]['impression'] =$value->kpis[0];
+				$trend_data[$key]['cost'] =$value->kpis[1];
+				$trend_data[$key]['cpc'] =round($value->kpis[2],2);
+				$trend_data[$key]['click'] =$value->kpis[3];
+				$trend_data[$key]['ctr'] =round($value->kpis[4],2);
+				$trend_data[$key]['cpm'] =round($value->kpis[5],2);
+				$trend_data[$key]['conversion'] =$value->kpis[6];
+				$trend_data[$key]['phoneConversion'] =$value->kpis[7];
+				$trend_data[$key]['bridgeConversion'] =$value->kpis[8];
+				if($category=='账户'){
+					$trend_data[$key]['name']=$value->name[0];
+				}elseif($category=='计划'){
+					$trend_data[$key]['name']=$value->name[1];
+				}else {
+					$trend_data[$key]['name']=$value->name[2];
+				}
+				
+				$n_count =0;
+				$sum_temp=0;
+				foreach ($k_avgrank_trend as $k1 => $v1) {
+			   		if (strcmp($v1->date, $value->date)) {
+				   	$sum_temp += $v1->kpis[6];
+				   		if ($v1->kpis[6] > 0) {
+					 	$n_count++;
+				   		}
+			   		}
+			 	}  
+			 	$trend_data[$key]['position'] = round($sum_temp/$n_count,2);     
+			}
+			break;
+		case '关键词':
+		foreach ($result_json as $key => $value) {
+			$trend_data[$key]['date'] =$value->date;
+			$trend_data[$key]['impression'] =$value->kpis[0];
+			$trend_data[$key]['cost'] =$value->kpis[1];
+			$trend_data[$key]['cpc'] =round($value->kpis[2],2);
+			$trend_data[$key]['click'] =$value->kpis[3];
+			$trend_data[$key]['ctr'] =round($value->kpis[4],2);
+			$trend_data[$key]['cpm'] =round($value->kpis[5],2);
+			$trend_data[$key]['position'] =$value->kpis[6];
+			$trend_data[$key]['conversion'] =$value->kpis[7];
+			$trend_data[$key]['bridgeConversion'] =$value->kpis[8];
+			$trend_data[$key]['name']=$value->name[3];    
+		}
+			break;
+		case '创意':
+		foreach ($result_json as $key => $value) {
+			$trend_data[$key]['date'] =$value->date;
+			$trend_data[$key]['impression'] =$value->kpis[0];
+			$trend_data[$key]['cost'] =$value->kpis[1];
+			$trend_data[$key]['cpc'] =round($value->kpis[2],2);
+			$trend_data[$key]['click'] =$value->kpis[3];
+			$trend_data[$key]['ctr'] =round($value->kpis[4],2);
+			$trend_data[$key]['cpm'] =round($value->kpis[5],2);
+			$trend_data[$key]['position'] =$value->kpis[6];
+			$trend_data[$key]['conversion'] =$value->kpis[7];
+			$trend_data[$key]['bridgeConversion'] =$value->kpis[8];
+			$trend_data[$key]['name']=$value->name[3];    
+		}
+			break;
+		default:
+			# code...
+			break;
+	}
+	return $trend_data;
 }
 function account_function_bydata($category='账户',$params=array()){
 	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
-	return $result_json;
+	foreach ($result_json as $key => $value) {
+		switch ($category) {
+			case '账户':
+				$pie_data['name'][]=$value->name[0];
+				$pie_data['impression']['data'][]=array('name'=>$value->name[0],'value'=>$value->kpis[0]);
+				$pie_data['cost']['data'][]=array('name'=>$value->name[0],'value'=>$value->kpis[1]);
+				$pie_data['click']['data'][]=array('name'=>$value->name[0],'value'=>$value->kpis[3]);
+				break;
+			case '计划':
+				$pie_data['name'][]=$value->name[1];
+				$pie_data['impression']['data'][]=array('name'=>$value->name[1],'value'=>$value->kpis[0]);
+				$pie_data['cost']['data'][]=array('name'=>$value->name[1],'value'=>$value->kpis[1]);
+				$pie_data['click']['data'][]=array('name'=>$value->name[1],'value'=>$value->kpis[3]);
+				break;
+			case '单元':
+				$pie_data['name'][]=$value->name[2];
+				$pie_data['impression']['data'][]=array('name'=>$value->name[2],'value'=>$value->kpis[0]);
+				$pie_data['cost']['data'][]=array('name'=>$value->name[2],'value'=>$value->kpis[1]);
+				$pie_data['click']['data'][]=array('name'=>$value->name[2],'value'=>$value->kpis[3]);
+				break;
+			case '关键词':
+				$pie_data['name'][]=$value->name[3];
+				$pie_data['impression']['data'][]=array('name'=>$value->name[3],'value'=>$value->kpis[0]);
+				$pie_data['cost']['data'][]=array('name'=>$value->name[3],'value'=>$value->kpis[1]);
+				$pie_data['click']['data'][]=array('name'=>$value->name[3],'value'=>$value->kpis[3]);
+				break;
+			case '创意':
+				$pie_data['name'][]=$value->name[3];
+				$pie_data['impression']['data'][]=array('name'=>$value->name[3],'value'=>$value->kpis[0]);
+				$pie_data['cost']['data'][]=array('name'=>$value->name[3],'value'=>$value->kpis[1]);
+				$pie_data['click']['data'][]=array('name'=>$value->name[3],'value'=>$value->kpis[3]);
+				break;
+			default:
+				# code...
+				break;
+		}
+	}
+	return $pie_data;
+}
+function account_function_bytire_compare($category='账户',$params=array()){
+	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
+	foreach ($result_json as $key => $value) {
+		switch ($category) {
+			case '账户':
+				
+			case '计划':
+				
+			case '单元':
+				if ($category=='账户') {
+					$tire_cmp_data['name'][]=$value->name[0];
+				}elseif ($category=='计划') {
+					$tire_cmp_data['name'][]=$value->name[1];
+				}else{
+					$tire_cmp_data['name'][]=$value->name[2];
+				}
+				$tire_cmp_data['impression'][]=$value->kpis[0];
+				$tire_cmp_data['cost'][]=$value->kpis[1];
+				$tire_cmp_data['cpc'][]=$value->kpis[2];
+				$tire_cmp_data['click'][]=$value->kpis[3];
+				$tire_cmp_data['ctr'][]=$value->kpis[4];
+				
+				break;
+			case '关键词':
+			case '创意':
+				$tire_cmp_data['name'][]=$value->name[3];
+				$tire_cmp_data['impression'][]=$value->kpis[0];
+				$tire_cmp_data['cost'][]=$value->kpis[1];
+				$tire_cmp_data['cpc'][]=$value->kpis[2];
+				$tire_cmp_data['click'][]=$value->kpis[3];
+				$tire_cmp_data['ctr'][]=$value->kpis[4];
+				$tire_cmp_data['position'][]=$value->kpis[6];
+				
+				break;
+			
+			default:
+				# code...
+				break;
+		}
+	}
+	return $tire_cmp_data;
 }
 function test(){
 	echo "function test successfuly";

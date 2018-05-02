@@ -118,7 +118,10 @@ class DataController extends AdminbaseController {
                 $p_temp['unitOfTime'] = 8;
                 $filter_result = account_function_bydata(S('account_check_pager_select'),$p_temp);
                 break;
-            
+            case '66':
+                $p_temp['unitOfTime'] = 8;
+                $filter_result = account_function_bytire_compare(S('account_check_pager_select'),$p_temp);
+                break;
             default:
                 # code...
                 break;
