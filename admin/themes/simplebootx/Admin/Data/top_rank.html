@@ -115,6 +115,7 @@
 <!-- 账户选择 -->
     <script type="text/javascript">
                 $("#account_select").click(function(event) {
+                    $("#loading",window.parent.document).show();
                     $.ajax({
                     type: "post",
                     url: "__MODULE__/Ajax/handle_data_check",
@@ -126,7 +127,7 @@
                     success: function(data) {
 
                         $test_data = data.data;
-
+                        $("#loading",window.parent.document).hide();
                     }
                 });
                 $("#mytreeselect").empty();
@@ -160,7 +161,7 @@
                 $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
                 /*使用JSON.stringify($temp)方法将object转换为json字符串*/
                /* console.log(typeof(jQuery.parseJSON(JSON.stringify($temp))));*/
-
+               $("#loading",window.parent.document).show();
                 $.ajax({
                     url: '__CONTROLLER__/top_rank',
                     type: 'POST',
@@ -171,6 +172,7 @@
                 })
                 .done(function(data) {
                     refreshDOM(data.data);
+                    $("#loading",window.parent.document).hide();
                     console.log("success");
                     /*console.log(data);
                     alert("account_select");*/
@@ -285,6 +287,7 @@
         elem: '#datepicker1' ,
         range: true,//指定元素
         done: function(value){
+            $("#loading",window.parent.document).show();
         $.ajax({
             type: "post",
             url: "__CONTROLLER__/top_rank",
@@ -295,6 +298,7 @@
             success: function(data){
                 console.log(data.data);
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
 
                 }
             });
@@ -304,6 +308,7 @@
     $("#device li").click(function () {
         var device=$(this).val();
         //console.log($unit_data);
+        $("#loading",window.parent.document).show();
         $.ajax({
             type:"post",
             url:"__CONTROLLER__/top_rank",
@@ -313,6 +318,7 @@
             dataType:"json",
             success:function (data) {
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                /* alert(111111);*/
             }
         })
@@ -321,6 +327,7 @@
     $("#Level_to_choose li").click(function () {
         var level_to_choose=$(this).text();
         //console.log($unit_data);
+        $("#loading",window.parent.document).show();
         $.ajax({
             type:"post",
             url:"__CONTROLLER__/top_rank",
@@ -331,6 +338,7 @@
             success:function (data) {
                /* console.log(data);*/
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                /* alert(111111);*/
             }
         })
@@ -339,6 +347,7 @@
     $("#Indexselection li").click(function () {
         var indexselection=$(this).text();
         //console.log($unit_data);
+        $("#loading",window.parent.document).show();
         $.ajax({
             type:"post",
             url:"__CONTROLLER__/top_rank",
@@ -348,6 +357,7 @@
             dataType:"json",
             success:function (data) {
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                /* alert(111111);*/
             }
         })
@@ -356,6 +366,7 @@
     $("#TOP_choice li").click(function () {
         var top_choice=$(this).text();
         //console.log($unit_data);
+        $("#loading",window.parent.document).show();
         $.ajax({
             type:"post",
             url:"__CONTROLLER__/top_rank",
@@ -365,6 +376,7 @@
             dataType:"json",
             success:function (data) {
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                 /*alert(111111);*/
             }
         })

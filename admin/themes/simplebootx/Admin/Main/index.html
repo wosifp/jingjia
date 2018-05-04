@@ -1027,7 +1027,7 @@ $(".bai_name").click(function() {
     $("#zhanghu").html(target);
     $("#firstpane").css('display', 'none');
     $("#zhanghu").css('color', 'red');
-
+    $("#loading",window.parent.document).show();
     $.ajax({
         type: "post",
         url: "__CONTROLLER__/index",
@@ -1037,6 +1037,7 @@ $(".bai_name").click(function() {
         dataType: "json",
         success: function(data) {
             refresh_doms(data.data);
+            $("#loading",window.parent.document).hide();
             console.log(data);
             /*alert(1111111);*/
             // window.location = "/Admin/Index/index";
@@ -1061,6 +1062,7 @@ $("#area_action").click(function(event) {
         console.log($(dataCityinput).data());
        
         /*window.location.href = "__CONTROLLER__/index?area_value=" + $(dataCityinput).data("value");*/
+        $("#loading",window.parent.document).show();
         $.ajax({
             url: '__CONTROLLER__/index',
             type: 'POST',
@@ -1069,6 +1071,7 @@ $("#area_action").click(function(event) {
         })
         .done(function(data) {
             refresh_doms(data.data);
+            $("#loading",window.parent.document).hide();
             console.log(data.data);
             console.log("success");
             
@@ -1089,7 +1092,9 @@ laydate.render({
                     range: true, //指定元素
                     done: function(value) {
                         /*window.location.href = "__CONTROLLER__/index?datepicker=" + value;*/
-                        console.log({$waitSecond});
+                        $("#loading",window.parent.document).show();
+                        /*console.log({$waitSecond});*/
+                        
                         $.ajax({
                             type: "post",
                             url: "__CONTROLLER__/index",
@@ -1099,6 +1104,7 @@ laydate.render({
                             dataType: "json",
                             success: function(data) {
                                 refresh_doms(data.data);
+                                $("#loading",window.parent.document).hide();
                                console.log(data.data);
                                 /*alert(1111111);*/
                             }
@@ -1108,9 +1114,10 @@ laydate.render({
 $("#device").change(function() {
 
     var device = $(this).val();
-    
+     
    /* window.location.href = "__CONTROLLER__/index?device=" + device;
-*/
+*/  
+    $("#loading",window.parent.document).show();
     $.ajax({
         type: "post",
         url: "__CONTROLLER__/index",
@@ -1120,6 +1127,7 @@ $("#device").change(function() {
         dataType: "json",
         success: function(data) {
             refresh_doms(data.data);
+            $("#loading",window.parent.document).hide();
             console.log(data.data);
             /*alert(1111111);*/
             // window.location = "/Admin/Index/index";

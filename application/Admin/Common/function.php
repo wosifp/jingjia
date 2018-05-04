@@ -1102,13 +1102,13 @@ function leftrank_function_byday($params=array()){
 }
 function leftrank_function_byhour($params){
 	$result_json = json_decode(getHistoryRankReport_realtime($params))->body->data;
-	
-	foreach ($result_json as $key => $value) {
 
-		$trend_data[(int)explode(' ', $value->date)[1]]['first'] +=$value->kpis[0];
-		$trend_data[(int)explode(' ', $value->date)[1]]['second'] +=$value->kpis[1];
-		$trend_data[(int)explode(' ', $value->date)[1]]['third'] +=$value->kpis[2];
-		$trend_data[(int)explode(' ', $value->date)[1]]['forth'] +=$value->kpis[3];
+	foreach ($result_json as $key => $value) {
+		$d = explode(' ', $value->date);
+		$trend_data[(int)$d[1]]['first'] +=$value->kpis[0];
+		$trend_data[(int)$d[1]]['second'] +=$value->kpis[1];
+		$trend_data[(int)$d[1]]['third'] +=$value->kpis[2];
+		$trend_data[(int)$d[1]]['forth'] +=$value->kpis[3];
 	}
 	$hours = array(0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 );
 	foreach ($hours as $key => $value) {

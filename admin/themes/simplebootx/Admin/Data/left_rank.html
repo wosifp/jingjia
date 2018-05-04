@@ -232,6 +232,7 @@
     var unit_data = 5;
     $("#filter_select li").click(function () {
         unit_data = $(this).val();
+        $("#loading",window.parent.document).show();
         $.ajax({
             url: '__CONTROLLER__/left_rank',
             type: 'POST',
@@ -240,6 +241,7 @@
         })
             .done(function (data) {
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                 console.log(data.data);
                 console.log("success");
             })
@@ -264,6 +266,7 @@
         // 0415结束
 
         console.log(tier_selected);
+        $("#loading",window.parent.document).show();
         $.ajax({
             url: '__CONTROLLER__/left_rank',
             type: 'POST',
@@ -273,6 +276,7 @@
             .done(function (data) {
 
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                 console.log("success");
             })
             .fail(function () {
@@ -281,6 +285,7 @@
             .always(function () {
                 console.log("complete");
             });
+            $("#loading",window.parent.document).show();
         $.ajax({
             type: "post",
             url: "__MODULE__/Ajax/handle_data_check",
@@ -292,6 +297,7 @@
             success: function (data) {
 
                 $test_data = data.data;
+                $("#loading",window.parent.document).hide();
                 console.log($test_data);
             }
         });
@@ -341,7 +347,7 @@
         $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
         /*使用JSON.stringify($temp)方法将object转换为json字符串*/
         console.log(typeof (jQuery.parseJSON(JSON.stringify($temp))));
-
+        $("#loading",window.parent.document).show();
         $.ajax({
             url: '__CONTROLLER__/left_rank',
             type: 'POST',
@@ -353,6 +359,7 @@
         })
             .done(function (data) {
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                 console.log("success");
                 console.log(data);
             })
@@ -370,6 +377,7 @@
 <script type="text/javascript">
     $("#device").change(function (event) {
         $device = $(this).val();
+        $("#loading",window.parent.document).show();
         $.ajax({
             url: '__CONTROLLER__/left_rank',
             type: 'POST',
@@ -380,6 +388,7 @@
                 console.log("xxxxxxxxxxxxxxxxunit_data");
                 console.log(unit_data);
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                 console.log("success");
             })
             .fail(function () {
@@ -398,6 +407,7 @@
         range: true, //指定元素
         done: function (value) {
             /* $("#riqi").val(value);*/
+            $("#loading",window.parent.document).show();
             $.ajax({
                 url: '__CONTROLLER__/left_rank',
                 type: 'POST',
@@ -409,10 +419,12 @@
             })
                 .done(function (data) {
 
+                    
+                    refreshDOM(data.data);
+                    $("#loading",window.parent.document).hide();
                     console.log("success");
                     console.log(data.data);
                     console.log(option0);
-                    refreshDOM(data.data);
                 })
                 .fail(function () {
                     console.log("error");
@@ -438,6 +450,7 @@
             console.log($(dataCityinput).data());
 
             /*window.location.href = "__CONTROLLER__/index?area_value=" + $(dataCityinput).data("value");*/
+            $("#loading",window.parent.document).show();
             $.ajax({
                 url: '__CONTROLLER__/left_rank',
                 type: 'POST',
@@ -446,6 +459,7 @@
             })
                 .done(function (data) {
                     refreshDOM(data.data);
+                    $("#loading",window.parent.document).hide();
                     console.log(data.data);
                     console.log("success");
 

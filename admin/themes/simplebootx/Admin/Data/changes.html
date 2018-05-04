@@ -103,6 +103,7 @@
 <!-- 账户选择 -->
     <script type="text/javascript">
                 $("#account_select").click(function(event) {
+                    $("#loading",window.parent.document).show();
                     $.ajax({
                     type: "post",
                     url: "__MODULE__/Ajax/handle_data_check",
@@ -114,6 +115,7 @@
                     success: function(data) {
 
                         $test_data = data.data;
+                        $("#loading",window.parent.document).hide();
 
                     }
                 });
@@ -148,7 +150,7 @@
                 $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
                 /*使用JSON.stringify($temp)方法将object转换为json字符串*/
                /* console.log(typeof(jQuery.parseJSON(JSON.stringify($temp))));*/
-
+               $("#loading",window.parent.document).show();
                 $.ajax({
                     url: '__CONTROLLER__/changes',
                     type: 'POST',
@@ -159,6 +161,7 @@
                 })
                 .done(function(data) {
                     refreshDOM(data.data);
+                    $("#loading",window.parent.document).hide();
                     console.log("success");
                     /*console.log(data);
                     alert("account_select");*/
@@ -179,6 +182,7 @@
         elem: '#datepicker1' ,
         range: true,//指定元素
         done: function(value){
+        $("#loading",window.parent.document).show();
         $.ajax({
             type: "post",
             url: "__CONTROLLER__/changes",
@@ -190,6 +194,7 @@
                 console.log("datePicker------");
                 console.log(data.data);
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                 }
             });
         }
@@ -201,7 +206,7 @@
             $('#produce_flag li').click(function(event) {
                 /* Act on the event */
                 $value = $(this).text();
-                
+                $("#loading",window.parent.document).show();
                 $.ajax({
             type: "post",
             url: "__CONTROLLER__/changes",
@@ -211,6 +216,7 @@
             dataType: "json",
             success: function(data){
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                /* alert(1111111);*/
             }
         });
@@ -222,6 +228,7 @@
                 /* Act on the event */
                 $value = $(this).text();
                 console.log($value) ;
+                $("#loading",window.parent.document).show();
                 $.ajax({
             type: "post",
             url: "__CONTROLLER__/changes",
@@ -231,6 +238,7 @@
             dataType: "json",
             success: function(data){
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                 /*alert(1111111);*/
             }
         });
@@ -241,6 +249,7 @@
             $("#device li").click(function () {
         var device=$(this).val();
         //console.log($unit_data);
+        $("#loading",window.parent.document).show();
         $.ajax({
             type:"post",
             url:"__CONTROLLER__/changes",
@@ -250,6 +259,7 @@
             dataType:"json",
             success:function (data) {
                 refreshDOM(data.data);
+                $("#loading",window.parent.document).hide();
                /* alert(111111);*/
             }
              })
@@ -261,6 +271,7 @@
                 /* Act on the event */
                 $value = $(this).text();
                 console.log($value) ;
+                $("#loading",window.parent.document).show();
                 $.ajax({
             type: "post",
             url: "__CONTROLLER__/changes",
@@ -270,6 +281,7 @@
             dataType: "json",
             success: function(data){
                  refreshDOM(data.data);
+                 $("#loading",window.parent.document).hide();
                 /*alert(1111111);*/
             }
         });
