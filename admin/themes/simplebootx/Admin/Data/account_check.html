@@ -25,7 +25,7 @@
 <script src="__PUBLIC__/js/areapicker/City_data.js"></script>
 <script src="__PUBLIC__/js/areapicker/areadata.js"></script>
 <script src="__PUBLIC__/js/areapicker/auto_area.js"></script>
-
+<script type="text/javascript" src="__PUBLIC__/admin/js/functions_module.js"></script>
 <body>
     <div class="qi_right_1">
         <!--层级选择 pager_select -->
@@ -1440,14 +1440,14 @@
         // 0415添加
         $("#filter_select li").eq(7).html('<a href="javascript:">' + tier_selected + '分布</a>');
         $("#filter_select li").eq(9).html('<a href="javascript:">' + tier_selected + '对比</a>');
-        $("#points").trigger('click');
+        //$("#points").trigger('click');
         $("#fanwei").show();
         $("#set_fanwei").text(tier_selected);
         /* $("#beixuan").html("*默认为全部");*/
         // 0415结束
 
         /*console.log(tier_selected);*/
-        console.log( $("#loading",window.parent.document).show());
+        /*console.log( $("#loading",window.parent.document).show());
         $("#loading",window.parent.document).show();
         $.ajax({
             url: '__CONTROLLER__/account_check',
@@ -1458,7 +1458,7 @@
             .done(function (data) {
 
                 refreshDOM(5, data.data);
-                /*$("#loading",window.parent.document).hide();*/
+                $("#loading",window.parent.document).hide();
                 console.log("success");
             })
             .fail(function () {
@@ -1466,7 +1466,7 @@
             })
             .always(function () {
                 console.log("complete");
-            });
+            });*/
             /*$("#loading",window.parent.document).show();*/
         $.ajax({
             type: "post",
@@ -1474,82 +1474,14 @@
             data: {
                 pager_select: tier_selected
             },
-            async: false,
+            //async: false,
             dataType: "json",
             success: function (data) {
-
-                $test_data = data.data;
+                showMultiTree(tier_selected,data.data);
                 $("#loading",window.parent.document).hide();
-                console.log($test_data);
             }
         });
-        $("#mytreeselect").empty();
-        $("#firstpane div").empty();
-        $("#firstpane div").remove();
-        // $test_data =$.parseJSON('{$page_1}');
-       /* console.log($test_data);
-        console.log(11111111111111);*/
-
-        if (tier_selected == "账户") {
-            $.each($test_data, function (index, val) {
-                $.each(val, function (index1, val1) {
-                    $.each(val1, function (index2, val2) {
-                        $("#mytreeselect ").append('<option value=' + val2.id + ' data-section="' + index + '/' + index1 + '">' + val2.user_login + '</option>');
-                    });
-                });
-            });
-        }
-
-        if (tier_selected == "计划") {
-            $.each($test_data, function (index, val) {
-                $.each(val, function (index1, val1) {
-                    $("#mytreeselect ").append('<option value=' + val1.campaignId + ' data-section="' + index + '">' + val1.campaignName + '</option>');
-                });
-            });
-        }
-        if (tier_selected == "单元") {
-            $.each($test_data, function (index, val) {
-                $.each(val, function (index1, val1) {
-                    $.each(val1, function (index2, val2) {
-                        $("#mytreeselect ").append('<option value=' + val2.adgroupId + ' data-section="' + index + '/' + index1 + '">' + val2.adgroupName + '</option>');
-                    });
-                });
-            });
-        }
-        if (tier_selected == "关键词") {
-            $.each($test_data, function (index, val) {
-                $.each(val, function (index1, val1) {
-                    $.each(val1, function (index2, val2) {
-                        $.each(val2, function (index3, val3) {
-                            $("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="' + index + '/' + index1 + '/' + index2 + '">' + val3.keyword + '</option>');
-                        });
-                    });
-                });
-            });
-        }
-        if (tier_selected == "创意") {
-            $.each($test_data, function (index, val) {
-                $.each(val, function (index1, val1) {
-                    $.each(val1, function (index2, val2) {
-                        $.each(val2, function (index3, val3) {
-                            $("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="' + index + '/' + index1 + '/' + index2 + '">' + val3.title + '</option>');
-                        });
-                    });
-                });
-            });
-        }
-
-
-        $tree1 = $("#mytreeselect").treeMultiselect({
-            allowBatchSelection: true,
-            enableSelectAll: true,
-            searchable: true,
-            sortable: true,
-            startCollapsed: true,
-            onChange: function (text, value, initialIndex, section) {
-                $temp = text;
-            }
-        });
+        
     });
     $("#send_mytree").click(function () {
         $("#firstpane").hide();
@@ -1557,7 +1489,7 @@
         // 0417添加
         $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
         /*使用JSON.stringify($temp)方法将object转换为json字符串*/
-        console.log(typeof (jQuery.parseJSON(JSON.stringify($temp))));
+        //console.log(typeof (jQuery.parseJSON(JSON.stringify($temp))));
         $("#loading",window.parent.document).show();
         $.ajax({
             url: '__CONTROLLER__/account_check',
@@ -1581,7 +1513,7 @@
                 console.log("complete");
             });
 
-        console.log($temp);
+        //console.log($temp);
     });
 </script>
 <!-- 设备选择 -->
@@ -1596,8 +1528,8 @@
             data: { device: $device },
         })
             .done(function (data) {
-                console.log("xxxxxxxxxxxxxxxxunit_data");
-                console.log(unit_data);
+                /*console.log("xxxxxxxxxxxxxxxxunit_data");
+                console.log(unit_data);*/
                 refreshDOM(unit_data, data.data);
                 $("#loading",window.parent.document).hide();
                 console.log("success");

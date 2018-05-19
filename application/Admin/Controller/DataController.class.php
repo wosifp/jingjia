@@ -1054,39 +1054,404 @@ class DataController extends AdminbaseController {
     public function operation_record(){
         /*$result = getReport("Toolkit");
         echo $result;*/ 
-        /*静态数组p——temp，保存前台已经点击过的选择按钮值*/
-        static $p_temp = array();
-        /*设置默认值*/
-        $p_temp['startDate']=isset($p_temp['startDate'])?$p_temp['startDate']:date('Y-m-d',strtotime('-1 day'));
-        $p_temp['endDate']=isset($p_temp['endDate'])?$p_temp['endDate']:date('Y-m-d');
-        $p_temp['device']=isset($p_temp['device'])?$p_temp['device']:0;
+         $p_temp = array( );
+        /*获取用户列表并压到模板*/
+        $this->assign('trade',getAccountList());
+        /*获取要被查看的账户名字*/
+        $statIds_temp = $_REQUEST["statIds"];
+        S('operation_record_pager_select',$_REQUEST['pager_select']?$_REQUEST['pager_select']:S('operation_record_pager_select'));
+        if ($_REQUEST['pager_select']=='账户') {
+            $targets = array();
+            foreach ($statIds_temp as $key => $value) {
+                $targets[] = $value['text'];
+            }
+        
+            $target = $targets[0] ?$targets[0]:0;
+            if($target){
+                session('username_normal',$target);
+            }
+        }
+        S('operation_record_optLevel',$_REQUEST['optLevel']?$_REQUEST['optLevel']:S('operation_record_optLevel'),300);
+        S('operation_record_indexselection',$_REQUEST['indexselection']?$_REQUEST['indexselection']:S('operation_record_indexselection'),300);
 
+        /*参数处理*/
+
+        $datepicker = explode(" ",  $_REQUEST['datepicker']);
+        S('operation_record_startDate',$datepicker[0]?$datepicker[0]:S('operation_record_startDate'),300);
+        S('operation_record_endDate',$datepicker[2]?$datepicker[2]:S('operation_record_endDate'),300);
+        $p_temp['startDate']=S('operation_record_startDate')?S('operation_record_startDate'):date('Y-m-d',strtotime("-30 day"));
+        $p_temp['endDate']=S('operation_record_endDate')?S('operation_record_endDate'):date('Y-m-d',strtotime("-1 day"));
+        $p_temp['optLevel']=S('operation_record_optLevel')?S('operation_record_optLevel'):3;
+        $report_json = json_decode(getReport("Toolkit",$p_temp))->body->data;
+        //var_dump($p_temp);
+        //var_dump($report_json);
+    /*参数处理end*/
+        /*获取grid数据*/
+        $content_table = array('budget' =>'预算','dailyBudget'=>'每日预算','budgetDay2Day'=>'日预算->日预算','budgetDay2Week'=>'日预算->周预算','budgetWeek2Day'=>'周预算->日预算','budgetWeek2Week'=>'周预算->周预算','zone'=>'推广地域','materialActive'=>'激活时长设置','ipExclude'=>'IP排除','queryRegion'=>'搜索意图定位','dynamicIdeaStat'=>'动态创意','updExternalFlow'=>'修改搜索合作网络出价','addPlan'=>'新建计划','delPlan'=>'删除推广计划','shelve'=>'暂停/启用推广','cycShelve'=>'推广时段管理','dailyBudget'=>'每日预算','showFac'=>'展现方式','negativeWord'=>'否定关键词','accurateNegativeWord'=>'精确否定关键词','cproJoin'=>'参加网盟推广','setCproPrice'=>'网盟推广出价','deviceCfgStat'=>'勾选投放设备','targetDevice'=>'切换投放设备','phoneNumber'=>'推广电话','bridge'=>'商桥移动咨询','mobilePrice'=>'修改移动出价','queryRegion'=>'搜索意图定位','dynamicIdeaStat'=>'动态创意','addUnit'=>'新建单元','delUnit'=>'删除单元','bidPrice'=>'修改单元出价','updUnitName'=>'编辑单元名称','negativeWord'=>'否定关键词','accurateNegativeWord'=>'精确否定关键词','mobilePriceFactor'=>'修改移动出价比例','matchPriceFactorStatus'=>'分匹配模式出价','matchPriceFactor'=>'修改分匹配模式出价','addWord'=>'添加关键词','delWord'=>'删除关键词','bidPrice'=>'修改关键词出价','updWordMatch'=>'匹配方式','active'=>'激活关键词','wordTransfer'=>'转移关键词','updWordUrl'=>'关键词URL','updWordMobileUrl'=>'移动URL','matchPrefer'=>'接受/不接受分匹配模式出价','addIdea'=>'新建创意','delIdea'=>'删除创意','updIdea'=>'编辑创意','active'=>'激活创意','deviceOpt'=>'修改设备偏好','addDynamicIdea'=>'新建动态创意','delDynamicIdea'=>'删除动态创意','updDynamicIdea'=>'修改动态创意','shelveDynamicIdea'=>'暂停/启用动态创意','addSublink'=>'新建子链','delSublink'=>'删除子链','updSublink'=>'编辑子链','shelveSublink'=>'暂停/启用子链','addAppCreative'=>'新建app推广','delAppCreative'=>'删除app推广','updAppCreative'=>'修改app推广','shelveAppCreative'=>'暂停/启用app推广','addPhoneCreative'=>'新建推广电话','delPhoneCreative'=>'删除推广电话','updPhoneCreative'=>'编辑推广电话','shelvePhoneCreative'=>'暂停/启用推广电话','addBridgeCreative'=>'新建商桥移动咨询','delBridgeCreative'=>'删除商桥移动咨询','shelveBridgeCreative'=>'暂停/启用商桥移动咨询','addLXBCreative'=>'新建网页回呼','delLXBCreative'=>'删除网页回呼','updLXBCreative'=>'编辑网页回呼','shelveLXBCreative'=>'暂停/启用网页回呼');
+
+        /*testdata  
+                 "userId": user_id, 
+                "planId": plan_id, 
+                "unitId": unit_id, 
+                "optTime": "1418642731000", 
+                "optContent": "budgetDay2Week", 
+                "optType": 4, 
+                "optLevel": 3, 
+                "oldValue": "old_value", 
+                "newValue": "new_value", 
+                "optObj": "操作对象内容" 
+
+        */
+        $testTime = strtotime('2018-05-10');
+        $testTime2 = strtotime('2018-05-05');
+        $testTime3 = strtotime('2018-05-06');
+        $testdata = array(
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime3 ,'optContent'=>'budgetDay2Week' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>10 ,'newValue'=>20 ,'optObj'=> 'obj',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime ,'optContent'=>'budgetDay2Day' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>10 ,'newValue'=>20 ,'optObj'=> 'obj',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime ,'optContent'=>'negativeWord' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>10 ,'newValue'=>20 ,'optObj'=> 'obj',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime ,'optContent'=>'negativeWord' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>10 ,'newValue'=>20 ,'optObj'=> 'obj',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime ,'optContent'=>'addUnit' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>10 ,'newValue'=>20 ,'optObj'=> 'obj',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime ,'optContent'=>'addUnit' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>10 ,'newValue'=>20 ,'optObj'=> 'obj',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime ,'optContent'=>'bidPrice' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>10 ,'newValue'=>20 ,'optObj'=> 'obj',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime3 ,'optContent'=>'bidPrice' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>30 ,'newValue'=>20 ,'optObj'=> 'obj',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime ,'optContent'=>'bidPrice' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>2.3 ,'newValue'=>5 ,'optObj'=> '斐丝丽尔',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime3 ,'optContent'=>'bidPrice' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>3.4 ,'newValue'=>2.0 ,'optObj'=> '斐丝丽尔',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime2 ,'optContent'=>'bidPrice' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>10 ,'newValue'=>40 ,'optObj'=> 'obj',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime2 ,'optContent'=>'updWordMatch' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>'短语' ,'newValue'=>'精确' ,'optObj'=> '家具',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime2 ,'optContent'=>'updWordMatch' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>'广泛' ,'newValue'=>'精确' ,'optObj'=> '家具',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime2 ,'optContent'=>'updWordMatch' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>'短语' ,'newValue'=>'广泛' ,'optObj'=> '家具',),
+            array('userId' =>'123455' ,'planId'=>'2222' ,'unitId'=> '4444','optTime'=>$testTime2 ,'optContent'=>'updWordMatch' ,'optType'=> 4,'optLevel'=>3 ,'oldValue'=>'短语' ,'newValue'=>'精确' ,'optObj'=> '家具',)) ;
+        if ($report_json) {
+            $report_tag = "真实数据";
+
+            //var_dump($report_json);
+        }else{
+            $report_tag ='**测试数据,有真实数据时自动切换为真实数据**';
+            $report_json = json_decode(json_encode($testdata));
+        }
+        
+        $grid_data = array();
+        if ($report_json) {
+            foreach ($report_json as $key => $value) {
+                $grid_data[$key]['用户id']=$value->userId;
+                $grid_data[$key]['计划id']=$value->planId;
+                $grid_data[$key]['单元id']=$value->unitId;
+                $grid_data[$key]['操作时间']=date('Y-m-d',$value->optTime);
+                $grid_data[$key]['操作内容']=$value->optContent;
+                $grid_data[$key]['操作类型']=$value->optType;
+                $grid_data[$key]['操作层级']=$value->optLevel;
+                $grid_data[$key]['操作前内容']=$value->oldValue;
+                $grid_data[$key]['操作后内容']=$value->newValue;
+                $grid_data[$key]['被操作对象名称']=$value->optObj;    
+            }
+        }
+        $this->assign('grid_data',$grid_data);
+        
+        /*总次数统计*/
+        $operation_count = array();
+        foreach ($report_json as $key => $value) {
+            $opt_value = $value->optContent;
+            //var_dump($opt_value);
+            $operation_count[$content_table[$opt_value]] = $operation_count[$content_table[$opt_value]]?$operation_count[$content_table[$opt_value]]:0 ;
+            $operation_count[$content_table[$opt_value]]++;
+            //var_dump($operation_count[$content_table[$opt_value]]);
+        }
+        $operation_total = array();
+        foreach ($operation_count as $key => $value) {
+            $operation_total['name'][] = $key;
+            $operation_total['data'][] = array('name'=>$key,'value'=>$value);
+        }
+        /*分日次数统计*/
+        $operation_count_d = array();
+        foreach ($report_json as $key => $value) {
+            $day_time = date('Y-m-d',(int)$value->optTime);
+            $opt_value =$content_table[$value->optContent] ;
+            $operation_count_d[$opt_value][$day_time] = $operation_count_d[$opt_value][$day_time]?$operation_count_d[$opt_value][$day_time]:0;
+            $operation_count_d[$opt_value][$day_time]++;
+           /* var_dump($day_time);
+            var_dump($operation_count_d[$opt_value][$day_time]);*/
+        }
+        $begin = new\DateTime($p_temp['startDate']);
+        $end = new\DateTime($p_temp['endDate']);
+        $end = $end->modify('+1 day');
+        $date_interval = new\DateInterval('P1D');
+        $date_period = new\DatePeriod($begin,$date_interval,$end);
+        foreach ($date_period as $date) {
+            $date_arr[] = $date->format('Y-m-d');
+        }
+        foreach ($date_arr as $key => $value) {
+            foreach ($operation_count_d as $k => $v) {
+                $operation_count_d[$k][$value] = $operation_count_d[$k][$value]?$operation_count_d[$k][$value]:0;
+            }
+        }
+        //var_dump($operation_count_d);
+        $operation_count_byday = array();
+        $operation_count_byday['name'] = $date_arr;
+        foreach ($operation_count_d as $key => $value) {
+            $operation_count_byday['legend'][]=$key;
+            foreach ($date_arr as $k => $v) {
+                $operation_count_byday['data'][$key][] = array('name'=>$v,'value'=>$value[$v]);
+            }
+        }
+        /*series*/
+        $series = array( );
+        foreach ($operation_count_byday['data'] as $key => $value) {
+            $series[] = array('name'=>$key,'type'=>'line','data'=>$value);
+        }
+        $operation_count_byday['series'] = $series;
+        $operation_return = array('total'=>$operation_total,'byday'=>$operation_count_byday);
+        $this->assign('operation_return',$operation_return);
+        /*keyword_price and keyword_match 假设按时间升序排列*/
+        $operation_keyword_price = array( );
+        foreach ($report_json as $key => $value) {
+            $key_time = date("Y-m-d",(int)$value->optTime);
+            if ($value->optContent== 'bidPrice') {
+                $operation_keyword_price[$value->optObj][$key_time]['oldValue'] = $operation_keyword_price[$value->optObj][$key_time]['oldValue']?$operation_keyword_price[$value->optObj][$key_time]['oldValue']:$value->oldValue;
+                $operation_keyword_price[$value->optObj][$key_time]['newValue'] = $value->newValue;
+            }
+            if ($value->optContent=='updWordMatch') {
+                $word = $value->oldValue.'->'.$value->newValue;
+                $operation_keyword_match_byday[$word][$key_time] =$operation_keyword_match_byday[$word][$key_time]?$operation_keyword_match_byday[$word][$key_time]:0;
+                $operation_keyword_match_byday[$word][$key_time]++;
+                $operation_keyword_match_total[$word] =$operation_keyword_match_total[$word]?$operation_keyword_match_total[$word]:0;
+                $operation_keyword_match_total[$word]++; 
+            }
+        }
+        /*var_dump($word);
+        var_dump($operation_keyword_price);
+        var_dump($operation_keyword_match_total);
+        var_dump($operation_keyword_match_byday);*/
+        foreach ($date_arr as $key => $value) {
+            foreach ($operation_keyword_price as $k => $v) {
+                $price_m =$v[$value]['newValue']-$v[$value]['oldValue'];
+                $operation_keyword_ptmp[$k][$value]=$price_m?$price_m:0;
+            }
+            foreach ($operation_keyword_match_byday as $k => $v) {
+                $operation_keyword_match_byday[$k][$value] = $operation_keyword_match_byday[$k][$value]?$operation_keyword_match_byday[$k][$value]:0;
+            }
+        }
+        //var_dump($operation_keyword_ptmp);
+        /*price return */
+        foreach ($operation_keyword_ptmp as $key => $value) {
+            $op_keyword_price['legend'][] = $key;
+            $op_keyword_price['name'] = $date_arr;
+            foreach ($date_arr as $k => $v) {
+                $op_keyword_price['data'][$key][]=array('name'=>$v,'value'=>$value[$v]);
+            }
+        }
+        foreach ($op_keyword_price['data'] as $key => $value) {
+            $price_series[] = array('name'=>$key,'type'=>'line','data'=>$value);
+        }
+        $op_keyword_price['series'] = $price_series;
+        $operation_return['price']= $op_keyword_price;
+        /*match return */
+        foreach ($operation_keyword_match_byday as $key => $value) {
+            $op_keyword_match_byday['legend'][] =$key;
+            $op_keyword_match_byday['name'] = $date_arr;
+            foreach ($date_arr as $k => $v) {
+                $op_keyword_match_byday['data'][$key][]=array('name'=>$v,'value'=>$value[$v]);
+            }
+        }
+        foreach ($op_keyword_match_byday['data'] as $key => $value) {
+            $match_series[] = array('name'=>$key,'type'=>'line','data'=>$value);
+        }
+        $op_keyword_match_byday['series'] = $match_series;
+        foreach ($operation_keyword_match_total as $key => $value) {
+            $op_keyword_match_total['name'][] = $key;
+            $op_keyword_match_total['data'][] = array('name'=>$key,'value'=>$value);
+        }
+        $operation_return['match_byday'] = $op_keyword_match_byday;
+        $operation_return['match_total'] = $op_keyword_match_total;
         if (IS_AJAX) {
-            # code...
-            /*如果有需要处理的前端传来的数据，先处理数据，比如范围选择，地域代码数据，*/
-             /*更新$p_temp数组*/
-            $p_unitOfTime = $_POST['unitOfTime']?$_POST['unitOfTime']:$p_temp;
-            $p_temp['order']=$_POST['order']?$_POST['order']:$p_temp['order'];
-            $datepick = explode(" ",  $_POST['datepicker']);
-            $p_temp['startDate']=$datepick[0]?$datepick[0]:$p_temp['startDate'];
-            $p_temp['endDate']=$datepick[2]?$datepick[2]:$p_temp['endDate'];
-            $p_temp['device']=$_POST['device']?$_POST['device']:$p_temp['device'];
-            
-            $param_data  = dispatch_kpijob($_POST['pager_select'],$p_temp);
-            
-            //var_dump(json_decode($param));
-
-            
-           $this->ajaxReturn($param_data);
+            $operation_record_ajax['data']['grid_data']=$grid_data;
+            $operation_record_ajax['data']['operation_return']=$operation_return;
+            $operation_record_ajax['data']['tag'] = $report_tag;
+            $this->ajaxReturn($operation_record_ajax);
         }
         
          $this->display();
     }
 /*排名优化 optimize（）*/
     public function optimize(){
-        /*参数处理*/
+         $p_temp = array( );
+        /*获取用户列表并压到模板*/
+        $this->assign('trade',getAccountList());
+        /*获取要被查看的账户名字*/
+        $statIds_temp = $_REQUEST["statIds"];
+        S('optimize_pager_select',$_REQUEST['pager_select']?$_REQUEST['pager_select']:S('optimize_pager_select'));
+        if ($_REQUEST['pager_select']=='账户') {
+            $targets = array();
+            foreach ($statIds_temp as $key => $value) {
+                $targets[] = $value['text'];
+            }
         
-        /*参数处理end*/
+            $target = $targets[0] ?$targets[0]:0;
+            if($target){
+                session('username_normal',$target);
+            }
+        }else{
+            foreach ($statIds_temp as $key => $value) {
+                $p_temp['statIds'][] =$value['value'];
+            }
+        }
+        /*参数处理*/
+        S('optimize_analysis_direction',$_REQUEST['analysis_direction']?$_REQUEST['analysis_direction']:S('optimize_analysis_direction'),300);
+        S('optimize_statIds',$p_temp['statIds']?$p_temp['statIds']:S('optimize_statIds'),300);
+        $datepicker = explode(" ",  $_REQUEST['datepicker']);
+        S('optimize_startDate',$datepicker[0]?$datepicker[0]:S('optimize_startDate'),300);
+        S('optimize_endDate',$datepicker[2]?$datepicker[2]:S('optimize_endDate'),300);
+        $p_temp['startDate']=S('optimize_startDate')?S('optimize_startDate'):date('Y-m-d',strtotime("-30 day"));
+        $p_temp['endDate']=S('optimize_endDate')?S('optimize_endDate'):date('Y-m-d',strtotime("-1 day"));
+        $p_temp['statIds'] = S('optimize_statIds')?S('optimize_statIds'):array();
+        $p_temp['unitOfTime']=8;
+       
+        //$report_json = json_decode(getReport("Toolkit",$p_temp))->body->data;
+        //var_dump($p_temp);
+        //var_dump($report_json);
+    /*参数处理end*/
+    /*获取关键词keywordService*/
+        $params_keyword['ids'] = $p_temp['statIds'];
+        $params_keyword['idType']=11;
+        $params_keyword['getTemp']=1;
+        $keyword_shadow_json = json_decode(getReport('Keyword',$params_keyword))->body->data;
+        $params_keyword['getTemp']=0;
+        $keyword_json = json_decode(getReport('Keyword',$params_keyword))->body->data;
+        foreach ($keyword_shadow_json as $key => $value) {
+            $keyword_json[]=$value;
+        }
+        foreach ($keyword_json as $key => $value) {
+            $keyword[$value->keywordId] =$value;
+        }
+    /*获取keywordReport 报告数据*/
+        $report_type = S('optimize_pager_select');
+        $keyword_report_json = json_decode(dispatch_kpijob($report_type,$p_temp))->body->data;
+
+
+        /*根据排查方向处理数据*/
+        $keyword_info = array();
+        /*if (S('optimize_analysis_direction') == '点击率低') {*/
+        /*lowctr*/
+            foreach ($keyword_report_json as $key => $value) {
+                $keyword_lowctr[$key]['id'] = $value->id;
+                $keyword_lowctr[$key]['rank'] = $value->kpis[6];
+                $keyword_lowctr[$key]['name']=$value->name[3];
+                /*排名高*/
+                if ($keyword_lowctr[$key]['rank'] <4) {
+                    $keyword_lowctr[$key]['step'][] = array('name'=>'排名高','value'=>$value->kpis[6].' 参照值：4');
+                    $keyword_lowctr[$key]['result'] = '查看创意';
+                }else{
+                    /*排名低*/
+                    $keyword_lowctr[$key]['step'][] = array('name'=>'排名低','value'=>$value->kpis[6].' 参照值：4');
+                    $keyword_lowctr[$key]['result'] = '提高关键词排名';
+                }
+            }
+        /*}elseif (S('optimize_analysis_direction')=='点击价格高') {*/
+        /*highcpc*/
+            foreach ($keyword_report_json as $key => $value) {
+                $keyword_highcpc[$key]['id'] = $value->id;
+                $keyword_highcpc[$key]['rank'] = $value->kpis[6];
+                $keyword_highcpc[$key]['name'] = $value->name[3];
+                if ($keyword_highcpc[$key]['rank'] <4) {
+                    /*排名高*/
+                    $keyword_highcpc[$key]['step'][] = array('name'=>'排名高','value'=>$value->kpis[6].' 参照值：4');
+                    /*出价高*/
+                    if ($keyword[$value->id]->price >($value->kpis[2] * 1.5)) {
+                        $keyword_highcpc[$key]['step'][] = array('name'=>'出价高','value'=>$keyword[$value->id]->price.' 参照值：'.$value->kpis[2]);
+                        /*质量度高*/
+                        if ($keyword[$value->id]->mobileQuality >4 && $keyword[$value->id]->pcQuality >4) {
+                            $keyword_highcpc[$key]['step'][] = array('name'=>'质量度高','value'=>'moblie:'.$keyword[$value->id]->mobileQuality.',pc:'.$keyword[$value->id]->pcQuality.' 参照值：4');
+                            //$keyword_highcpc[$key]['step'][] = array('name'=>'建议','value'=>'关键词商业竞争激烈');
+                            $keyword_highcpc[$key]['result'] = '关键词商业竞争激烈';
+                        }elseif($keyword[$value->id]->mobileQuality >4 || $keyword[$value->id]->pcQuality >4){
+                            if ($keyword[$value->id]->pcQuality <=4) {
+                                $keyword_highcpc[$key]['step'][] = array('name'=>'质量度移动高,pc低','value'=>'moblie:'.$keyword[$value->id]->mobileQuality.',pc:'.$keyword[$value->id]->pcQuality.' 参照值：4');
+                                //$keyword_highcpc[$key]['step'][] = array('name'=>'建议','value'=>'关键词商业竞争激烈,提高pc质量度');
+                            $keyword_highcpc[$key]['result'] = '关键词商业竞争激烈,提高pc质量度';
+                            }else{
+                                $keyword_highcpc[$key]['step'][] = array('name'=>'质量度pc高,移动低','value'=>'moblie:'.$keyword[$value->id]->mobileQuality.',pc:'.$keyword[$value->id]->pcQuality.' 参照值：4');
+                                //$keyword_highcpc[$key]['step'][] = array('name'=>'建议','value'=>'关键词商业竞争激烈,提高mobile质量度');
+                            $keyword_highcpc[$key]['result'] = '关键词商业竞争激烈,提高mobile质量度';
+                            }
+                            /*移动质量度低*/
+                        }else{
+                            $keyword_highcpc[$key]['step'][] = array('name'=>'质量度低','value'=>'moblie:'.$keyword[$value->id]->mobileQuality.',pc:'.$keyword[$value->id]->pcQuality.' 参照值：4');
+                            //$keyword_highcpc[$key]['step'][] = array('name'=>'建议','value'=>'优化关键词质量度');
+                            $keyword_highcpc[$key]['result'] = '优化关键词质量度';
+                        }
+                    }else{
+                        /*出价低*/
+                        $keyword_highcpc[$key]['step'][] = array('name'=>'出价低','value'=>$keyword[$value->id]->price.' 参照值：'.$value->kpis[2]);
+                        //$keyword_highcpc[$key]['step'][] = array('name'=>'建议','value'=>'1、检查各个创意如闪投等是否添加溢价；2、检查是否开启了自动排名出价等工具');
+                        $keyword_highcpc[$key]['result'] = '1、检查各个创意如闪投等是否添加溢价；2、检查是否开启了自动排名出价等工具';
+                    }
+                    
+                }else{
+                    /*排名低*/
+                    $keyword_highcpc[$key]['step'][] = array('name'=>'排名低','value'=>$value->kpis[6].' 参照值：4');
+                    /*出价高*/
+                    if ($keyword[$value->id]->price >($value->kpis[2] * 1.5)) {
+                        $keyword_highcpc[$key]['step'][] = array('name'=>'出价高','value'=>$keyword[$value->id]->price.' 参照值：'.$value->kpis[2]);
+                        /*质量度高*/
+                        if ($keyword[$value->id]->mobileQuality >4 && $keyword[$value->id]->pcQuality >4) {
+                            $keyword_highcpc[$key]['step'][] = array('name'=>'质量度高','value'=>'moblie:'.$keyword[$value->id]->mobileQuality.',pc:'.$keyword[$value->id]->pcQuality.' 参照值：4');
+                            //$keyword_highcpc[$key]['step'][] = array('name'=>'建议','value'=>'关键词商业竞争激烈');
+                            $keyword_highcpc[$key]['result'] = '关键词商业竞争激烈';
+                        }elseif($keyword[$value->id]->mobileQuality >4 || $keyword[$value->id]->pcQuality >4){
+                            if ($keyword[$value->id]->pcQuality <=4) {
+                                $keyword_highcpc[$key]['step'][] = array('name'=>'质量度 移动高,pc低','value'=>'moblie:'.$keyword[$value->id]->mobileQuality.',pc:'.$keyword[$value->id]->pcQuality.' 参照值：4');
+                                //$keyword_highcpc[$key]['step'][] = array('name'=>'建议','value'=>'关键词商业竞争激烈,提高pc质量度');
+                            $keyword_highcpc[$key]['result'] = '关键词商业竞争激烈,提高pc质量度';
+                            }else{
+                                $keyword_highcpc[$key]['step'][] = array('name'=>'质量度pc高,移动低','value'=>'moblie:'.$keyword[$value->id]->mobileQuality.',pc:'.$keyword[$value->id]->pcQuality.' 参照值：4');
+                                //$keyword_highcpc[$key]['step'][] = array('name'=>'建议','value'=>'关键词商业竞争激烈,提高mobile质量度');
+                            $keyword_highcpc[$key]['result'] = '关键词商业竞争激烈,提高mobile质量度';
+                            }
+                            /*移动质量度低*/
+                        }else{
+                            $keyword_highcpc[$key]['step'][] = array('name'=>'质量度低','value'=>'moblie:'.$keyword[$value->id]->mobileQuality.',pc:'.$keyword[$value->id]->pcQuality.' 参照值：4');
+                            //$keyword_highcpc[$key]['step'][] = array('name'=>'建议','value'=>'优化关键词质量度');
+                            $keyword_highcpc[$key]['result'] = '优化关键词质量度';
+                        }
+                    }else{
+                        /*出价低*/
+                        $keyword_highcpc[$key]['step'][] = array('name'=>'出价高','value'=>$keyword[$value->id]->price.' 参照值：'.$value->kpis[2]);
+                        //$keyword_highcpc[$key]['step'][] = array('name'=>'建议','value'=>'1、检查各个创意如闪投等是否添加溢价；2、检查是否开启了自动排名出价等工具');
+                        $keyword_highcpc[$key]['result'] = '1、检查各个创意如闪投等是否添加溢价；2、检查是否开启了自动排名出价等工具';
+                    }
+                    
+                }
+            }
+        //}
+
+        //var_dump($keyword_info);
+        /*格式化keyword_lowctr*/
+        $keyword_lowctr_data = array('name'=>'点击率低','children'=>array());
+        foreach ($keyword_lowctr as $key => $value) {
+            $keyword_lowctr_data['children'][$key]['name'] = $value['name'];
+            $keyword_lowctr_data['children'][$key]['children']=array(array('name'=>'建议','value'=>$value['result']));
+            for ($i=count($value['step'])-1; $i>=0  ; $i--) { 
+                $keyword_lowctr_data['children'][$key]['children']=array(array('name'=>$value['step'][$i]['name'],'value'=>$value['step'][$i]['value'],'children'=>$keyword_lowctr_data['children'][$key]['children']));
+            }
+        }
+        /*keyword_highcpc*/
+        $keyword_highcpc_data =array('name'=>'点击价格高','children'=>array());
+        foreach ($keyword_highcpc as $key => $value) {
+            $keyword_highcpc_data['children'][$key]['name'] = $value['name'];
+            $keyword_highcpc_data['children'][$key]['children']=array(array('name'=>'建议','value'=>$value['result']));
+            for ($i=count($value['step'])-1; $i>=0  ; $i--) { 
+                $keyword_highcpc_data['children'][$key]['children']=array(array('name'=>$value['step'][$i]['name'],'value'=>$value['step'][$i]['value'],'children'=>$keyword_highcpc_data['children'][$key]['children']));
+            }
+        }
+        if (IS_AJAX) {
+            $optimize_ajax['data']['p_temp'] = $p_temp;
+            $optimize_ajax['data']['keywordService'] = $keyword_json;
+            $optimize_ajax['data']['keyword_report'] = $keyword_report_json;
+            $optimize_ajax['data']['keyword_lowctr'] = $keyword_lowctr;
+            $optimize_ajax['data']['keyword_highcpc'] = $keyword_highcpc;
+            $optimize_ajax['data']['keyword_lowctr_data'] = $keyword_lowctr_data;
+            $optimize_ajax['data']['keyword_highcpc_data'] = $keyword_highcpc_data;
+            $this->ajaxReturn($optimize_ajax);
+        }
         $this->display();
     }
 

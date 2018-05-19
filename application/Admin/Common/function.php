@@ -50,6 +50,49 @@ function send_post($url, $post_data) {
 		
         return $output;    
 }
+/*返回相应服务的报告，
+参数：
+$param : 数组类型，可以修改请求参数体中 某些Key对应的键值，可为空。
+$serviceName : 服务名称(Account, Campaign , Adgroup, Keyword, Creative,NewCreative,Toolkit , DynamicCreative,DynCreativeExclusion,RealTimeData,RealTimeQueryData,RealTimePairData,ProfessionalReportId, ReportState,ReportFileUrl,BulkJob,AllChangedObjects,FileStatus,FilePath,cancelDownload,ChangedId,ChangedItemId,ChangedScale)
+*/
+function getReport($serviceName='Account',$param=array()){
+	/*获取自动添加后缀的服务名字*/
+	$param_auto=auto_completeParam($serviceName);
+
+	/*获取post请求参数体*/
+	$post_data = get_postdata($param_auto['info']);
+
+	/*获取post请求 URL*/
+	$url = get_requestURL($param_auto['postfix']);
+
+	/*decode json格式的$post_data 数据用于修改数据的成员变量*/
+	$post_data_temp = json_decode($post_data);
+
+	/*修改成员变量*/
+	if ($param) {
+		# code...
+		foreach ($param as $key => $value) {
+		# code...
+		$post_data_temp = updateItem($post_data_temp,$key,$value);
+		}
+	}
+	//var_dump($post_data_temp);
+/*将修改好的消息体 encode成json格式*/
+	$post_data = json_encode($post_data_temp);
+	//echo $url;
+	//echo $post_data;
+	if (S($post_data)) {
+		# code...
+		$output = S($post_data);
+	}else{
+		$output = send_post($url,$post_data);
+		S($post_data,$output,604800);
+	}
+	
+
+	return $output;
+
+}
 /*parameters data format:
 ["startDate"=>"2018-01-01","endDate"=>"2018-03-03"]
 函数功能：返回账户时事报告，默认平台和设备为全部，可通过参数传入选择不同平台和设备。
@@ -187,8 +230,9 @@ function getCreativeIdReport_realtime($param = array("startDate"=>"2018-01-01","
 	$resultData = array( );
 	/*时间单位设置，1,3,4,5,7，8 分别对应年、月、周、日、小时报、请求时间段*/
 	$p_statRange = isset($param['statRange'])?$param['statRange']:7;
+	
 	$p_performanceData=$param['unitOfTime'] == 7?array('impression','cost','cpc','click','ctr','cpm'):array('impression','cost','cpc','click','ctr','cpm','position','conversion','bridgeConversion');
-	$param1 = array("reportType"=>12,"levelOfDetails"=>7,'performanceData'=>$p_performanceData );
+	$param1 = array("reportType"=>12,"levelOfDetails"=>7,'performanceData'=>$p_performanceData ,'statRange'=>$p_statRange );
 	$param1 = array_merge($param,$param1);
 	
 	$resultData =json_decode(getReport("RealTimeData",$param1));
@@ -259,49 +303,7 @@ function getRegionReport_realtime($param = array("startDate"=>"2018-01-01","endD
 
 
 
-/*返回相应服务的报告，
-参数：
-$param : 数组类型，可以修改请求参数体中 某些Key对应的键值，可为空。
-$serviceName : 服务名称(Account, Campaign , Adgroup, Keyword, Creative,NewCreative,Toolkit , DynamicCreative,DynCreativeExclusion,RealTimeData,RealTimeQueryData,RealTimePairData,ProfessionalReportId, ReportState,ReportFileUrl,BulkJob,AllChangedObjects,FileStatus,FilePath,cancelDownload,ChangedId,ChangedItemId,ChangedScale)
-*/
-function getReport($serviceName='Account',$param=array()){
-	/*获取自动添加后缀的服务名字*/
-	$param_auto=auto_completeParam($serviceName);
 
-	/*获取post请求参数体*/
-	$post_data = get_postdata($param_auto['info']);
-
-	/*获取post请求 URL*/
-	$url = get_requestURL($param_auto['postfix']);
-
-	/*decode json格式的$post_data 数据用于修改数据的成员变量*/
-	$post_data_temp = json_decode($post_data);
-
-	/*修改成员变量*/
-	if ($param) {
-		# code...
-		foreach ($param as $key => $value) {
-		# code...
-		$post_data_temp = updateItem($post_data_temp,$key,$value);
-		}
-	}
-	//var_dump($post_data_temp);
-/*将修改好的消息体 encode成json格式*/
-	$post_data = json_encode($post_data_temp);
-	//echo $url;
-	//echo $post_data;
-	if (S($post_data)) {
-		# code...
-		$output = S($post_data);
-	}else{
-		$output = send_post($url,$post_data);
-		S($post_data,$output,604800);
-	}
-	
-
-	return $output;
-
-}
 /*函数实现查找并修改json数据 结构中与$key_param对应的成员的值，修改后的值为$value_param，源数据为$data_param
 $data_param  : 要修改的json数据；
 $key_param :  要查找的key值；
@@ -486,7 +488,7 @@ function getCreativeIdList($param = array()){
 			# code...
 			$keywordData[] = $v;
 		}
-		var_dump($keywordData);
+		//var_dump($keywordData);
 		foreach ($keywordData as $key => $value) {
 			# code...
 			$d1 = $all_temp;
@@ -889,6 +891,7 @@ function account_function_byregion($category='账户',$params=array()){
 }
 
 function account_function_bytire($category='账户',$params=array()){
+	//var_dump($params);
 	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
 
 	$k_avgrank_trend = json_decode(getKeywordIdReport_realtime())->body->data;

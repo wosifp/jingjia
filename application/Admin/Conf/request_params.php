@@ -90,7 +90,7 @@ getTemp 为 0 查询到的是 A, getTemp 为 1 查询到的是 A’.  	*/
 	'endDate'=>'2018-04-01',
 	'optTypes'=>null,
 	'optLevel'=>3,
-	'optContents'=>null
+	'optContents'=>array()
 	/* 具体参数参见api文档95页 */
 	),
 	

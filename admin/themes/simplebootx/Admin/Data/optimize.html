@@ -1,0 +1,403 @@
+<admintpl file="header" />
+</head>
+<script src="__PUBLIC__/js/jquery.js"></script>
+<link href="__PUBLIC__/admin/css/bootstrap.min.css" rel="stylesheet">
+<link href="__PUBLIC__/admin/css/style.css" rel="stylesheet" type="text/css" />
+<script src="__PUBLIC__/admin/js/bootstrap.min.js" type="text/javascript"></script>
+<script src="__PUBLIC__/admin/js/style.js" type="text/javascript"></script>
+<script src="__PUBLIC__/js/jquery-ui.min.js"></script>
+<script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
+<script src="__PUBLIC__/js/echarts/echarts.min.js"></script>
+<script src="__PUBLIC__/js/echarts/china.js"></script>
+<script src="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.js"></script>
+<link rel="stylesheet" href="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.min.css">
+<script type="text/javascript" src="__PUBLIC__/admin/js/functions_module.js"></script>
+
+<body>
+    <div class="qi_right_1">
+        <!-- 层级选择 -->
+        <div class="qi_con_1">
+            <ul class="pager" id="pager_select">
+                <li><a href="#">账户</a></li>
+                <li><a href="#">关键词</a></li>
+                
+            </ul>
+            <!-- <span style="color: red">* 账户必选</span> -->
+        </div>
+        <!-- 范围选择  -->
+        <div class="qi_con_1">
+            <div class="qi_float_l qi_bfb_30">
+                <p class="qi_p_2" style="display: block" id="fanwei">
+                    <span id="set_fanwei"></span>选择：
+                    <a class="btn btn-default" href="javascript:" role="button">选择 <span class="caret"></span></a>
+                    <span id="cengji" style="display: none"></span>
+                </p>
+                <div id="firstpane" class="menu_list" style="display:none">
+                    <hr>
+                    <select id="mytreeselect" multiple="multiple"></select>
+                    <button id="send_mytree" class="btn">确定</button>
+                </div>
+            </div>
+            <!--时间-->
+            <div class="qi_float_l qi_bfb_30">
+                时间：
+                <input type="text" name="date_pick" id="datepicker1">
+            </div>
+            <!--时间 end-->
+        </div>
+        <p class="qi_p_2">问题排查方向：</p>
+        <div class="qi_con_1">
+            <div class="qi_float_l qi_bfb_30">
+                <ul class="pager" id="analysis_direction">
+                    <li><a href="#">点击率低</a></li>
+                    <li><a href="#">点击价格高</a></li>
+                </ul>
+            </div>
+        </div>
+        <!--折线图-->
+        <div class="qi_con_1">
+            <p id="grid0_null">无数据</p>
+            <div id="myChart0" style="width: 900px;height:500px;display: block;"></div>
+            <div id="myChart_data" hidden="true">{$operation_return}</div>
+            <div id="myChart1" style="width: 900px;height:500px;display: none;"></div>
+        </div>
+    </div>
+    <!-- 趋势图 -->
+    <script>
+    var myChart0 = echarts.init(document.getElementById('myChart0'));
+    var myChart1 = echarts.init(document.getElementById('myChart1'));
+    var option0 = '';
+    var option1='';
+    function mypush(parent, child) {
+            var temp = null;
+            temp = [{
+                name: parent.name,
+                value: parent.value,
+                children: child
+            }];
+            return temp;
+        }
+    function set_option0($data) {
+        //echarts.dispose(myChart0);
+       /* $ppp = {
+            name: "优化",
+            children: []
+        };
+        var keyword = $data.keyword_info;
+        for (var item in keyword) {
+            var child = [{
+                name: 'advice',
+                value: keyword[item].result
+            }];
+
+            for (var item2 = keyword[item].step.length - 1; item2 >= 0; item2--) {
+                child = mypush(keyword[item].step[item2], child);
+            }
+            $ppp.children.push({
+                name: keyword[item].id,
+                children: child
+            });
+
+        }*/
+        /*var data1 = { 
+            name: "flare",    
+    
+            children: [
+                {
+                    name: "flex",
+                    value: 4116,    
+                    collapsed: null, 
+                    children: [{
+                        name:'xxx1',
+                        value:90
+                    }] 
+                },
+                {
+                    name: "ee",
+                    value: 33,    
+                    collapsed: null, 
+                    children: [{
+                        name:'xx2',
+                        value:55
+                    }] 
+                }
+            ]
+        },*/
+        if (option0) {
+                    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxoption 0 is not null");
+                    myChart0.clear();
+                }else{
+                    console.log("ooooooooooooooooption is null");
+                }
+        option0 = {
+            tooltip: {
+                trigger: 'item',
+                //triggerOn: 'mousemove',
+                formatter:'{a},{b},{c}'
+            },
+            legend: {
+                top: '2%',
+                left: '3%',
+                orient: 'vertical',
+                data: [{
+                    name: 'tree1',
+                    icon: 'rectangle'
+                }],
+                borderColor: '#c23531'
+            },
+            series: [{
+                type: 'tree',
+                name: 'tree1',
+                //data: [$ppp],
+                data:[$data.keyword_lowctr_data],
+                top: '5%',
+                left: '7%',
+                bottom: '2%',
+                //right: '60%',
+                symbol: 'rect',
+                symbolSize: 17,
+
+                label: {
+                    normal: {
+                        position: 'left',
+                        verticalAlign: 'middle',
+                        align: 'right'
+                    }
+                },
+
+                leaves: {
+                    label: {
+                        normal: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'left'
+                        }
+                    }
+                },
+
+                expandAndCollapse: true,
+
+                animationDuration: 550,
+                animationDurationUpdate: 750
+
+            }]
+        };
+        myChart0.setOption(option0, true);
+    }
+    /*tree2 */
+    function set_option1($data) {
+        if (option1) {
+                    console.log("xxxxxxxxxxxxxxxxxxxxxxxxxxxoption 1 is not null");
+                    myChart1.clear();
+                }else{
+                    console.log("ooooooooooooooooption1 is null");
+                }
+        option1 = {
+            tooltip: {
+                trigger: 'item',
+                triggerOn: 'mousemove',
+                formatter:'{a},{b},{c}'
+            },
+            legend: {
+                top: '2%',
+                left: '3%',
+                orient: 'vertical',
+                data: [{
+                    name: 'tree1',
+                    icon: 'rectangle'
+                }],
+                borderColor: '#c23531'
+            },
+            series: [{
+                type: 'tree',
+                name: 'tree1',
+                //data: [$ppp],
+                data:[$data.keyword_highcpc_data],
+                top: '5%',
+                left: '7%',
+                bottom: '2%',
+                //right: '60%',
+                symbol: 'rect',
+                symbolSize: 17,
+
+                label: {
+                    normal: {
+                        position: 'top',
+                        verticalAlign: 'middle',
+                        align: 'right'
+                    }
+                },
+
+                leaves: {
+                    label: {
+                        normal: {
+                            position: 'right',
+                            verticalAlign: 'middle',
+                            align: 'left'
+                        }
+                    }
+                },
+
+                expandAndCollapse: true,
+
+                animationDuration: 550,
+                animationDurationUpdate: 750
+
+            }]
+        };
+        myChart1.setOption(option1, true);
+    }
+    </script>
+    <!--层级 计划单元关键词创意选择pager_select-->
+    <script type="text/javascript">
+        $analysis_direction=null;
+    var tier_selected = '';
+    $("#pager_select a").click(function(event) {
+        tier_selected = $(this).text();
+        // 0415添加
+        $("#fanwei").show();
+        $("#set_fanwei").text(tier_selected);
+        //$("#beixuan").html("*默认为全部");
+        // 0415结束
+        $("#loading", window.parent.document).show();
+        $.ajax({
+            type: "post",
+            url: "__MODULE__/Ajax/handle_data_check",
+            data: {
+                pager_select: tier_selected
+            },
+            //async: false,
+            dataType: "json",
+            success: function(data) {
+                showMultiTree(tier_selected, data.data);
+                //$test_data = data.data;
+
+                $("#loading", window.parent.document).hide();
+
+            }
+        });
+    });
+    </script>
+    <!-- send_mytree -->
+    <script type="text/javascript">
+    $("#send_mytree").click(function() {
+        $("#firstpane").hide();
+        // $("#beixuan").html('');
+        // 0417添加
+        $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
+        /*使用JSON.stringify($temp)方法将object转换为json字符串*/
+        console.log(typeof(jQuery.parseJSON(JSON.stringify($temp))));
+        $("#loading", window.parent.document).show();
+        $.ajax({
+                url: '__CONTROLLER__/optimize',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    statIds: jQuery.parseJSON(JSON.stringify($temp)),
+                    pager_select: tier_selected
+                },
+            })
+            .done(function(e) {
+                $("#myChart_data").text(JSON.stringify(e.data));
+                refreshDOM();
+                $("#loading", window.parent.document).hide();
+                console.log("success");
+                console.log(e);
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });
+
+        console.log($temp);
+    });
+    </script>
+    <!-- 时间选择 -->
+    <script>
+    laydate.render({
+        elem: '#datepicker1',
+        range: true, //指定元素
+        done: function(value) {
+             $("#loading", window.parent.document).show();
+            $.ajax({
+                type: "post",
+                url: "__CONTROLLER__/optimize",
+                data: {
+                    datepicker: value
+                },
+                dataType: "json",
+                success: function(data) {
+                     $("#myChart_data").text(JSON.stringify(data.data));
+                     refreshDOM();
+                      $("#loading", window.parent.document).hide();
+                    //console.log(data);
+                }
+            });
+        }
+    });
+    </script>
+    <!-- 问题排查方向 -->
+    <script type="text/javascript">
+    $("#analysis_direction li").click(function(event) {
+
+        $analysis_direction = $(this).text();
+        refreshDOM();
+        /*$("#loading", window.parent.document).show();
+        $.ajax({
+                url: '__CONTROLLER__/optimize',
+                type: 'POST',
+                dataType: 'json',
+                data: {
+                    analysis_direction: $analysis_direction
+                },
+            })
+            .done(function(data) {
+
+                refreshDOM(data.data);
+
+                $("#loading", window.parent.document).hide();
+                console.log("success");
+            })
+            .fail(function() {
+                console.log("error");
+            })
+            .always(function() {
+                console.log("complete");
+            });*/
+
+    });
+    </script>
+    <!-- refresh_dom -->
+    <script type="text/javascript">
+    function refreshDOM() {
+        // $("#myChart_data").text(JSON.stringify($data));
+        $("#grid0_null").hide();
+        if ($analysis_direction) {
+            switch ($analysis_direction){
+            case '点击率低':
+                $("#myChart0").show();
+                $("#myChart1").hide();
+                set_option0($.parseJSON($("#myChart_data").text()));
+                break;
+            case '点击价格高' :
+                $("#myChart1").show();
+                $("#myChart0").hide();
+                set_option1($.parseJSON($("#myChart_data").text()));
+                break;
+            default:
+                $("#myChart0").show();
+                $("#myChart1").hide();
+                set_option0($.parseJSON($("#myChart_data").text()));
+                break;
+        }
+        }else{
+            $("#myChart0").hide();
+            $("#myChart1").hide();
+        }
+    }
+    </script>
+</body>
+
+</html>

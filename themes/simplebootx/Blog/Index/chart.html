@@ -6,13 +6,14 @@
     <script src="__PUBLIC__/js/jquery.js"></script>
     <script src="__PUBLIC__/js/echarts/echarts.js"></script>
     <style>#echarts1 {width:500px; height: 600px;margin: auto;}</style>
+    <script type="text/javascript" src="__PUBLIC__/test.js"></script>
 </head>
 <body>
    <div id="echarts1" ></div>
    <button id="change">bar</button>
    <button id="changetoline">line</button>
 <script type="text/javascript">
-    
+    test();
     var mychart1 = echarts.init(document.getElementById('echarts1'));
     var app={};
     var  option = {

@@ -1,15 +1,11 @@
 <admintpl file="header" />
 </head>
-<!-- <script src="__PUBLIC__/js/jqueryh/jquery-3.3.1.min.js"></script> -->
 <script src="__PUBLIC__/js/jquery.js"></script>
 <link href="__PUBLIC__/admin/css/bootstrap.min.css" rel="stylesheet">
 <link href="__PUBLIC__/admin/css/style.css" rel="stylesheet" type="text/css" />
 <script src="__PUBLIC__/admin/js/bootstrap.min.js" type="text/javascript"></script>
 <script src="__PUBLIC__/admin/js/style.js" type="text/javascript"></script>
 <script src="__PUBLIC__/js/jquery-ui.min.js"></script>
-<!--<script src="__PUBLIC__/admin/js/laydate.js"></script>-->
-<!--<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate.css">-->
-<!--<link type="text/css" rel="stylesheet" href="__PUBLIC__/admin/css/laydate(1).css" id="LayDateSkin">-->
 <script src="__PUBLIC__/js/datePicker/laydate/laydate.js"></script>
 <script src="__PUBLIC__/js/echarts/echarts.min.js"></script>
 <script src="__PUBLIC__/js/echarts/china.js"></script>
@@ -17,297 +13,571 @@
 <link rel="stylesheet" href="__PUBLIC__/tree-multiselect/jquery.tree-multiselect.min.css">
 <link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid.css" />
 <link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid-theme.css" />
-    
+<link href="__PUBLIC__/js/areapicker/zyzn_1.css" type="text/css" rel="stylesheet">
 <script type="text/javascript" src="__PUBLIC__/js/jsgrid/jsgrid.js"></script>
-<link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid.css" />
-<link type="text/css" rel="stylesheet" href="__PUBLIC__/js/jsgrid/jsgrid-theme.css" />
-    
-<script type="text/javascript" src="__PUBLIC__/js/jsgrid/jsgrid.js"></script>
+<script src="__PUBLIC__/js/areapicker/City_data.js"></script>
+<script src="__PUBLIC__/js/areapicker/areadata.js"></script>
+<script src="__PUBLIC__/js/areapicker/auto_area.js"></script>
+
 <body>
     <div class="qi_right_1">
+        <!-- 范围选择  -->
         <div class="qi_con_1">
-           <ul class="pager" id="unitoftime">
-                <li id="points" value="5"><a href="#">关键词添加</a></li>
-                <li value="7"><a href="#">关键词价格</a></li>
-                <li value="4"><a href="#">匹配方式</a></li>
-                <li value="3"><a href="#" id="monthly">创意</a></li>
-                <li value="1"><a href="#">否定词添加</a></li>
-                <!-- <li value="22"><a href="#">设备对比</a></li>
-                <li value="33"><a href="#">地域分布</a></li>
-                <li value="44"><a href="#">层级分布</a></li>
-                <li value="55"><a href="#">数据构成</a></li> -->
-                <!--<li value="66"><a href="#">关键词对比</a></li>-->
-                <!--<li value="77"><a href="#">质量度</a></li>-->
-            </ul>
-        </div>
-        <div class="qi_con_1">
+            <div class="qi_float_l qi_bfb_30">
+                <p class="qi_p_2" style="display: block" id="fanwei">
+                    <span id="set_fanwei"></span>范围：
+                    <a class="btn btn-default" href="javascript:" role="button" id="account_select">选择 <span class="caret"></span></a>
+                    <span id="cengji" style="display: none"></span>
+                </p>
+                <div id="firstpane" class="menu_list" style="display:none">
+                    <hr>
+                    <select id="mytreeselect" multiple="multiple"></select>
+                    <button id="send_mytree" class="btn">确定</button>
+                </div>
+            </div>
             <!--时间-->
             <div class="qi_float_l qi_bfb_30">
                 时间：
                 <input type="text" name="date_pick" id="datepicker1">
-                <script>
-                laydate.render({
-                    elem: '#datepicker1',
-                    range: true, //指定元素
-                    done: function(value) {
-                        $.ajax({
-                            type: "post",
-                            url: "__CONTROLLER__/operation_record",
-                            data: {
-                                datepicker: value,
-                                abcd:"sdf"
-
-                            },
-                            dataType: "json",
-                            success: function(data) {
-                                console.log(data);
-                            }
-                        });
-                    }
-                });
-                </script>
+            </div>
+            <div class="qi_float_l qi_bfb_30">
+                <span id="data_tag" style="color: 'red';"></span>
             </div>
             <!--时间 end-->
-            <div class="qi_float_l qi_bfb_30" id="zhanghu" style="color: red">
-            </div>
         </div>
-        <ul class="pager" id="page_select">
-                    <li style="display: none" class="zhexian"><a href="#">折线图</a></li>
-                    <li style="display: none" class="zhutu"><a href="#">柱状体</a></li>
-                    <li style="display: none" class="pingtu"><a href="#">平涂</a></li>
-                    <li style="display: none" class="dietu"><a href="#">堆叠图</a></li>
-                    <li style="display: none" class="bingtu"><a href="#">饼图</a></li>
-                    <li style="display: none" class="quyu"><a href="#">区域图</a></li>
-                    <li style="display: none" class="sandian"><a href="#">散点图</a></li>
-                </ul>
-                <!--折线图-->
-            <div id="myChart0" style="width: 600px;height:400px;display: block;"></div>
-            <div id="myChart6" style="width: 600px;height:400px;display: block;">
-                
-
-            </div>
-            <div><label>详情</label></div>
-            <div id="jsGrid"></div>
-            <script>
-    var clients = [
-        { "Name": "Otto Clay", "Age": 25, "Country": 1, "Address": "Ap #897-1459 Quam Avenue", "Married": false }
-        
-    ];
-
-    var countries = [
-        { Name: "", Id: 0 },
-        { Name: "账户", Id: 1 },
-        { Name: "计划", Id: 2 },
-        { Name: "单元", Id: 3 },
-        { Name: "操作时间", Id: 4 },
-        { Name: "操作内容", Id: 5 },
-        { Name: "操作类型", Id: 6 },
-        { Name: "操作层级", Id: 7 },
-        { Name: "操作前内容", Id: 8 },
-        { Name: "操作后内容", Id: 9 },
-        { Name: "被操作对象名称", Id: 9 }
-
-    ];
-
-    $("#jsGrid").jsGrid({
-        width: "100%",
-        height: "400px",
-
-        //inserting: true,
-        //editing: true,
-        sorting: true,
-        paging: true,
-
-        data: clients,
-
-        fields: [
-            { name: "账户", type: "text", validate: "required" },
-            { name: "计划", type: "text", width: 50 },
-            { name: "单元", type: "text" },
-            { name: "操作时间", type: "text",  textField: "Name" },
-            { name: "操作内容", type: "text", sorting: false },
-            { name: "操作类型", type: "text", sorting: false },
-            { name: "操作层级", type: "text", sorting: false },
-            { name: "操作前内容", type: "text", sorting: false },
-            { name: "操作后内容", type: "text", sorting: false },
-            { name: "被操作对象名称", type: "text", sorting: false }
-        ]
-    });
-</script>
-            <script>
-            var myChart0 = echarts.init(document.getElementById('myChart0'));
-            var option0 = {
-                toolbox: {
-                    feature: {
-                        saveAsImage: {
-                            pixelRatio: 3
-                        }
-                    }
-                },
-                xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    type: 'line',
-                    smooth: true
-                }]
-            };
-            myChart0.setOption(option0);
-            </script>
-            <!--柱状图-->
-
-            <!--饼图-->
-            <div id="myChart3" style="width: 600px;height:400px;display: none;"></div>
-            <script>
-            var myChart3 = echarts.init(document.getElementById('myChart3'));
-            var option3 = {
-                toolbox: {
-                    feature: {
-                        saveAsImage: {
-                            pixelRatio: 3
-                        }
-                    }
-                },
-                title: {
-                    text: '某站点用户访问来源',
-                    subtext: '纯属虚构',
-                    x: 'center'
-                },
-                tooltip: {
-                    trigger: 'item',
-                    formatter: "{a} <br/>{b} : {c} ({d}%)"
-                },
-                legend: {
-                    orient: 'vertical',
-                    left: 'left',
-                    data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
-                },
-                series: [{
-                    name: '访问来源',
-                    type: 'pie',
-                    radius: '55%',
-                    center: ['50%', '60%'],
-                    data: [{
-                        value: 335,
-                        name: '直接访问'
-                    }, {
-                        value: 310,
-                        name: '邮件营销'
-                    }, {
-                        value: 234,
-                        name: '联盟广告'
-                    }, {
-                        value: 135,
-                        name: '视频广告'
-                    }, {
-                        value: 1548,
-                        name: '搜索引擎'
-                    }],
-                    itemStyle: {
-                        emphasis: {
-                            shadowBlur: 10,
-                            shadowOffsetX: 0,
-                            shadowColor: 'rgba(0, 0, 0, 0.5)'
-                        }
-                    }
-                }]
-            };
-            myChart3.setOption(option3);
-            </script>
-            <div id="myChart1" style="width: 600px;height:400px;display: none;"></div>
-            <script>
-            var myChart1 = echarts.init(document.getElementById('myChart1'));
-            var option1 = {
-                toolbox: {
-                    feature: {
-                        saveAsImage: {
-                            pixelRatio: 3
-                        }
-                    }
-                },
-                xAxis: {
-                    type: 'category',
-                    data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
-                },
-                yAxis: {
-                    type: 'value'
-                },
-                series: [{
-                    data: [820, 932, 901, 934, 1290, 1330, 1320],
-                    type: 'bar',
-                    smooth: true
-                }]
-            };
-            myChart1.setOption(option1);
-            </script>
-            <!-- 频率直方图 -->
-            <script type="text/javascript">
-              var myChart6 = echarts.init(document.getElementById('myChart6'));  
-
-
-var option6 = {
-    tooltip : {
-        trigger: 'axis',
-        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-        }
-    },
-    legend: {
-        data: [ '关键词修改频率直方图',]
-    },
-    grid: {
-        left: '3%',
-        right: '4%',
-        bottom: '3%',
-        containLabel: true
-    },
-    xAxis:  {
-        type: 'value'
-    },
-    yAxis: {
-        type: 'category',
-        data: ['key1','key2','key3','key4']
-    },
-    series: [
-        {
-            name: '关键词修改频率直方图',
-            type: 'bar',
-            stack: '总量',
-            label: {
-                normal: {
-                    show: true,
-                    position: 'insideRight'
-                }
-            },
-            data: [292, 87, 16, 125]
-        },
-
-    ]
-};
- myChart6.setOption(option6);
-            </script>
+        <!-- 层级选择 -->
         <div class="qi_con_1">
-            
-            <!--计划单元关键词创意选择pager_select-->
-            <script type="text/javascript">
-            $("#pager_select a").click(function(event) {
-                /* Act on the event */
+            <ul class="pager" id="optLevel_select">
+                <li value="3"><a href="#">账户</a></li>
+                <li value="2"><a href="#">计划</a></li>
+                <li value="1"><a href="#">单元</a></li>
+                <li value="5"><a href="#">关键词</a></li>
+                <li value="4"><a href="#">创意</a></li>
+            </ul>
+        </div>
+        <div class="qi_con_1">
+            <ul class="pager" id="chart_select">
+                <li id="chart_byday"><a href="#">每日</a></li>
+                <li id="chart_total"><a href="#">按时间段</a></li>
+                <li id="chart_direction"><a href="#">修改方向</a></li>
+                <li id="chart_frequency"><a href="#">频率</a></li>
+                <li id="chart_match_total"><a href="#">匹配方式按时间段</a></li>
+                <li id="chart_keyword_price"><a href="#">价格修改</a></li>
+                <li id="chart_match_byday"><a href="#">匹配方式按日</a></li>
+            </ul>
+        </div>
+    <!--折线图-->
+        <div class="qi_con_1">
+            <p id="grid0_null">无数据</p>
+            <div id="myChart0" style="width: 900px;height:500px;display: block;"></div>
+            <div id="myChart_data" hidden="true">{$operation_return}</div>
+        </div>
+        <!-- <div class="qi_con_1">
+             <p id="grid1_null" >无数据</p>
+            <div id="myChart1" style="width: 900px;height:500px;display: block;">
+            </div>
+        </div> -->
+    <!-- grid -->
+        <div class="qi_con_1">
+            <p class="qi_p_4">详细</p>
+            <p id="grid_null">无数据</p>
+            <div id="jsGrid"></div>
+            <div id="grid_data" hidden="true">{$grid_data}</div>
+        </div>
+    <!-- jsgrid -->
+        <script>
+        function set_grid_option($data) {
+            if ($data) {
+                $("#grid_null").hide();
+                var clients = $data;
+                var grid_option_1 = {
+                    width: "100%",
+                    height: "400px",
+                    sorting: true,
+                    paging: true,
 
-                $value1 = $(this).text();
-                console.log($value1);
-                $.ajax({
+                    data: clients,
+
+                    fields: [{
+                        name: "账户id",
+                        type: "text"
+                    }, {
+                        name: "计划id",
+                        type: "text"
+                    }, {
+                        name: "单元id",
+                        type: "text"
+                    }, {
+                        name: "操作时间",
+                        type: "text",
+                        textField: "Name"
+                    }, {
+                        name: "操作内容",
+                        type: "text"
+                    }, {
+                        name: "操作类型",
+                        type: "text"
+                    }, {
+                        name: "操作层级",
+                        type: "text"
+                    }, {
+                        name: "操作前内容",
+                        type: "text"
+                    }, {
+                        name: "操作后内容",
+                        type: "text"
+                    }, {
+                        name: "被操作对象名称",
+                        type: "text"
+                    }]
+                };
+                $("#jsGrid").jsGrid(grid_option_1);
+            } else {
+                $("#grid_null").show();
+            }
+        }
+        </script>
+    <!-- 趋势图 -->
+        <script>
+        var myChart0 = echarts.init(document.getElementById('myChart0'));
+        var option0 = '';
+        var option_price = '';
+        var option_match_byday = '';
+        var option_match_total = '';
+
+        function set_option0($data) {
+            if ($data.series) {
+                $("#grid0_null").hide();
+                option0 = {
+                    title: {
+                        text: '日修改次数统计',
+                        left: 'center'
+                    },
+                    legend: {
+                        data: $data.legend,
+                        top: '10%'
+                    },
+                    toolbox: {
+                        left: '5%',
+                        top: 'auto',
+                        itemSize: 20,
+                        feature: {
+                            magicType: {
+                                type: ['line', 'bar']
+                            },
+                            saveAsImage: {
+                                pixelRatio: 3
+                            }
+                        }
+                    },
+
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: '10%',
+                        top: '20%',
+                        right: '10%',
+                        bottom: '15%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        axisLabel: {
+                            interval: 0,
+                            rotate: 45,
+                        },
+                        data: $data.name
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    dataZoom: [{
+                        type: 'slider',
+                        show: true,
+                        start: 0,
+                        end: 100,
+                        handleSize: 8
+                    }, {
+                        type: 'inside',
+                        start: 0,
+                        end: 100
+                    }, {
+                        type: 'slider',
+                        show: true,
+                        yAxisIndex: 0,
+                        filterMode: 'empty',
+                        width: 12,
+                        height: '70%',
+                        handleSize: 8,
+                        showDataShadow: false,
+                        left: '93%'
+                    }],
+                    series: $data.series
+                        /* series: [{
+                             data: [820, 932, 901, 934, 1290, 1330, 1320],
+                             type: 'line',
+                             smooth: true
+                         }]*/
+                };
+                myChart0.setOption(option0, true);
+            } else {
+                $("#grid0_null").show();
+            }
+
+        }
+        </script>
+    <!-- match byday  -->
+        <script type="text/javascript">
+        function set_option_match_byday($data) {
+            if ($data.series) {
+                $("#grid0_null").hide();
+                option_match_byday = {
+                    title: {
+                        text: '匹配方式趋势',
+                        left: 'center'
+                    },
+                    legend: {
+                        data: $data.legend,
+                        top: '10%'
+                    },
+                    toolbox: {
+                        left: '5%',
+                        top: 'auto',
+                        itemSize: 20,
+                        feature: {
+                            magicType: {
+                                type: ['line', 'bar']
+                            },
+                            saveAsImage: {
+                                pixelRatio: 3
+                            }
+                        }
+                    },
+
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: '10%',
+                        top: '20%',
+                        right: '10%',
+                        bottom: '15%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        axisLabel: {
+                            interval: 0,
+                            rotate: 45,
+                        },
+                        data: $data.name
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    dataZoom: [{
+                        type: 'slider',
+                        show: true,
+                        start: 0,
+                        end: 100,
+                        handleSize: 8
+                    }, {
+                        type: 'inside',
+                        start: 0,
+                        end: 100
+                    }, {
+                        type: 'slider',
+                        show: true,
+                        yAxisIndex: 0,
+                        filterMode: 'empty',
+                        width: 12,
+                        height: '70%',
+                        handleSize: 8,
+                        showDataShadow: false,
+                        left: '93%'
+                    }],
+                    series: $data.series
+                        /* series: [{
+                             data: [820, 932, 901, 934, 1290, 1330, 1320],
+                             type: 'line',
+                             smooth: true
+                         }]*/
+                };
+                myChart0.setOption(option_match_byday, true);
+            } else {
+                $("#grid0_null").show();
+            }
+
+        }
+        </script>
+    <!-- option price  -->
+        <script type="text/javascript">
+        function set_option_price($data) {
+            if ($data.series) {
+                $("#grid0_null").hide();
+                option_price = {
+                    title: {
+                        text: '价格变化量趋势',
+                        left: 'center'
+                    },
+                    legend: {
+                        data: $data.legend,
+                        top: '10%'
+                    },
+                    toolbox: {
+                        left: '5%',
+                        top: 'auto',
+                        itemSize: 20,
+                        feature: {
+                            magicType: {
+                                type: ['line', 'bar']
+                            },
+                            saveAsImage: {
+                                pixelRatio: 3
+                            }
+                        }
+                    },
+
+                    tooltip: {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        left: '10%',
+                        top: '20%',
+                        right: '10%',
+                        bottom: '15%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        axisLabel: {
+                            interval: 0,
+                            rotate: 45,
+                        },
+                        data: $data.name
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    dataZoom: [{
+                        type: 'slider',
+                        show: true,
+                        start: 0,
+                        end: 100,
+                        handleSize: 8
+                    }, {
+                        type: 'inside',
+                        start: 0,
+                        end: 100
+                    }, {
+                        type: 'slider',
+                        show: true,
+                        yAxisIndex: 0,
+                        filterMode: 'empty',
+                        width: 12,
+                        height: '70%',
+                        handleSize: 8,
+                        showDataShadow: false,
+                        left: '93%'
+                    }],
+                    series: $data.series
+                        /* series: [{
+                             data: [820, 932, 901, 934, 1290, 1330, 1320],
+                             type: 'line',
+                             smooth: true
+                         }]*/
+                };
+                myChart0.setOption(option_price, true);
+            } else {
+                $("#grid0_null").show();
+            }
+
+        }
+        </script>
+    <!-- 频率直方图 -->
+        <script type="text/javascript">
+        //var myChart1 = echarts.init(document.getElementById('myChart1'));
+        var option1 = '';
+
+        function set_option1($data) {
+            if ($data) {
+                $("#grid1_null").hide();
+                option1 = {
+                    title: {
+                        text: "时间段内修改总次数",
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data: $data.name
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: $data.name
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                            name: '',
+                            type: 'bar',
+
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'insideRight'
+                                }
+                            },
+                            data: $data.data
+                        },
+
+                    ]
+                };
+                myChart0.setOption(option1, true);
+            } else {
+                $("#grid1_null").show();
+            }
+
+        }
+        </script>
+    <!-- match total -->
+        <script type="text/javascript">
+        function set_option_match_total($data) {
+            if ($data) {
+                $("#grid1_null").hide();
+                option_match_total = {
+                    title: {
+                        text: "时间段内修改总次数",
+                        left: 'center'
+                    },
+                    tooltip: {
+                        trigger: 'axis',
+                        axisPointer: { // 坐标轴指示器，坐标轴触发有效
+                            type: 'shadow' // 默认为直线，可选为：'line' | 'shadow'
+                        }
+                    },
+                    legend: {
+                        data: $data.name
+                    },
+                    grid: {
+                        left: '3%',
+                        right: '4%',
+                        bottom: '3%',
+                        containLabel: true
+                    },
+                    xAxis: {
+                        type: 'category',
+                        data: $data.name
+                    },
+                    yAxis: {
+                        type: 'value'
+                    },
+                    series: [{
+                            name: '',
+                            type: 'bar',
+
+                            label: {
+                                normal: {
+                                    show: true,
+                                    position: 'insideRight'
+                                }
+                            },
+                            data: $data.data
+                        },
+
+                    ]
+                };
+                myChart0.setOption(option_match_total, true);
+            } else {
+                $("#grid1_null").show();
+            }
+
+        }
+        </script>
+  
+    <!-- 页面加载 -->
+        <script type="text/javascript">
+        $(function() {
+            $("#chart_select li").hide();
+        })
+        </script>
+    <!-- 账户选择 -->
+        <script type="text/javascript">
+        $("#account_select").click(function(event) {
+            $("#loading", window.parent.document).show();
+            $.ajax({
+                type: "post",
+                url: "__MODULE__/Ajax/handle_data_check",
+                data: {
+                    pager_select: "账户"
+                },
+                async: false,
+                dataType: "json",
+                success: function(data) {
+
+                    $test_data = data.data;
+                    $("#loading", window.parent.document).hide();
+                }
+            });
+            $("#mytreeselect").empty();
+            $("#firstpane div").empty();
+            $("#firstpane div").remove();
+            $.each($test_data, function(index, val) {
+                $.each(val, function(index1, val1) {
+                    $.each(val1, function(index2, val2) {
+                        $("#mytreeselect ").append('<option value=' + val2.id + ' data-section="' + index + '/' + index1 + '">' + val2.user_login + '</option>');
+                    });
+                });
+            });
+
+            option_tree1_0 = {
+                allowBatchSelection: true,
+                enableSelectAll: true,
+                searchable: true,
+                sortable: true,
+                startCollapsed: true,
+                onChange: function(text, value, initialIndex, section) {
+                    $temp = text;
+                    console.log($temp);
+                }
+            };
+            $tree1 = $("#mytreeselect").treeMultiselect(option_tree1_0);
+        });
+        $("#send_mytree").click(function() {
+            $("#firstpane").hide();
+            $("#beixuan").html('');
+            // 0417添加
+            $("#cengji").text(jQuery.parseJSON(JSON.stringify($temp)));
+            /*使用JSON.stringify($temp)方法将object转换为json字符串*/
+            /* console.log(typeof(jQuery.parseJSON(JSON.stringify($temp))));*/
+            $("#loading", window.parent.document).show();
+            $.ajax({
                     url: '__CONTROLLER__/operation_record',
                     type: 'POST',
                     dataType: 'json',
-                    data: {pager_select: $value1},
+                    data: {
+                        statIds: jQuery.parseJSON(JSON.stringify($temp)),
+                        pager_select: "账户"
+                    },
                 })
-                .done(function(e) {
+                .done(function(data) {
+                    refreshDOM(data.data);
+                    $("#loading", window.parent.document).hide();
                     console.log("success");
+                    /*console.log(data);
+                    alert("account_select");*/
                 })
                 .fail(function() {
                     console.log("error");
@@ -315,201 +585,125 @@ var option6 = {
                 .always(function() {
                     console.log("complete");
                 });
-                
+
+            /* console.log($temp);*/
+        });
+        </script>
+    <!-- 时间选择 -->
+        <script>
+        laydate.render({
+            elem: '#datepicker1',
+            range: true, //指定元素
+            done: function(value) {
                 $.ajax({
                     type: "post",
-                    url: "__MODULE__/Ajax/handle_data_check",
+                    url: "__CONTROLLER__/operation_record",
                     data: {
-                        pager_select: $value1
+                        datepicker: value,
+                        abcd: "sdf"
+
                     },
-                    async: false,
                     dataType: "json",
                     success: function(data) {
-
-                        $test_data = data.data;
-
+                        console.log(data);
                     }
                 });
-                $("#mytreeselect").empty();
-                $("#firstpane div").empty();
-                $("#firstpane div").remove();
-                // $test_data =$.parseJSON('{$page_1}');
-                console.log($test_data);
-                if ($value1 == "计划") {
-                    $.each($test_data, function(index, val) {
-                        $.each(val, function(index1, val1) {
-                            $("#mytreeselect ").append('<option value=' + val1.campaignId + ' data-section="' + index + '">' + val1.campaignName + '</option>');
-                        });
-                    });
-                }
-                if ($value1 == "单元") {
-                    $.each($test_data, function(index, val) {
-
-                        $.each(val, function(index1, val1) {
-            
-                            $.each(val1, function(index2, val2) {
-                                 /* iterate through array or object */
-                                 $("#mytreeselect ").append('<option value=' + val2.adgroupId + ' data-section="' + index+'/'+index1 + '">' + val2.adgroupName + '</option>');
-                            });
-                        });
-                    });
-                }
-                if ($value1=="关键词") {
-$.each($test_data, function(index, val) {
-                    $.each(val, function(index1, val1) {
-                            $.each(val1, function(index2, val2) {
-                                 $.each(val2, function(index3, val3) {
-$("#mytreeselect ").append('<option value=' + val3.keywordId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.keyword + '</option>'); 
-                                 });
-                                 
-                            });
-                        });
-                    });  
-                }
-                if ($value1=="创意") {
-$.each($test_data, function(index, val) {
-                    $.each(val, function(index1, val1) {
-                            $.each(val1, function(index2, val2) {
-                                 $.each(val2, function(index3, val3) {
-$("#mytreeselect ").append('<option value=' + val3.creativeId + ' data-section="' + index+'/'+index1 +'/'+index2+ '">' + val3.title + '</option>'); 
-                                 });
-                                 
-                            });
-                        });
-                    });  
-                }
-
-
-                $tree1 = $("#mytreeselect").treeMultiselect({
-                    allowBatchSelection: true,
-                    enableSelectAll: true,
-                    searchable: true,
-                    sortable: true,
-                    startCollapsed: true,
-                    onChange: function(text, value, initialIndex, section) {
-                        $temp = text;
-                    }
+            }
+        });
+        </script>
+    <!-- optLevel_select -->
+        <script type="text/javascript">
+        $("#optLevel_select li").click(function(event) {
+            var optLevel_value = $(this).val();
+            $("#chart_select li").hide();
+            $("#chart_byday").show();
+            $("#chart_total").show();
+            $("#chart_frequency").show();
+            switch (optLevel_value) {
+                case 1:
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    $("#chart_byday").show();
+                    $("#chart_total").show();
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    //$("#chart_direction").show();
+                    $("#chart_match_byday").show();
+                    $("#chart_match_total").show();
+                    $("#chart_keyword_price").show();
+                    break;
+                default:
+                    break;
+            }
+            $("#loading", window.parent.document).show();
+            $.ajax({
+                    url: '__CONTROLLER__/operation_record',
+                    type: 'POST',
+                    dataType: 'json',
+                    data: {
+                        optLevel: optLevel_value
+                    },
+                })
+                .done(function(data) {
+                    refreshDOM(data.data);
+                    $("#loading", window.parent.document).hide();
+                    console.log("success");
+                })
+                .fail(function(e) {
+                    $("#loading", window.parent.document).hide();
+                    //refreshDOM(null);
+                    console.log("error");
+                })
+                .always(function() {
+                    console.log("complete");
                 });
 
+            console.log($(this).val());
+        });
+        </script>
+    <!-- chart_select事件响应 -->
+        <script type="text/javascript">
+        $("#chart_byday").click(function(event) {
+            set_option0($.parseJSON($("#myChart_data").text()).operation_return.byday);
+        });
+        $("#chart_total").click(function(event) {
+            set_option1($.parseJSON($("#myChart_data").text()).operation_return.total);
+            /*console.log($.parseJSON($("#myChart_data").text()).operation_return.total);*/
+        });
+        $("#chart_match_byday").click(function(event) {
+            set_option_match_byday($.parseJSON($("#myChart_data").text()).operation_return.match_byday);
+        });
+        $("#chart_keyword_price").click(function(event) {
+            set_option_price($.parseJSON($("#myChart_data").text()).operation_return.price);
+        });
+        $("#chart_match_total").click(function(event) {
+            set_option_match_total($.parseJSON($("#myChart_data").text()).operation_return.match_total);
+        });
+        </script>
+    <!-- refresh_dom -->
+        <script type="text/javascript">
+        function refreshDOM($data) {
+            $("#myChart_data").text(JSON.stringify($data));
+            $("#data_tag").text($data.tag);
+            if ($data) {
+                if ($data.grid_data) {
+                    set_grid_option($data.grid_data);
+                } else {
+                    set_grid_option(null);
+                }
+                set_option0($data.operation_return.byday);
+                /*set_option1($data.operation_return.total);*/
 
-            });
-            </script>
-    </div>
+            } else {
+                set_grid_option(null);
+            }
+
+        }
+        </script>
 </body>
 
 </html>
-<script type="text/javascript">
-$("#unitoftime li").click(function() {
-    var unit_data = $(this).val();
-    //console.log($unit_data);
-    if (unit_data == 1 || unit_data == 3 || unit_data == 4 || unit_data == 5 || unit_data == 7) {
-        $(".zhexian").css('display', 'block');
-        $(".zhutu").css('display', 'block');
-        $("#page_select li").not(".zhexian").not(".zhutu").css('display', 'none');
-        $("#myChart0").css('display', 'block');
-        $("#myChart1").css('display', 'none');
-        $("#myChart2").css('display', 'none');
-        $("#myChart3").css('display', 'none');
-        $("#myChart4").css('display', 'none');
-        $("#myChart5").css('display', 'none');
-    }
-    if (unit_data == 22) { //设备对比 平涂
-        $(".pingtu").css('display', 'block');
-        $("#page_select li").not(".pingtu").css('display', 'none');
-        $("#myChart0").css('display', 'none');
-        $("#myChart1").css('display', 'none');
-        $("#myChart2").css('display', 'block');
-        $("#myChart3").css('display', 'none');
-        $("#myChart4").css('display', 'none');
-        $("#myChart5").css('display', 'none');
-    }
-    if (unit_data == 33) { // 地域分布 区域图、散点图
-        $(".quyu").css('display', 'block');
-        $(".sandian").css('display', 'block');
-        $("#page_select li").not(".quyu").not(".sandian").css('display', 'none');
-        $("#myChart0").css('display', 'none');
-        $("#myChart1").css('display', 'none');
-        $("#myChart2").css('display', 'none');
-        $("#myChart3").css('display', 'none');
-        $("#myChart4").css('display', 'block');
-        $("#myChart5").css('display', 'none');
-
-    }
-    if (unit_data == 55) { // 数据构成 饼图
-        $(".bingtu").css('display', 'block');
-        $("#page_select li").not(".bingtu").css('display', 'none');
-        $("#myChart0").css('display', 'none');
-        $("#myChart1").css('display', 'none');
-        $("#myChart2").css('display', 'none');
-        $("#myChart3").css('display', 'block');
-        $("#myChart4").css('display', 'none');
-        $("#myChart5").css('display', 'none');
-    }
-
-    $.ajax({
-        type: "post",
-        url: "__MODULE__/Data/data_check",
-        data: {
-            unit_data: unit_data
-        },
-        dataType: "json",
-        success: function(data) {
-            alert(111111);
-        }
-    })
-})
-
-$(".zhexian").click(function() {
-    $("#myChart0").css('display', 'block');
-    $("#myChart1").css('display', 'none');
-    $("#myChart2").css('display', 'none');
-    $("#myChart3").css('display', 'none');
-    $("#myChart4").css('display', 'none');
-    $("#myChart5").css('display', 'none');
-});
-
-$(".zhutu").click(function() {
-    $("#myChart0").css('display', 'none');
-    $("#myChart1").css('display', 'block');
-    $("#myChart2").css('display', 'none');
-    $("#myChart3").css('display', 'none');
-    $("#myChart4").css('display', 'none');
-    $("#myChart5").css('display', 'none');
-});
-
-$(".pingtu").click(function() {
-    $("#myChart0").css('display', 'none');
-    $("#myChart1").css('display', 'none');
-    $("#myChart2").css('display', 'block');
-    $("#myChart3").css('display', 'none');
-    $("#myChart4").css('display', 'none');
-    $("#myChart5").css('display', 'none');
-});
-
-$(".bingtu").click(function() {
-    $("#myChart0").css('display', 'none');
-    $("#myChart1").css('display', 'none');
-    $("#myChart2").css('display', 'none');
-    $("#myChart3").css('display', 'block');
-    $("#myChart4").css('display', 'none');
-    $("#myChart5").css('display', 'none');
-});
-
-$(".quyu").click(function() {
-    $("#myChart0").css('display', 'none');
-    $("#myChart1").css('display', 'none');
-    $("#myChart2").css('display', 'none');
-    $("#myChart3").css('display', 'none');
-    $("#myChart4").css('display', 'block');
-    $("#myChart5").css('display', 'none');
-});
-
-$(".sandian").click(function() {
-    $("#myChart0").css('display', 'none');
-    $("#myChart1").css('display', 'none');
-    $("#myChart2").css('display', 'none');
-    $("#myChart3").css('display', 'none');
-    $("#myChart4").css('display', 'none');
-    $("#myChart5").css('display', 'block');
-});
-</script>
