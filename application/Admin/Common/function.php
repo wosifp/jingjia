@@ -698,8 +698,6 @@ function account_function_byweek($category='账户',$params=array()){
 function account_function_byday($category='账户',$params=array()){
 
 	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
-
-	$k_avgrank_trend = json_decode(getKeywordIdReport_realtime($params))->body->data;
 	if ($category =="账户") {
        foreach ($result_json as $key => $value) {
            $trend_data['date'][] =$value->date;
@@ -713,17 +711,8 @@ function account_function_byday($category='账户',$params=array()){
            $trend_data['phoneConversion'][] =$value->kpis[7];
            $trend_data['bridgeConversion'][] =$value->kpis[8];
            $trend_data['name']=$value->name;
-           $n_count =0;
-           $sum_temp=0;
-           foreach ($k_avgrank_trend as $k1 => $v1) {
-              if (strcmp($v1->date, $value->date)) {
-                  $sum_temp += $v1->kpis[6];
-                  if ($v1->kpis[6] > 0) {
-                    $n_count++;
-                  }
-              }
-            }  
-            $trend_data['position'][] = round($sum_temp/$n_count,2);     
+            
+            $trend_data['position'][] = get_avgrank_bytire($category,$params)['avgrank_bytime'][$value->date];     
        }
 	}else{
 		foreach ($result_json as $key => $value) {
@@ -732,6 +721,8 @@ function account_function_byday($category='账户',$params=array()){
 			$result_temp[$value->date]['cost'] += $value->kpis[1] ;
 			$result_temp[$value->date]['click'] += $value->kpis[3];
 			$result_temp[$value->date]['name'] = $value->name;
+			$tt = (string)$value->id;
+			$result_temp[$value->date]['position'] = get_avgrank_bytire($category,$params)[$tt]['avgrank_bytime'][$value->date];
 		}
 		foreach ($result_temp as $key => $value) {
 			$result_temp[$key]['cpc'] = round($value['cost']/$value['click'],2);
@@ -746,17 +737,7 @@ function account_function_byday($category='账户',$params=array()){
             $trend_data['click'][] =$value['click'];
             $trend_data['ctr'][] =$value['ctr'];
             $trend_data['name']=$value['name'];
-            $n_count =0;
-            $sum_temp=0;
-           foreach ($k_avgrank_trend as $k1 => $v1) {
-              if (strcmp($v1->date, $value->date)) {
-                  $sum_temp += $v1->kpis[6];
-                  if ($v1->kpis[6] > 0) {
-                    $n_count++;
-                  }
-              }
-            }  
-            $trend_data['position'][] = round($sum_temp/$n_count,2);
+            $trend_data['position'][] = $value['position'];
 		}
 	}
 	
@@ -893,8 +874,7 @@ function account_function_byregion($category='账户',$params=array()){
 function account_function_bytire($category='账户',$params=array()){
 	//var_dump($params);
 	$result_json = json_decode(dispatch_kpijob($category,$params))->body->data;
-
-	$k_avgrank_trend = json_decode(getKeywordIdReport_realtime())->body->data;
+	//var_dump($result_json);
 	switch ($category) {
 		case '账户':
 		case '计划':
@@ -917,18 +897,15 @@ function account_function_bytire($category='账户',$params=array()){
 				}else {
 					$trend_data[$key]['name']=$value->name[2];
 				}
-				
-				$n_count =0;
-				$sum_temp=0;
-				foreach ($k_avgrank_trend as $k1 => $v1) {
-			   		if (strcmp($v1->date, $value->date)) {
-				   	$sum_temp += $v1->kpis[6];
-				   		if ($v1->kpis[6] > 0) {
-					 	$n_count++;
-				   		}
-			   		}
-			 	}  
-			 	$trend_data[$key]['position'] = round($sum_temp/$n_count,2);     
+				$tt = (string)$value->id;
+				if ($category =='账户') {
+					$trend_data[$key]['position'] = get_avgrank_bytire($category,$params)['avgrank_total'];
+				}else{
+					$trend_data[$key]['position'] = get_avgrank_bytire($category,$params)[$tt]['avgrank_total'];
+				}
+			 	
+			 	//var_dump($tt);
+			 	//var_dump(get_avgrank_bytire($category,$params));
 			}
 			break;
 		case '关键词':
@@ -1164,6 +1141,97 @@ function leftrank_function_byhour($params){
 	$return_data['grid_data']=$grid_data;
 	$return_data['grid_fields']=$grid_fields;
 	return $return_data;
+}
+/*获取指定 层级的平均排名。
+返回值：维数组，两个key ，第一个key：'avgrank_total' 表示获取整个时间段内的平均排名，第二个key：'avgrank_bytime'，表示按照时间粒度计算平均排名。可根据unitOfTime的值不同获取不同key值对应的排名*/
+function get_avgrank_bytire($tire ,$params){
+	$return_data = array();
+	switch ($tire) {
+		case '账户':
+			$return_data = get_avgrank_account($params);
+			break;
+		case '计划':
+			$return_data = get_avgrank_campain($params);
+			break;
+		case '单元':
+			$return_data = get_avgrank_adgroup($params);
+			break;
+		default:
+			# code...
+			break;
+	}
+	return $return_data;
+}
+function get_avgrank_account($params){
+	$params['statRange'] = 2;
+	return get_avgrank($params);
+}
+function get_avgrank_campain($params){
+	$params['statRange'] = 3;
+	/*bykey*/
+	if ($params['statIds']) {
+		foreach ($params['statIds'] as $key => $value) {
+			$p = $params;
+			$p['statIds'] = array($value);
+			//var_dump($p);
+			$p_result[$value] = get_avgrank($p);
+		}
+	}else{
+		$p_result =false;
+	}
+	//var_dump($p_result);
+	return $p_result;
+}
+function get_avgrank_adgroup($params){
+	$params['statRange'] = 5;
+	if ($params['statIds']) {
+		foreach ($params['statIds'] as $key => $value) {
+			$p = $params;
+			$p['statIds'] = array($value);
+			//var_dump($p);
+			$p_result[$value] = get_avgrank($p);
+		}
+	}else{
+		$p_result =false;
+	}
+	//var_dump($p_result);
+	return $p_result;
+}
+/*计算平均排名*/
+function get_avgrank($params){
+	/*total*/
+	$rank_json = json_decode(getKeywordIdReport_realtime($params))->body->data;
+	//var_dump($rank_json);
+	$impression_rank_total=0;
+	$impression_rank_denominater=0;
+	foreach ($rank_json as $key => $value) {
+		$impression_rank_total += $value->kpis[0]*$value->kpis[6];
+		$impression_rank_denominater +=$value->kpis[0];
+	}
+	if ($impression_rank_denominater >0) {
+		$avg_rank_total = round($impression_rank_total / $impression_rank_denominater,2);
+	}else{
+		$avg_rank_total = false;
+	}
+	/*by time */
+	$d_total=array();
+	$d_denominater = array();
+	//var_dump($rank_json);
+	foreach ($rank_json as $k => $v) {
+		//var_dump($v);
+		$d_total[$v->date] =$d_total[$v->date]?$d_total[$v->date]:0;
+		$d_total[$v->date] += $v->kpis[0] * $v->kpis[6];
+		$d_denominater[$v->date] = $d_denominater[$v->date]?$d_denominater[$v->date]:0;
+		$d_denominater[$v->date] +=$v->kpis[0];
+		//var_dump($value->date);
+	}
+	//var_dump($avg_rank_total);
+	$avg_rank_bytime =array();
+	foreach ($d_total as $key => $value) {
+		$avg_rank_bytime[$key] = round($d_total[$key]/$d_denominater[$key],2);
+	}
+	//var_dump($avg_rank_bytime);
+	return array('avgrank_total'=>$avg_rank_total,'avgrank_bytime'=>$avg_rank_bytime);
 }
 function test(){
 	echo "function test successfuly";

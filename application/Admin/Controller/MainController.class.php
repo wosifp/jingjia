@@ -72,36 +72,8 @@ class MainController extends AdminbaseController {
         $param0['startDate']=date('Y-m-d',strtotime($param['startDate'])-$n_t-86400);
         $param0['endDate'] = date('Y-m-d',strtotime($param['startDate'])-86400);
         /*获取平均排名数据 时间段*/
-        $rank_range_json = json_decode(getKeywordIdReport_realtime($param))->body->data;
-
-        $rank_range_json0=json_decode(getKeywordIdReport_realtime($param0))->body->data;
-
-        //var_dump($rank_range_json);
-        $rank_length = 0;
-        $rank_temp = 0;
-        foreach ($rank_range_json as $key => $value) {
-            if ((int)$value->kpis[6]==0) {
-                continue;
-            }else{
-                $rank_temp += $value->kpis[6];
-                $rank_length++;
-            }
-            
-        }
-        $avgrank1= round($rank_temp / $rank_length ,2);
-        $rank_length = 0;
-        $rank_temp = 0;
-        foreach ($rank_range_json0 as $key => $value) {
-            if ((int)$value->kpis[6]==0) {
-                continue;
-            }else{
-                $rank_temp += $value->kpis[6];
-                $rank_length++;
-            }
-            
-        }
-        $avgrank0 = round($rank_temp / $rank_length ,2);
-        
+        $avgrank1 = get_avgrank_bytire('账户',$param)['avgrank_total'];
+        $avgrank0 = get_avgrank_bytire('账户',$param0)['avgrank_total'];
         /* 获取关键指标数据
         **********************
         调用该函数获取请求数据，将json字符串赋值给json_string*/
@@ -138,8 +110,6 @@ class MainController extends AdminbaseController {
        /*获取趋势图mychart2数据*/
        $params_trend = $param;
        $params_trend['unitOfTime']=5;
-       $k_avgrank_trend = json_decode(getKeywordIdReport_realtime($params_trend))->body->data;
-       //var_dump($k_avgrank_trend);
        $k_trend = json_decode(getAccountReport_realtime($params_trend))->body->data;
        if (!$k_trend) {
          $trend_data['date'][] =0;
@@ -168,17 +138,8 @@ class MainController extends AdminbaseController {
            $trend_data['phoneConversion'][] =$value->kpis[7];
            $trend_data['bridgeConversion'][] =$value->kpis[8];
            $trend_data['name']=$value->name;
-           $n_count =0;
-           $sum_temp=0;
-           foreach ($k_avgrank_trend as $k1 => $v1) {
-              if (strcmp($v1->date, $value->date)) {
-                  $sum_temp += $v1->kpis[6];
-                  if ($v1->kpis[6] > 0) {
-                    $n_count++;
-                  }
-              }
-            }  
-            $trend_data['position'][] = round($sum_temp/$n_count,2);   
+           /*平均排名获取*/
+           $trend_data['position'][] = get_avgrank_bytire('账户',$params_trend)['avgrank_bytime'][$value->date];   
        }
        //var_dump($trend_data);
        $this->assign("trend_data",json_encode($trend_data));

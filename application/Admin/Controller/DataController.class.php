@@ -38,6 +38,7 @@ class DataController extends AdminbaseController {
             $targets = array();
             foreach ($statIds_temp as $key => $value) {
                 $targets[] = $value['text'];
+                $p_temp['statIds'][] =$value['value'];
             }
         
             $target = $targets[0] ?$targets[0]:0;
