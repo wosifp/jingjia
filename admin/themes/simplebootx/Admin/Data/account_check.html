@@ -202,7 +202,7 @@
         function set_option_0($data) {
             option0 = {
                 legend: {
-                    data: [$("#kpi_line_select").val()]
+                    data: [$data.name]
                 },
                 toolbox: {
                     left: '5%',
@@ -235,7 +235,7 @@
                         interval: 0,
                         rotate: 45,
                     },
-                    data: $.parseJSON($("#chart_data").text()).date
+                    data: $data.xAxis_data
                 },
                 yAxis: {
                     type: 'value'
@@ -266,8 +266,8 @@
                     }
                 ],
                 series: [{
-                    name: $("#kpi_line_select").val(),
-                    data: $.parseJSON($("#chart_data").text()).impression,
+                    name: $data.name,
+                    data: $data.series_data,
                     type: 'line',
                     smooth: true
                 }]
@@ -1632,15 +1632,17 @@
             case 1:
             case 3:
             case 7:
-                set_option_0($data);
-                /*$("#kpi_line_select").trigger('change');*/
+                //set_option_0($data);
+                $("#kpi_line_select").trigger('change');
                 break;
             case 22:
                 set_option_device($data);
+                //$("#kpi_line_select").trigger('change');
                 break;
             case 33:
                 /*地域数据更新 region_data*/
                 set_option_region($data);
+                //$("#kpi_line_select").trigger('change');
                 break;
             case 44:
                 /* set_option_scatter($data,'compare_position_impression');*/ 
@@ -1662,9 +1664,18 @@
 <script type="text/javascript">
     $("#kpi_line_select").change(function (event) {
         $kpi_line_value = $(this).val();
-        option0.xAxis.data = $.parseJSON($("#chart_data").text()).date;
+        //set_option_0($data);
+        $d1 = $.parseJSON($("#chart_data").text());
+        $temp_name = $(this).val();
+        $data = new Array();
+        $data['name'] = $temp_name;
+        $data['xAxis_data']=$d1.date;
+        $data['series_data'] = $d1[$kpi_line_value];
+        
+        set_option_0($data);
+        /*option0.xAxis.data = $.parseJSON($("#chart_data").text()).date;
         option0.series[0].data = $.parseJSON($("#chart_data").text())[$(this).val()];
-        myChart0.setOption(option0, true);
+        myChart0.setOption(option0, true);*/
 
     });
     $("#compare_select").change(function (event) {
