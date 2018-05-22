@@ -636,7 +636,9 @@ li {
         '武汉': [114.31, 30.52],
         '大庆': [125.03, 46.58]
     };
-    var data = $.parseJSON($("#region_data2").text()).region_map2['impression'];
+    var regin_asign = '';
+    var option3 = '';
+    /*var data = $.parseJSON($("#region_data2").text()).region_map2[regin_asign];
 
     var convertData = function(data) {
         var res = [];
@@ -651,13 +653,369 @@ li {
         }
         return res;
     };
-    var region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['impression']['name'].slice(0, 10);
-    var region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['impression']['data'].slice(0, 10);
-    var region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['impression']['name'].slice(0, 10);
-    var region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['impression']['data'].slice(0, 10);
+    var region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2[regin_asign]['name'].slice(0, 10);
+    var region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2[regin_asign]['data'].slice(0, 10);
+    var region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid[regin_asign]['name'].slice(0, 10);
+    var region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid[regin_asign]['data'].slice(0, 10);
     var region_map_city_data = convertData(data);
-    var region_map_province_data = $.parseJSON($("#region_data").text()).region_map['impression'];
+    var region_map_province_data = $.parseJSON($("#region_data").text()).region_map[regin_asign];
     var option3 = {
+
+        toolbox: {
+            show: true,
+            orient: 'horizontal',
+            left: 'right',
+            top: 'top',
+            feature: {
+                dataView: {
+                    readOnly: false
+                },
+                restore: {},
+                saveAsImage: {
+                    pixelRatio: 4,
+                    backgroundColor: '#fff'
+
+                }
+            }
+        },
+
+        legend: {
+            orient: 'horizontal',
+            top: '20%',
+            left: '66%',
+            data: ['省份', '城市'],
+            selectedMode: 'single',
+            selected: {
+                '省份': true,
+                '城市': false
+            }
+
+        },
+        grid: {
+            x: '66%',
+            y: '27%',
+            width: '27%',
+            height: '60%',
+            show: true
+        },
+        xAxis: {
+            type: 'value',
+            show: true
+
+        },
+        yAxis: {
+
+            type: 'category',
+            inverse: true,
+            data: region_grid_province_name
+        },
+        //图例 
+        visualMap: {
+            orient: 'horizontal',
+
+            type: 'continuous',
+            min: 0,
+            max: Math.ceil(Math.max(...region_grid_province_data)),
+            text: ['High', 'Low'],
+            realtime: false,
+            calculable: true,
+            seriesIndex: 3,
+            color: ['orangered', 'yellow', 'lightskyblue']
+        },
+        geo: {
+            map: 'china',
+            roam: true,
+            left: '7%',
+            label: {
+                normal: {
+                    show: true,
+                    textStyle: {
+                        color: 'rgba(0,0,0,0.4)'
+                    }
+                }
+            },
+            itemStyle: {
+                normal: {
+                    borderColor: 'rgba(0, 0, 0, 0.2)'
+                },
+                emphasis: {
+                    areaColor: null,
+                    shadowOffsetX: 0,
+                    shadowOffsetY: 0,
+                    shadowBlur: 20,
+                    borderWidth: 0,
+                    shadowColor: 'rgba(0, 0, 0, 0.5)'
+                }
+            }
+        },
+        //鼠标移动
+        tooltip: {
+            // show: false, //不显示提示标签
+            formatter: function(params) {
+                if (option3.legend.selected.城市 == true) {
+                    $str = JSON.stringify(params.value).split(",");
+
+                    if ($str[2] == null) {
+                        return params.name + ':' + params.value;
+                    } else {
+                        $value = $str[2].split("]")[0];
+                        return params.name + ':' + $value;
+                    }
+                } else {
+                    return params.name + ' : ' + params.value;
+                }
+            },
+            //提示标签格式
+            backgroundColor: "#ff7f50", //提示标签背景颜色
+            textStyle: {
+                color: "#fff"
+            } //提示标签字体颜色
+        },
+        series: [{
+                name: '省份',
+                type: 'bar',
+                data: region_grid_province_data,
+                itemStyle: {
+                    normal: {
+                        color: 'lightskyblue'
+                    }
+                }
+            }, {
+                name: '城市',
+                type: 'bar',
+                data: region_grid_city_data,
+                itemStyle: {
+                    normal: {
+                        color: 'lightskyblue'
+                    }
+                }
+            }, {
+                name: "城市",
+                type: 'scatter',
+                coordinateSystem: 'geo',
+                data: convertData(data),
+                symbolSize: 12,
+                geoIndex: 0,
+                symbolRotate: 35,
+                label: {
+                    normal: {
+                        position: 'right',
+                        show: false
+                    },
+                    emphasis: {
+                        show: true
+                    }
+                },
+                itemStyle: {
+                    normal: {
+                        color: '#F06C00'
+                    }
+                }
+            }, {
+                name: "省份",
+                type: 'map',
+                mapType: 'china',
+                geoIndex: 0,
+                label: {
+                    normal: {
+                        show: true, //显示省份标签
+                        textStyle: {
+                            color: "#c71585"
+                        } //省份标签字体颜色
+                    },
+                    emphasis: {
+                        //对应的鼠标悬浮效果
+                        show: true,
+                        textStyle: {
+                            color: "#800080"
+                        }
+                    }
+                },
+
+                itemStyle: {
+                    normal: {
+                        borderWidth: .5, //区域边框宽度
+                        borderColor: '#009fe8', //区域边框颜色
+                        areaColor: "#ffefd5", //区域颜色
+                    },
+                    emphasis: {
+                        borderWidth: .5,
+                        borderColor: '#4b0082',
+                        areaColor: "#ffdead",
+                    }
+                },
+                data: region_map_province_data
+            }
+
+        ],
+    };
+    //console.log($.parseJSON($("#region_data").text()));
+    myChart3.setOption(option3,true);
+*/
+function convertData (data) {
+        var res = [];
+        for (var i = 0; i < data.length; i++) {
+            var geoCoord = geoCoordMap[data[i].name];
+            if (geoCoord) {
+                res.push({
+                    name: data[i].name,
+                    value: geoCoord.concat(data[i].value)
+                });
+            }
+        }
+        return res;
+    };
+    myChart3.on('legendselectchanged', function(params) {
+        if (params.name == "城市") {
+            option3.yAxis.data = region_grid_city_name;
+            option3.visualMap.seriesIndex = 2;
+            option3.legend.selected = {
+                '省份': false,
+                '城市': true
+            };
+            myChart3.setOption(option3);
+        } else if (params.name == "省份") {
+            option3.yAxis.data = region_grid_province_name;
+            option3.visualMap.seriesIndex = 3;
+            option3.legend.selected = {
+                '省份': true,
+                '城市': false
+            };
+            myChart3.setOption(option3);
+        }
+        console.log(params);
+    });
+
+
+    $("#region_select").change(function(event) {
+        switch ($(this).val()) {
+            case 'region_impression':
+                regin_asign = 'impression';
+                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['impression']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['impression']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['impression']);
+                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['impression']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['impression']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['impression'];
+                break;
+            case 'region_cost':
+            regin_asign = 'cost';
+                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['cost']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['cost']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['cost']);
+                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['cost']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['cost']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['cost'];
+                break;
+            case 'region_click':
+            regin_asign = 'click';
+                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['click']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['click']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['click']);
+                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['click']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['click']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['click'];
+                break;
+            case 'region_cpc':
+            regin_asign = 'cpc';
+                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['cpc']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['cpc']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['cpc']);
+                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['cpc']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['cpc']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['cpc'];
+                break;
+            case 'region_ctr':
+            regin_asign = 'ctr';
+                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['ctr']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['ctr']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['ctr']);
+                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['ctr']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['ctr']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['ctr'];
+                break;
+            case 'region_cpm':
+            regin_asign = 'cpm';
+                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['cpm']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['cpm']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['cpm']);
+                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['cpm']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['cpm']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['cpm'];
+                break;
+            case 'region_avgrank':
+            regin_asign = 'position';
+                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['position']['name'].slice(0, 10);
+                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['position']['data'].slice(0, 10);
+                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['position']);
+                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['position']['name'].slice(0, 10);
+                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['position']['data'].slice(0, 10);
+                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['position'];
+                break;
+            default:
+                break;
+        }
+        if (option3.legend.selected.城市 == true) {
+            option3.yAxis.data = region_grid_city_name;
+        } else {
+            option3.yAxis.data = region_grid_province_name;
+        }
+
+        option3.series[0].data = region_grid_province_data;
+        option3.series[1].data = region_grid_city_data;
+        option3.series[2].data = region_map_city_data;
+        option3.series[3].data = region_map_province_data;
+        option3.visualMap.max = Math.max.apply(null, region_grid_province_data);
+        $regin_param = new Array();
+        if (option3.legend.selected.城市 == true) {
+            $regin_param['yAxis'] = region_grid_city_name;
+        } else {
+            $regin_param['yAxis'] = region_grid_province_name;
+        }
+
+        $regin_param['region_grid_province_data'] = region_grid_province_data;
+        $regin_param['region_grid_city_data'] = region_grid_city_data;
+        $regin_param['region_map_city_data'] = region_map_city_data;
+        $regin_param['region_map_province_data'] = region_map_province_data;
+        $regin_param['visualMap_max'] = Math.max.apply(null, region_grid_province_data);
+        $regin_param['type'] = regin_asign;
+        //set_option3($regin_param['type']);
+        myChart3.setOption(option3,true);
+        
+    });
+    </script>
+    <script type="text/javascript">
+        $(function(){
+            set_option3('impression');
+        })
+    </script>
+    <!-- set_option3  -->
+    <script type="text/javascript">
+        
+        function set_option3(regin_asign){
+            console.log(regin_asign);
+    var convertData = function(data) {
+        var res = [];
+        for (var i = 0; i < data.length; i++) {
+            var geoCoord = geoCoordMap[data[i].name];
+            if (geoCoord) {
+                res.push({
+                    name: data[i].name,
+                    value: geoCoord.concat(data[i].value)
+                });
+            }
+        }
+        return res;
+    };
+        console.log("..........................setOption3");
+         data = $.parseJSON($("#region_data2").text()).region_map2[regin_asign];
+         region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2[regin_asign]['name'].slice(0, 10);
+     region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2[regin_asign]['data'].slice(0, 10);
+     region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid[regin_asign]['name'].slice(0, 10);
+     region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid[regin_asign]['data'].slice(0, 10);
+     region_map_city_data = convertData(data);
+     region_map_province_data = $.parseJSON($("#region_data").text()).region_map[regin_asign];
+     option3 = {
 
         toolbox: {
             show: true,
@@ -852,104 +1210,8 @@ li {
 
         ],
     };
-    //console.log($.parseJSON($("#region_data").text()));
-    myChart3.setOption(option3);
-    myChart3.on('legendselectchanged', function(params) {
-        if (params.name == "城市") {
-            option3.yAxis.data = region_grid_city_name;
-            option3.visualMap.seriesIndex = 2;
-            option3.legend.selected = {
-                '省份': false,
-                '城市': true
-            };
-            myChart3.setOption(option3);
-        } else if (params.name == "省份") {
-            option3.yAxis.data = region_grid_province_name;
-            option3.visualMap.seriesIndex = 3;
-            option3.legend.selected = {
-                '省份': true,
-                '城市': false
-            };
-            myChart3.setOption(option3);
-        }
-        console.log(params);
-    });
-
-
-    $("#region_select").change(function(event) {
-        switch ($(this).val()) {
-            case 'region_impression':
-                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['impression']['name'].slice(0, 10);
-                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['impression']['data'].slice(0, 10);
-                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['impression']);
-                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['impression']['name'].slice(0, 10);
-                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['impression']['data'].slice(0, 10);
-                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['impression'];
-                break;
-            case 'region_cost':
-                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['cost']['name'].slice(0, 10);
-                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['cost']['data'].slice(0, 10);
-                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['cost']);
-                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['cost']['name'].slice(0, 10);
-                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['cost']['data'].slice(0, 10);
-                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['cost'];
-                break;
-            case 'region_click':
-                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['click']['name'].slice(0, 10);
-                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['click']['data'].slice(0, 10);
-                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['click']);
-                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['click']['name'].slice(0, 10);
-                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['click']['data'].slice(0, 10);
-                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['click'];
-                break;
-            case 'region_cpc':
-                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['cpc']['name'].slice(0, 10);
-                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['cpc']['data'].slice(0, 10);
-                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['cpc']);
-                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['cpc']['name'].slice(0, 10);
-                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['cpc']['data'].slice(0, 10);
-                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['cpc'];
-                break;
-            case 'region_ctr':
-                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['ctr']['name'].slice(0, 10);
-                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['ctr']['data'].slice(0, 10);
-                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['ctr']);
-                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['ctr']['name'].slice(0, 10);
-                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['ctr']['data'].slice(0, 10);
-                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['ctr'];
-                break;
-            case 'region_cpm':
-                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['cpm']['name'].slice(0, 10);
-                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['cpm']['data'].slice(0, 10);
-                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['cpm']);
-                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['cpm']['name'].slice(0, 10);
-                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['cpm']['data'].slice(0, 10);
-                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['cpm'];
-                break;
-            case 'region_avgrank':
-                region_grid_city_name = $.parseJSON($("#region_data2").text()).region_grid2['position']['name'].slice(0, 10);
-                region_grid_city_data = $.parseJSON($("#region_data2").text()).region_grid2['position']['data'].slice(0, 10);
-                region_map_city_data = convertData($.parseJSON($("#region_data2").text()).region_map2['position']);
-                region_grid_province_name = $.parseJSON($("#region_data").text()).region_grid['position']['name'].slice(0, 10);
-                region_grid_province_data = $.parseJSON($("#region_data").text()).region_grid['position']['data'].slice(0, 10);
-                region_map_province_data = $.parseJSON($("#region_data").text()).region_map['position'];
-                break;
-            default:
-                break;
-        }
-        if (option3.legend.selected.城市 == true) {
-            option3.yAxis.data = region_grid_city_name;
-        } else {
-            option3.yAxis.data = region_grid_province_name;
-        }
-
-        option3.series[0].data = region_grid_province_data;
-        option3.series[1].data = region_grid_city_data;
-        option3.series[2].data = region_map_city_data;
-        option3.series[3].data = region_map_province_data;
-        option3.visualMap.max = Math.max.apply(null, region_grid_province_data);
-        myChart3.setOption(option3,true);
-    });
+    myChart3.setOption(option3,true);
+    }
     </script>
 <!-- 分时汇总 myChart4*********************** -->
     <script>
@@ -1156,6 +1418,8 @@ function refresh_doms(data) {
     /*地域数据更新 region_data*/
     $("#region_data").text(JSON.stringify(data.region_data));
     $("#region_data2").text(JSON.stringify(data.region_data2));
+    console.log(typeof set_option3);
+    set_option3(regin_asign?regin_asign:'impression');
     $("#region_select").trigger('change');
     /*分时数据更新 fenshi_data*/
     $("#fenshi_data").text(JSON.stringify(data.fenshi_data));
