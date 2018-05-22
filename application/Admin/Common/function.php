@@ -711,8 +711,8 @@ function account_function_byday($category='账户',$params=array()){
            $trend_data['phoneConversion'][] =$value->kpis[7];
            $trend_data['bridgeConversion'][] =$value->kpis[8];
            $trend_data['name']=$value->name;
-            
-            $trend_data['position'][] = get_avgrank_bytire($category,$params)['avgrank_bytime'][$value->date];     
+            $temp_position = get_avgrank_bytire($category,$params);
+            $trend_data['position'][] = $temp_position['avgrank_bytime'][$value->date];     
        }
 	}else{
 		foreach ($result_json as $key => $value) {
@@ -722,7 +722,8 @@ function account_function_byday($category='账户',$params=array()){
 			$result_temp[$value->date]['click'] += $value->kpis[3];
 			$result_temp[$value->date]['name'] = $value->name;
 			$tt = (string)$value->id;
-			$result_temp[$value->date]['position'] = get_avgrank_bytire($category,$params)[$tt]['avgrank_bytime'][$value->date];
+			 $temp_position = get_avgrank_bytire($category,$params);
+			$result_temp[$value->date]['position'] = $temp_position[$tt]['avgrank_bytime'][$value->date];
 		}
 		foreach ($result_temp as $key => $value) {
 			$result_temp[$key]['cpc'] = round($value['cost']/$value['click'],2);
