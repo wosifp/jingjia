@@ -899,10 +899,12 @@ function account_function_bytire($category='账户',$params=array()){
 					$trend_data[$key]['name']=$value->name[2];
 				}
 				$tt = (string)$value->id;
+				$rank_temp = get_avgrank_bytire($category,$params);
 				if ($category =='账户') {
-					$trend_data[$key]['position'] = get_avgrank_bytire($category,$params)['avgrank_total'];
+					
+					$trend_data[$key]['position'] = $rank_temp['avgrank_total'];
 				}else{
-					$trend_data[$key]['position'] = get_avgrank_bytire($category,$params)[$tt]['avgrank_total'];
+					$trend_data[$key]['position'] = $rank_temp[$tt]['avgrank_total'];
 				}
 			 	
 			 	//var_dump($tt);
