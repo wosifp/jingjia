@@ -72,8 +72,8 @@ class MainController extends AdminbaseController {
         $param0['startDate']=date('Y-m-d',strtotime($param['startDate'])-$n_t-86400);
         $param0['endDate'] = date('Y-m-d',strtotime($param['startDate'])-86400);
         /*获取平均排名数据 时间段*/
-        $rank_temp1 = get_avgrank_bytire('账户',$param)
-        $rank_temp2 = get_avgrank_bytire('账户',$param0)
+        $rank_temp1 = get_avgrank_bytire('账户',$param);
+        $rank_temp2 = get_avgrank_bytire('账户',$param0);
         $avgrank1 = $rank_temp1['avgrank_total'];
         $avgrank0 = $rank_temp2['avgrank_total'];
         /* 获取关键指标数据
