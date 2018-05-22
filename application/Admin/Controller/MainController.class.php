@@ -72,8 +72,10 @@ class MainController extends AdminbaseController {
         $param0['startDate']=date('Y-m-d',strtotime($param['startDate'])-$n_t-86400);
         $param0['endDate'] = date('Y-m-d',strtotime($param['startDate'])-86400);
         /*获取平均排名数据 时间段*/
-        $avgrank1 = get_avgrank_bytire('账户',$param)['avgrank_total'];
-        $avgrank0 = get_avgrank_bytire('账户',$param0)['avgrank_total'];
+        $rank_temp1 = get_avgrank_bytire('账户',$param)
+        $rank_temp2 = get_avgrank_bytire('账户',$param0)
+        $avgrank1 = $rank_temp1['avgrank_total'];
+        $avgrank0 = $rank_temp2['avgrank_total'];
         /* 获取关键指标数据
         **********************
         调用该函数获取请求数据，将json字符串赋值给json_string*/
@@ -139,7 +141,8 @@ class MainController extends AdminbaseController {
            $trend_data['bridgeConversion'][] =$value->kpis[8];
            $trend_data['name']=$value->name;
            /*平均排名获取*/
-           $trend_data['position'][] = get_avgrank_bytire('账户',$params_trend)['avgrank_bytime'][$value->date];   
+           $rank_temp = get_avgrank_bytire('账户',$params_trend);
+           $trend_data['position'][] = $rank_temp['avgrank_bytime'][$value->date];   
        }
        //var_dump($trend_data);
        $this->assign("trend_data",json_encode($trend_data));
