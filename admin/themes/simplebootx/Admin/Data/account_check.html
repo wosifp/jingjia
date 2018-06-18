@@ -56,12 +56,15 @@
                         <span class="caret"></span>
                     </a>
                     <span id="cengji" style="display: none"></span>
+                    <input type="checkbox" id="compare_radio" value="true" >对比</input>
                 </p>
+                
                 <div id="firstpane" class="menu_list" style="display:none">
                     <hr>
                     <select id="mytreeselect" multiple="multiple"></select>
                     <button id="send_mytree" class="btn">确定</button>
                 </div>
+
             </div>
         </div>
         <!-- 时间 -->
@@ -265,12 +268,7 @@
                         left: '93%'
                     }
                 ],
-                series: [{
-                    name: $data.name,
-                    data: $data.series_data,
-                    type: 'line',
-                    smooth: true
-                }]
+                series: $data.series_data
             };
             myChart0.setOption(option0, true);
 
@@ -310,7 +308,7 @@
                         interval:0,
                         rotate:45,
                     },
-                    data:  $data.name
+                    data:  $data[0]['data'].name
                 },
                 yAxis: {
                     type: 'value',
@@ -359,7 +357,7 @@
                             }
                         }
                     },
-                    data: $data.impression,
+                    data: $data[0]['data'].impression,
                     smooth: true
                 }, {
                     name: '消费',
@@ -372,7 +370,7 @@
                             }
                         }
                     },
-                    data: $data.cost,
+                    data: $data[0]['data'].cost,
                     smooth: true
                 }, {
                     name: '点击',
@@ -385,7 +383,7 @@
                             }
                         }
                     },
-                    data: $data.click,
+                    data: $data[0]['data'].click,
                     smooth: true
                 }, {
                     name: 'cpc',
@@ -398,7 +396,7 @@
                             }
                         }
                     },
-                    data: $data.cpc,
+                    data: $data[0]['data'].cpc,
                     smooth: true
                 }, {
                     name: 'ctr',
@@ -411,7 +409,7 @@
                             }
                         }
                     },
-                    data: $data.ctr,
+                    data: $data[0]['data'].ctr,
                     smooth: true
                 }, {
                     name: '平均排名',
@@ -424,7 +422,7 @@
                             }
                         }
                     },
-                    data: $data.position,
+                    data: $data[0]['data'].position,
                     smooth: true
                 }]
             };
@@ -488,7 +486,7 @@
                             }
                         }
                     },
-                    data: [$.parseJSON($("#chart_data").text()).pc.impression[0], $.parseJSON($("#chart_data").text()).mobile.impression[0]],
+                    data: [$.parseJSON($("#chart_data").text())[0]['data'].pc.impression[0], $.parseJSON($("#chart_data").text())[0]['data'].mobile.impression[0]],
                     smooth: true
                 }, {
                     name: '消费',
@@ -501,7 +499,7 @@
                             }
                         }
                     },
-                    data: [$.parseJSON($("#chart_data").text()).pc.cost[0], $.parseJSON($("#chart_data").text()).mobile.cost[0]],
+                    data: [$.parseJSON($("#chart_data").text())[0]['data'].pc.cost[0], $.parseJSON($("#chart_data").text())[0]['data'].mobile.cost[0]],
                     smooth: true
                 }, {
                     name: '点击',
@@ -514,7 +512,7 @@
                             }
                         }
                     },
-                    data: [$.parseJSON($("#chart_data").text()).pc.click[0], $.parseJSON($("#chart_data").text()).mobile.click[0]],
+                    data: [$.parseJSON($("#chart_data").text())[0]['data'].pc.click[0], $.parseJSON($("#chart_data").text())[0]['data'].mobile.click[0]],
                     smooth: true
                 }, {
                     name: 'cpc',
@@ -527,7 +525,7 @@
                             }
                         }
                     },
-                    data: [$.parseJSON($("#chart_data").text()).pc.cpc[0], $.parseJSON($("#chart_data").text()).mobile.cpc[0]],
+                    data: [$.parseJSON($("#chart_data").text())[0]['data'].pc.cpc[0], $.parseJSON($("#chart_data").text())[0]['data'].mobile.cpc[0]],
                     smooth: true
                 }, {
                     name: 'ctr',
@@ -540,7 +538,7 @@
                             }
                         }
                     },
-                    data: [$.parseJSON($("#chart_data").text()).pc.ctr[0], $.parseJSON($("#chart_data").text()).mobile.ctr[0]],
+                    data: [$.parseJSON($("#chart_data").text())[0]['data'].pc.ctr[0], $.parseJSON($("#chart_data").text())[0]['data'].mobile.ctr[0]],
                     smooth: true
                 }, {
                     name: '平均排名',
@@ -553,7 +551,7 @@
                             }
                         }
                     },
-                    data: [$.parseJSON($("#chart_data").text()).pc.position[0], $.parseJSON($("#chart_data").text()).mobile.position[0]],
+                    data: [$.parseJSON($("#chart_data").text())[0]['data'].pc.position[0], $.parseJSON($("#chart_data").text())[0]['data'].mobile.position[0]],
                     smooth: true
                 }]
             };
@@ -830,12 +828,12 @@
         var region_map_province_data = '';
         var option_region = '';
         function set_option_region($data) {
-            region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['impression']['name'].slice(0, 10);
-            region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['impression']['data'].slice(0, 10);
-            region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['impression']['name'].slice(0, 10);
-            region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['impression']['data'].slice(0, 10);
-            region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['impression']);
-            region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['impression'];
+            region_grid_city_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['impression']['name'].slice(0, 10);
+            region_grid_city_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['impression']['data'].slice(0, 10);
+            region_grid_province_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['impression']['name'].slice(0, 10);
+            region_grid_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['impression']['data'].slice(0, 10);
+            region_map_city_data = convertData($.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_map2['impression']);
+            region_map_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_map['impression'];
 
             option_region = {
 
@@ -1058,66 +1056,66 @@
             console.log($(this).val());
             switch ($(this).val()) {
                 case 'region_impression':
-                    region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['impression']['name'].slice(0, 10);
-                    region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['impression']['data'].slice(0, 10);
-                    region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['impression']);
-                    region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['impression']['name'].slice(0, 10);
-                    region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['impression']['data'].slice(0, 10);
-                    region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['impression'];
+                    region_grid_city_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['impression']['name'].slice(0, 10);
+                    region_grid_city_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['impression']['data'].slice(0, 10);
+                    region_map_city_data = convertData($.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_map2['impression']);
+                    region_grid_province_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['impression']['name'].slice(0, 10);
+                    region_grid_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['impression']['data'].slice(0, 10);
+                    region_map_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_map['impression'];
                     break;
                 case 'region_cost':
 
-                    region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cost']['name'].slice(0, 10);
-                    region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cost']['data'].slice(0, 10);
-                    region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['cost']);
-                    region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['cost']['name'].slice(0, 10);
-                    region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['cost']['data'].slice(0, 10);
-                    region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['cost'];
+                    region_grid_city_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['cost']['name'].slice(0, 10);
+                    region_grid_city_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['cost']['data'].slice(0, 10);
+                    region_map_city_data = convertData($.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_map2['cost']);
+                    region_grid_province_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['cost']['name'].slice(0, 10);
+                    region_grid_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['cost']['data'].slice(0, 10);
+                    region_map_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_map['cost'];
                     break;
                 case 'region_click':
 
-                    region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['click']['name'].slice(0, 10);
-                    region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['click']['data'].slice(0, 10);
-                    region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['click']);
-                    region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['click']['name'].slice(0, 10);
-                    region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['click']['data'].slice(0, 10);
-                    region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['click'];
+                    region_grid_city_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['click']['name'].slice(0, 10);
+                    region_grid_city_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['click']['data'].slice(0, 10);
+                    region_map_city_data = convertData($.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_map2['click']);
+                    region_grid_province_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['click']['name'].slice(0, 10);
+                    region_grid_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['click']['data'].slice(0, 10);
+                    region_map_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_map['click'];
                     break;
                 case 'region_cpc':
 
-                    region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cpc']['name'].slice(0, 10);
-                    region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cpc']['data'].slice(0, 10);
-                    region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['cpc']);
-                    region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['cpc']['name'].slice(0, 10);
-                    region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['cpc']['data'].slice(0, 10);
-                    region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['cpc'];
+                    region_grid_city_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['cpc']['name'].slice(0, 10);
+                    region_grid_city_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['cpc']['data'].slice(0, 10);
+                    region_map_city_data = convertData($.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_map2['cpc']);
+                    region_grid_province_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['cpc']['name'].slice(0, 10);
+                    region_grid_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['cpc']['data'].slice(0, 10);
+                    region_map_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_map['cpc'];
                     break;
                 case 'region_ctr':
 
-                    region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['ctr']['name'].slice(0, 10);
-                    region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['ctr']['data'].slice(0, 10);
-                    region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['ctr']);
-                    region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['ctr']['name'].slice(0, 10);
-                    region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['ctr']['data'].slice(0, 10);
-                    region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['ctr'];
+                    region_grid_city_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['ctr']['name'].slice(0, 10);
+                    region_grid_city_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['ctr']['data'].slice(0, 10);
+                    region_map_city_data = convertData($.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_map2['ctr']);
+                    region_grid_province_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['ctr']['name'].slice(0, 10);
+                    region_grid_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['ctr']['data'].slice(0, 10);
+                    region_map_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_map['ctr'];
                     break;
                 case 'region_cpm':
 
-                    region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cpm']['name'].slice(0, 10);
-                    region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['cpm']['data'].slice(0, 10);
-                    region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['cpm']);
-                    region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['cpm']['name'].slice(0, 10);
-                    region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['cpm']['data'].slice(0, 10);
-                    region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['cpm'];
+                    region_grid_city_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['cpm']['name'].slice(0, 10);
+                    region_grid_city_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['cpm']['data'].slice(0, 10);
+                    region_map_city_data = convertData($.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_map2['cpm']);
+                    region_grid_province_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['cpm']['name'].slice(0, 10);
+                    region_grid_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['cpm']['data'].slice(0, 10);
+                    region_map_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_map['cpm'];
                     break;
                 case 'region_avgrank':
 
-                    region_grid_city_name = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['position']['name'].slice(0, 10);
-                    region_grid_city_data = $.parseJSON($("#chart_data").text()).region_data2.region_grid2['position']['data'].slice(0, 10);
-                    region_map_city_data = convertData($.parseJSON($("#chart_data").text()).region_data2.region_map2['position']);
-                    region_grid_province_name = $.parseJSON($("#chart_data").text()).region_data.region_grid['position']['name'].slice(0, 10);
-                    region_grid_province_data = $.parseJSON($("#chart_data").text()).region_data.region_grid['position']['data'].slice(0, 10);
-                    region_map_province_data = $.parseJSON($("#chart_data").text()).region_data.region_map['position'];
+                    region_grid_city_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['position']['name'].slice(0, 10);
+                    region_grid_city_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_grid2['position']['data'].slice(0, 10);
+                    region_map_city_data = convertData($.parseJSON($("#chart_data").text())[0]['data'].region_data2.region_map2['position']);
+                    region_grid_province_name = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['position']['name'].slice(0, 10);
+                    region_grid_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_grid['position']['data'].slice(0, 10);
+                    region_map_province_data = $.parseJSON($("#chart_data").text())[0]['data'].region_data.region_map['position'];
                     break;
                 default:
                     break;
@@ -1360,6 +1358,19 @@
 </body>
 
 </html>
+<!-- radio shijian -->
+    <script type="text/javascript">
+        $("#compare_radio").click(function(event) {
+            /* Act on the event */
+            console.log("click ----------");
+            console.log($(this).val());
+            if ($(this).val()=="true") {
+                $(this).val("false");
+            }else{
+                $(this).val("true");
+            }
+        });
+    </script>
 <!-- 查看类型选择 -->
 <script type="text/javascript">
     var unit_data = 5;
@@ -1497,7 +1508,8 @@
             dataType: 'json',
             data: {
                 statIds: jQuery.parseJSON(JSON.stringify($temp)),
-                pager_select: tier_selected
+                pager_select: tier_selected,
+                compare_radio :$("#compare_radio").val()
             },
         })
             .done(function (data) {
@@ -1669,10 +1681,21 @@
         $temp_name = $(this).val();
         $data = new Array();
         $data['name'] = $temp_name;
-        $data['xAxis_data']=$d1.date;
-        $data['series_data'] = $d1[$kpi_line_value];
-        
+        $data['xAxis_data']=$d1[0]['data'].date;
+        $data_arr_temp = new Array();
+        for (var i = 0; i < $d1.length; i++) {
+            var tt = {};
+            tt.name = $d1[i]['name'];
+            tt.data = $d1[i]['data'][$kpi_line_value];
+            tt.type = 'line';
+            tt.smooth ='true';
+
+            $data_arr_temp.push($.parseJSON(JSON.stringify(tt)));
+        }
+        $data['series_data'] = $data_arr_temp;
+        console.log($data);
         set_option_0($data);
+        
         /*option0.xAxis.data = $.parseJSON($("#chart_data").text()).date;
         option0.series[0].data = $.parseJSON($("#chart_data").text())[$(this).val()];
         myChart0.setOption(option0, true);*/
@@ -1681,11 +1704,11 @@
     $("#compare_select").change(function (event) {
         $compare_select_value = $(this).val();
         $data_temp = $.parseJSON($("#chart_data").text());
-        set_option_scatter($data_temp,$compare_select_value);
+        set_option_scatter($data_temp[0]['data'],$compare_select_value);
     });
     $("#data_pie_select").change(function(event) {
         $data_pie_value = $(this).val();
         $data_temp = $.parseJSON($("#chart_data").text());
-        set_option_pie($data_temp,$data_pie_value);
+        set_option_pie($data_temp[0]['data'],$data_pie_value);
     });
 </script>

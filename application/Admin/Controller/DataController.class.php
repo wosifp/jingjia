@@ -34,17 +34,25 @@ class DataController extends AdminbaseController {
         /*获取要被查看的账户名字*/
         $statIds_temp = $_REQUEST["statIds"];
         S('account_check_pager_select',$_REQUEST['pager_select']?$_REQUEST['pager_select']:S('account_check_pager_select'),900);
+        S('account_check_compare_radio',$_REQUEST['compare_radio']?$_REQUEST['compare_radio']:S('account_check_compare_radio'),900);
+        $compare_radio = S('account_check_compare_radio')?S('account_check_compare_radio'):'false';
+        $target = array( );
         if ($_REQUEST['pager_select']=='账户') {
             $targets = array();
             foreach ($statIds_temp as $key => $value) {
                 $targets[] = $value['text'];
                 $p_temp['statIds'][] =$value['value'];
             }
-        
-            $target = $targets[0] ?$targets[0]:0;
-            if($target){
-                session('username_normal',$target);
+            if ($compare_radio=='true') {
+                $target = $targets;
+            }else{
+              $target[0] = $targets[0] ?$targets[0]:session('username_normal');
+            if($target[0]){
+                session('username_normal',$target[0]);
+            }  
             }
+            S('account_check_target',$target,900);
+            
         }else{
             foreach ($statIds_temp as $key => $value) {
                 $p_temp['statIds'][] =$value['value'];
@@ -82,51 +90,63 @@ class DataController extends AdminbaseController {
         /* $p_temp['unitOfTime']=$_REQUEST['unitOfTime']?$_REQUEST['unitOfTime']: 5;*/
         //var_dump($p_temp);
     /*参数处理end*/
-        switch ($filter_type) {
+    $target = S('account_check_target');
+    $filter_result = array();
+    //var_dump($target);
+    foreach ($target as $key => $value) {
+        # code...
+        /*此处可能会导致bug*/
+        session('username_normal',$value);
+
+        $filter_result[$key]['name'] = $value;
+         switch ($filter_type) {
             case '1':
                 $p_temp['unitOfTime'] = 1;
-                $filter_result = account_function_byday(S('account_check_pager_select'),$p_temp);
+                $filter_result[$key]['data'] = account_function_byday(S('account_check_pager_select'),$p_temp);
                 break;
             case '3':
                 $p_temp['unitOfTime'] = 3;
-                $filter_result = account_function_byday(S('account_check_pager_select'),$p_temp);
+                $filter_result[$key]['data'] = account_function_byday(S('account_check_pager_select'),$p_temp);
                 break;
             case '4':
                 $p_temp['unitOfTime'] = 4;
-                $filter_result = account_function_byday(S('account_check_pager_select'),$p_temp);
+                $filter_result[$key]['data'] = account_function_byday(S('account_check_pager_select'),$p_temp);
                 break;
             case '5':
                 $p_temp['unitOfTime'] = 5;
-                $filter_result = account_function_byday(S('account_check_pager_select'),$p_temp);
+                $filter_result[$key]['data'] = account_function_byday(S('account_check_pager_select'),$p_temp);
                 break;
             case '7':
                 $p_temp['unitOfTime'] = 7;
-                $filter_result = account_function_byhour(S('account_check_pager_select'),$p_temp);
+                $filter_result[$key]['data'] = account_function_byhour(S('account_check_pager_select'),$p_temp);
                 break;
             case '22':
                 $p_temp['unitOfTime'] = 8;
-                $filter_result = account_function_byDrate(S('account_check_pager_select'),$p_temp);
+                $filter_result[$key]['data'] = account_function_byDrate(S('account_check_pager_select'),$p_temp);
                 break;
             case '33':
                 $p_temp['unitOfTime'] = 8;
-                $filter_result = account_function_byregion(S('account_check_pager_select'),$p_temp);
+                $filter_result[$key]['data'] = account_function_byregion(S('account_check_pager_select'),$p_temp);
                 break;
             case '44':
                 $p_temp['unitOfTime'] = 8;
-                $filter_result = account_function_bytire(S('account_check_pager_select'),$p_temp);
+                $filter_result[$key]['data'] = account_function_bytire(S('account_check_pager_select'),$p_temp);
                 break;
             case '55':
                 $p_temp['unitOfTime'] = 8;
-                $filter_result = account_function_bydata(S('account_check_pager_select'),$p_temp);
+                $filter_result[$key]['data'] = account_function_bydata(S('account_check_pager_select'),$p_temp);
                 break;
             case '66':
                 $p_temp['unitOfTime'] = 8;
-                $filter_result = account_function_bytire_compare(S('account_check_pager_select'),$p_temp);
+                $filter_result[$key]['data'] = account_function_bytire_compare(S('account_check_pager_select'),$p_temp);
                 break;
             default:
                 # code...
                 break;
         }
+
+    }
+       
         /*$account_data_json = json_decode(dispatch_kpijob(S('account_check_pager_select'),$p_temp))->body->data;*/
         //var_dump($filter_result);
         if ($filter_type==999999) {

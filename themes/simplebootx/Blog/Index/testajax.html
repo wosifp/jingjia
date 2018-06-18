@@ -11,20 +11,39 @@
    <div id="myajax" ></div>
 
     <script type="text/javascript">
-    	
-    	$.ajax({
-            url:"__CONTROLLER__/handleajax",//这里指向的就不再是页面了，而是一个方法。
-            data:{},
+    	var dddd = '{"email":"whateer@gmail.com","passcode":"12345xx"}';
+        console.log(jQuery.parseJSON(dddd));
+    	/*$.ajax({
+            url:"http://52.69.162.140:8080/fcexchange/login",//这里指向的就不再是页面了，而是一个方法。
+            data:dddd,
             type:"POST",
             dataType:"JSON",
+            contentType: "application/json; charset=utf-8",
             success: function(data){
                 //alert(data[0].code);//这里要用索引，使用eq读取不出来数据。
                 $("#myajax").append(data.s);
                 console.log(data);
             }
+        })*/
+        $.ajax({
+            url: 'http://52.69.162.140:8080/fcexchange/login',
+            type: 'POST',
+            dataType: 'json',
+            contentType: "application/json; charset=utf-8",
+            data: dddd,
         })
+        .done(function(e) {
+            console.log("success");
+        })
+        .fail(function(e) {
+            console.log(e.responseJSON);
+            console.log("error");
+        })
+        .always(function(e) {
+            console.log("complete");
+        });
+        
     </script>
-
 </script>
 </body>
 </html>
